@@ -1,0 +1,5 @@
+common.o: common.c common.h
+replacement.o: replacement.c replacement.h list.h core.h spinlock.h \
+  atomic.h stats.h protocol.h common.h client.h
+stats.o: stats.c common.h stats.h spinlock.h
+debug.o: debug.c common.h atomic.h core.h list.h spinlock.h stats.h
