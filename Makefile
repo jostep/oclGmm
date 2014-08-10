@@ -43,11 +43,11 @@ depend : .depend
 %.c: ;
 
 gmmctl : server.o
-	$(CC) -L$(CUDAPATH)/lib64 $^ -o $@
+	$(CC) -L$(CUDAPATH)/lib64 $^ -o $@ -lpthread -lrt
 
 server.o : server.c protocol.h spinlock.h list.h atomic.h
 	$(CC) -c -l OpenCL -Wall \
-		-I$(CUDAPATH)/include  $< -o $@
+		-I$(CUDAPATH)/include  $< -o $@ -lpthread -lrt
 
 $(LIBGMM): $(OBJS)
 	$(CC) $(LDFLAGS) $(OBJS) -o $@

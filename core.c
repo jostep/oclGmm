@@ -25,13 +25,14 @@ struct gmm_context *pcontext=NULL;
 static void list_alloced_add(struct gmm_context *ctx, struct region *r){
     acquire(&ctx->lock_alloced);
     list_add(&r->entry_alloced, &ctx->list_alloced);
-    release (&ctx->lock->alloced);
+    release (&ctx->lock_alloced);
 }
 
 int gmm_context_init(){
     cl_int *errcode_CON=NULL;
     cl_int *errcode_CQ=NULL;
-    
+    cl_int numDevices; 
+
     if(pcontext!=NULL){ 
         gprint(FATAL,"pcontext already exists!\n");
         return -1;
