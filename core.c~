@@ -31,59 +31,11 @@ struct region * region_lookup(struct gmm_context *ctx, const cl_mem *ptr);
 static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, int htod);
 static void dma_channel_fini(struct dma_channel *chan);
 struct gmm_context *pcontext=NULL;
-static void list_alloced_add(struct gmm_context *ctx, struct region *r)
-{
-	acquire(&ctx->lock_alloced);
-	list_add(&r->entry_alloced, &ctx->list_alloced);
-	release(&ctx->lock_alloced);
-}
 
-static void list_alloced_del(struct gmm_context *ctx, struct region *r)
-{
-	acquire(&ctx->lock_alloced);
-	list_del(&r->entry_alloced);
-	release(&ctx->lock_alloced);
-}
-
-static void list_attached_add(struct gmm_context *ctx, struct region *r)
-{
-	acquire(&ctx->lock_attached);
-	list_add(&r->entry_attached, &ctx->list_attached);
-	release(&ctx->lock_attached);
-}
-
-static void list_attached_del(struct gmm_context *ctx, struct region *r)
-{
-	acquire(&ctx->lock_attached);
-	list_del(&r->entry_attached);
-	release(&ctx->lock_attached);
-}
-
-static void list_attached_mov(struct gmm_context *ctx, struct region *r)
-{
-	acquire(&ctx->lock_attached);
-	list_move(&r->entry_attached, &ctx->list_attached);
-	release(&ctx->lock_attached);
-}
-
-
-static inline void region_pin(struct region *r)
-{
-	int pinned = atomic_inc(&(r)->pinned);
-	if (pinned == 0)
-		update_detachable(-r->size);
-}
-
-static inline void region_unpin(struct region *r)
-{
-	int pinned = atomic_dec(&(r)->pinned);
-	if (pinned == 1)
-		update_detachable(r->size);
-}
-
-long LMAX(long a, long b)
-{
-	return a < b ? b : a;
+static void list_alloced_add(struct gmm_context *ctx, struct region *r){
+    acquire(&ctx->lock_alloced);
+    list_add(&r->entry_alloced, &ctx->list_alloced);
+    release (&ctx->lock_alloced);
 }
 
 int gmm_context_init(){

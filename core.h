@@ -120,7 +120,7 @@ struct gmm_context {
 	struct spinlock lock_attached;
 	struct dma_channel dma_htod;		// HtoD DMA channel
 	struct dma_channel dma_dtoh;		// DtoH DMA channel
-    cl_platform_id platform;
+    cl_platform_id *platform;
     cl_device_id * device;
     cl_context context_kernel;
     cl_command_queue commandQueue_kernel;

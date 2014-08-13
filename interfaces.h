@@ -27,7 +27,7 @@ do{                                             \
 
 
 
-_
+
 
 /* Intercept function func and store its previous value into var */
 #define INTERCEPT_CL(func, var)       \

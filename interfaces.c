@@ -11,7 +11,7 @@
 #include "protocol.h"
 #include "interfaces.h"
 #include "hint.h"
-
+#include "CL/opencl.h"
 
 // Original OpenCL handlers
 //
@@ -77,12 +77,12 @@ void gmm_init(void)
 	do {
         cl_platform_id platform=NULL;
         cl_device_id device=NULL;
-        cl_uint num_platformi=0;
-        cl_uint num_device=0;
+        cl_uint *num_platform;
+        cl_uint *num_device;
         cl_ulong mem;
        
-        clGetPlatformIDs(1,&platform,num_platform);
-        clGetDeviceIDs(platform,CL_DEVICE_TYPE_ALL,sizeof(device),device,&num_Dev);
+        clGetPlatformIDs(1,platform,num_platform);
+        clGetDeviceIDs(platform,CL_DEVICE_TYPE_ALL,sizeof(device),device,num_device);
         clGetDeviceInfo(device,CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem),&mem,NULL);
     
         //ERCI: Currently, unable to find out api to acquire the size of the used mem.
@@ -117,7 +117,7 @@ cl_mem clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void 
     }
     else {
        gprint(WARN,"clCreateBuffer called outside the GMM\N");
-       return ocl_clCreateBuffer(context,flag,size,host_ptr,errcode); 
+       return ocl_clCreateBuffer(context,flags,size,host_ptr,errcode); 
     }
     return  ret;
 }
