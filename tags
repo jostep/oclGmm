@@ -3,44 +3,103 @@
 !_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
-!_TAG_PROGRAM_VERSION	5.8	//
-BUFSIZE	core.h	14;"	d
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+.DEFAULT_GOAL	Makefile	/^.DEFAULT_GOAL := all$/;"	m
+ALIGNUP	core.h	152;"	d
+BLOCKIDX	core.h	149;"	d
+BLOCKMASK	core.h	145;"	d
+BLOCKSHIFT	core.h	144;"	d
+BLOCKSIZE	core.h	143;"	d
+BLOCKUP	core.h	150;"	d
+BUFSIZE	core.h	102;"	d
+BUFSIZE	core2.h	14;"	d
+CC	Makefile	/^CC := gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS := -Wall -pthread -fPIC -fvisibility=hidden \\$/;"	m
+CUDAPATH	Makefile	/^CUDAPATH = \/usr\/local\/cuda-6.0$/;"	m
 DEBUG	common.h	14;"	d
 ERROR	common.h	11;"	d
 FATAL	common.h	10;"	d
+FLAG_COW	hint.h	20;"	d
+FLAG_MEMSET	hint.h	24;"	d
+FLAG_PRINT_BUFFER	Makefile	/^FLAG_PRINT_BUFFER := -DGMM_PRINT_BUFFER$/;"	m
+FLAG_PRINT_BUFFER	Makefile	/^FLAG_PRINT_BUFFER :=$/;"	m
 GBUFFER_SIZE	common.c	35;"	d	file:
+GMM_BUFFER_COW	hint.h	22;"	d
+GMM_CONFIGS	gmm.mk	/^GMM_CONFIGS :=$/;"	m
 GMM_EXPORT	common.h	7;"	d
 GMM_PRINT_LEVEL	common.h	18;"	d
 GMM_PRINT_MSG	common.c	/^char *GMM_PRINT_MSG[PRINT_LEVELS] = {$/;"	v
 GMM_SEM_LAUNCH	protocol.h	74;"	d
 GMM_SHM_GLOBAL	protocol.h	75;"	d
+HINT_DEFAULT	hint.h	9;"	d
+HINT_INPUT	hint.h	6;"	d
+HINT_MASK	hint.h	10;"	d
+HINT_OUTPUT	hint.h	8;"	d
+HINT_PTADEFAULT	hint.h	17;"	d
+HINT_PTAMASK	hint.h	18;"	d
+HINT_PTAREAD	hint.h	15;"	d
+HINT_PTARRAY	hint.h	14;"	d
+HINT_PTAWRITE	hint.h	16;"	d
+HINT_READ	hint.h	5;"	d
+HINT_WRITE	hint.h	7;"	d
 ILIST_ADD	protocol.h	/^static inline void ILIST_ADD(struct gmm_global *p, int inew)$/;"	f
 ILIST_DEL	protocol.h	/^static inline void ILIST_DEL(struct gmm_global *p, int idel)$/;"	f
 ILIST_MOV	protocol.h	/^static inline void ILIST_MOV(struct gmm_global *p, int imov)$/;"	f
 INFO	common.h	13;"	d
 INIT_LIST_HEAD	list.h	/^static inline void INIT_LIST_HEAD(struct list_head *list)$/;"	f
 INTERCEPT_CL	interfaces.h	33;"	d
+LDFLAGS	Makefile	/^LDFLAGS := -shared -pthread -ldl -fPIC -OpenCL$/;"	m
+LIBGMM	Makefile	/^LIBGMM = libgmm.so$/;"	m
+LMAX	core.c	/^long LMAX(long a, long b)$/;"	f
+LOWER_PAGE	core.h	139;"	d
+MIN	core.h	141;"	d
 MSG_REP_ACK	protocol.h	/^	MSG_REP_ACK,$/;"	e	enum:msgtype
 MSG_REQ_EVICT	protocol.h	/^	MSG_REQ_EVICT,$/;"	e	enum:msgtype
-NBUFS	core.h	13;"	d
+NBUFS	core.h	101;"	d
+NBUFS	core2.h	13;"	d
 NCLIENTS	protocol.h	12;"	d
+NRBLOCKS	core.h	148;"	d
+NREFS	core.h	66;"	d
+OBJS	Makefile	/^OBJS = $(SRCS:.c=.o)$/;"	m
 OFFSETOF	list.h	85;"	d
 OPENCL_PATH	interfaces.h	16;"	d
+PAGEMASK	core.h	137;"	d
+PRINT_LEVEL	gmm.mk	/^PRINT_LEVEL = 4$/;"	m
 PRINT_LEVELS	common.h	15;"	d
+PRIO_DEFAULT	hint.h	28;"	d
+PRIO_LOWEST	hint.h	27;"	d
+SRCS	Makefile	/^SRCS = client.c common.c core.c interfaces.c msq.c replacement.c stats.c debug.c$/;"	m
 STAT	common.h	9;"	d
+STATE_ATTACHED	core.h	/^	STATE_ATTACHED,			\/\/ object allocated with device memory$/;"	e	enum:region_state
+STATE_ATTACHED	core2.h	/^    STATE_ATTACHED,$/;"	e	enum:region_state
+STATE_DETACHED	core.h	/^	STATE_DETACHED = 0,		\/\/ object not allocated with device memory$/;"	e	enum:region_state
+STATE_DETACHED	core2.h	/^    STATE_DETACHED=0,$/;"	e	enum:region_state
+STATE_EVICTING	core.h	/^	STATE_EVICTING,			\/\/ object being evicted$/;"	e	enum:region_state
+STATE_EVICTING	core2.h	/^    STATE_EVICTING,$/;"	e	enum:region_state
+STATE_FREEING	core.h	/^	STATE_FREEING,			\/\/ object being freed$/;"	e	enum:region_state
+STATE_FREEING	core2.h	/^    STATE_FREEING,$/;"	e	enum:region_state
+STATE_ZOMBIE	core.h	/^	STATE_ZOMBIE			\/\/ object waiting to be GC'ed$/;"	e	enum:region_state
+STATE_ZOMBIE	core2.h	/^    STATE_ZOMBIE$/;"	e	enum:region_state
 TDIFF	stats.h	53;"	d
 TREAT_ERROR	interfaces.h	18;"	d
 TRY_ACQUIRE_TIMES	spinlock.h	42;"	d
 TVAL	stats.h	52;"	d
+UPPER_PAGE	core.h	138;"	d
+USE_PRINT_BUFFER	gmm.mk	/^USE_PRINT_BUFFER = 0$/;"	m
 WARN	common.h	12;"	d
 _GMM_ATOMIC_H_	atomic.h	2;"	d
 _GMM_CLIENT_H_	client.h	2;"	d
 _GMM_COMMON_H_	common.h	2;"	d
 _GMM_CORE_H_	core.h	2;"	d
+_GMM_CORE_H_	core2.h	2;"	d
+_GMM_DEBUG_H_	debug.h	2;"	d
+_GMM_HINT_H_	hint.h	2;"	d
+_GMM_H_	gmm.h	3;"	d
 _GMM_INTERFACES_H_	interfaces.h	2;"	d
 _GMM_LIST_H_	list.h	2;"	d
 _GMM_MSQ_H_	msq.h	2;"	d
 _GMM_PROTOCOL_H_	protocol.h	4;"	d
+_GMM_REPLACEMENT_H_	replacement.h	2;"	d
 _GMM_SPINLOCK_H_	spinlock.h	3;"	d
 _GMM_STATS_H_	stats.h	2;"	d
 _GNU_SOURCE	common.h	60;"	d
@@ -49,6 +108,11 @@ __list_add	list.h	/^static inline void __list_add($/;"	f
 __list_del	list.h	/^static inline void __list_del(struct list_head * prev, struct list_head * next)$/;"	f
 ack	msq.c	/^long ack = 0;	\/\/ it's meaning depends on the message;$/;"	v
 acquire	spinlock.h	/^static inline void acquire(struct spinlock *lk)$/;"	f
+arg	core.h	/^	void *arg;$/;"	m	struct:ndptr_arg
+arg	core.h	/^	} arg;$/;"	m	struct:karg	typeref:union:karg::__anon1
+arg1	core.h	/^		struct dptr_arg arg1;$/;"	m	union:karg::__anon1	typeref:struct:karg::__anon1::dptr_arg
+arg2	core.h	/^		struct ndptr_arg arg2;$/;"	m	union:karg::__anon1	typeref:struct:karg::__anon1::ndptr_arg
+argoff	core.h	/^	size_t argoff;$/;"	m	struct:karg
 atomic_add	atomic.h	/^static inline int atomic_add(atomic_t *ptr, int val)$/;"	f
 atomic_dec	atomic.h	/^static inline int atomic_dec(atomic_t *ptr)$/;"	f
 atomic_inc	atomic.h	/^static inline int atomic_inc(atomic_t *ptr)$/;"	f
@@ -56,8 +120,11 @@ atomic_read	atomic.h	/^static inline int atomic_read(atomic_t *ptr)$/;"	f
 atomic_set	atomic.h	/^static inline void atomic_set(atomic_t *ptr, int val)$/;"	f
 atomic_sub	atomic.h	/^static inline int atomic_sub(atomic_t *ptr, int val)$/;"	f
 atomic_t	atomic.h	/^typedef volatile int atomic_t;$/;"	t
+block	core.h	/^struct block {$/;"	s
+block	core2.h	/^struct block{$/;"	s
 block	protocol.h	/^	int block;$/;"	m	struct:msg_req
-blocks	core.h	/^    struct block *blocks;$/;"	m	struct:region	typeref:struct:region::block
+blocks	core.h	/^	struct block *blocks;	\/\/ device memory blocks$/;"	m	struct:region	typeref:struct:region::block
+blocks	core2.h	/^    struct block *blocks;$/;"	m	struct:region	typeref:struct:region::block
 bytes_d2s	stats.h	/^	long bytes_d2s;				\/\/ device to swap buffer$/;"	m	struct:statistics
 bytes_dtod	stats.h	/^	long bytes_dtod;			\/\/ # of bytes going through the dtod API$/;"	m	struct:statistics
 bytes_dtoh	stats.h	/^	long bytes_dtoh;			\/\/ # of bytes going through the dtoh API$/;"	m	struct:statistics
@@ -77,7 +144,9 @@ bytes_u2s	stats.h	/^	long bytes_u2s;				\/\/ user buffer to swap buffer$/;"	m	st
 cid	client.c	/^int cid = -1;						\/\/ Id of this client$/;"	v
 cidtopid	client.c	/^pid_t cidtopid(int cid)$/;"	f
 clCreateBuffer	interfaces.c	/^cl_mem clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int *errcode){$/;"	f
+clCreateContext	interfaces.c	/^cl_context clCreateContext( cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){$/;"	f
 clReleaseMemObject	interfaces.c	/^cl_int clReleaseMemObject(cl_mem memObj){$/;"	f
+client	core.h	/^	int client;				\/\/ for a remote victim$/;"	m	struct:victim
 client_alloc	client.c	/^static int client_alloc()$/;"	f	file:
 client_attach	client.c	/^int client_attach()$/;"	f
 client_detach	client.c	/^void client_detach() {$/;"	f
@@ -85,41 +154,69 @@ client_free	client.c	/^static void client_free(int id)$/;"	f	file:
 client_lru_detachable	client.c	/^int client_lru_detachable()$/;"	f
 client_unpin	client.c	/^void client_unpin(int client)$/;"	f
 clients	protocol.h	/^	struct gmm_client clients[NCLIENTS];$/;"	m	struct:gmm_global	typeref:struct:gmm_global::gmm_client
-commandQueue_chan	core.h	/^    cl_command_queue commandQueue_chan;\/\/stream$/;"	m	struct:dma_channel
+commandQueue_chan	core.h	/^    cl_command_queue commandQueue_chan;$/;"	m	struct:dma_channel
+commandQueue_chan	core2.h	/^    cl_command_queue commandQueue_chan;\/\/stream$/;"	m	struct:dma_channel
 commandQueue_kernel	core.h	/^    cl_command_queue commandQueue_kernel;$/;"	m	struct:gmm_context
+commandQueue_kernel	core2.h	/^    cl_command_queue commandQueue_kernel;$/;"	m	struct:gmm_context
 cond_ack	msq.c	/^pthread_cond_t cond_ack;$/;"	v
 context_kernel	core.h	/^    cl_context context_kernel;$/;"	m	struct:gmm_context
+context_kernel	core2.h	/^    cl_context context_kernel;$/;"	m	struct:gmm_context
 count_attach_fail	stats.h	/^	long count_attach_fail;		\/\/ # of failed attach$/;"	m	struct:statistics
 count_evict_fail	stats.h	/^	long count_evict_fail;		\/\/ # of failed evictions in gmm_evict$/;"	m	struct:statistics
 count_evict_victims	stats.h	/^	long count_evict_victims;	\/\/ # of evicted victim regions$/;"	m	struct:statistics
-dev_addr	core.h	/^    cl_mem *dev_addr;$/;"	m	struct:region
-device	core.h	/^    cl_device_id *device;$/;"	m	struct:gmm_context
-dma_channel	core.h	/^struct dma_channel{$/;"	s
+cudaMemcpyHostToDeviceCow	hint.h	21;"	d
+dev_addr	core.h	/^	cl_mem *dev_addr;			\/\/ device memory address$/;"	m	struct:region
+dev_addr	core2.h	/^    cl_mem *dev_addr;$/;"	m	struct:region
+dev_valid	core.h	/^	int dev_valid;			\/\/ if data copy on device is valid$/;"	m	struct:block
+dev_valid	core2.h	/^ int dev_valid;$/;"	m	struct:block
+device	core.h	/^    cl_device_id * device;$/;"	m	struct:gmm_context
+device	core2.h	/^    cl_device_id *device;$/;"	m	struct:gmm_context
+dma_channel	core.h	/^struct dma_channel {$/;"	s
+dma_channel	core2.h	/^struct dma_channel{$/;"	s
 dma_channel_fini	core.c	/^static void dma_channel_fini(struct dma_channel *chan){$/;"	f	file:
-dma_channel_init	core.c	/^static int dma_channel_init(struct dma_channel *chan, int htod){$/;"	f	file:
-dma_dtoh	core.h	/^    struct dma_channel dma_dtoh;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::dma_channel
-dma_htod	core.h	/^    struct dma_channel dma_htod;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::dma_channel
-entry_alloced	core.h	/^    struct list_head entry_alloced;$/;"	m	struct:region	typeref:struct:region::list_head
-entry_attached	core.h	/^    struct list_head entry_attached;$/;"	m	struct:region	typeref:struct:region::list_head
-errcode	core.c	/^cl_int *errcode=NULL;$/;"	v
-events	core.h	/^    cl_event events[NBUFS];$/;"	m	struct:dma_channel
+dma_channel_init	core.c	/^static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, int htod){$/;"	f	file:
+dma_dtoh	core.h	/^	struct dma_channel dma_dtoh;		\/\/ DtoH DMA channel$/;"	m	struct:gmm_context	typeref:struct:gmm_context::dma_channel
+dma_dtoh	core2.h	/^    struct dma_channel dma_dtoh;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::dma_channel
+dma_htod	core.h	/^	struct dma_channel dma_htod;		\/\/ HtoD DMA channel$/;"	m	struct:gmm_context	typeref:struct:gmm_context::dma_channel
+dma_htod	core2.h	/^    struct dma_channel dma_htod;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::dma_channel
+dptr	core.h	/^	void *dptr;				\/\/ the actual device memory address$/;"	m	struct:dptr_arg
+dptr_arg	core.h	/^struct dptr_arg {$/;"	s
+entry	core.h	/^	struct list_head entry;$/;"	m	struct:victim	typeref:struct:victim::list_head
+entry_alloced	core.h	/^	struct list_head entry_alloced;		\/\/ linked to the list of allocated$/;"	m	struct:region	typeref:struct:region::list_head
+entry_alloced	core2.h	/^    struct list_head entry_alloced;$/;"	m	struct:region	typeref:struct:region::list_head
+entry_attached	core.h	/^	struct list_head entry_attached;	\/\/ linked to the list of attached$/;"	m	struct:region	typeref:struct:region::list_head
+entry_attached	core2.h	/^    struct list_head entry_attached;$/;"	m	struct:region	typeref:struct:region::list_head
+events	core.h	/^	cl_event events[NBUFS];	\/\/ Events for syncing staging buffers$/;"	m	struct:dma_channel
+events	core2.h	/^    cl_event events[NBUFS];$/;"	m	struct:dma_channel
+flags	core.h	/^	int flags;				\/\/ RW hints$/;"	m	struct:dptr_arg
+flags	core.h	/^	int flags;$/;"	m	struct:rwhint
+flags	core.h	/^	int flags[NREFS];			\/\/ is each region read\/modified by the kernel?$/;"	m	struct:kcb
 flags	core.h	/^    cl_mem_flags flags;$/;"	m	struct:region
-flags	core.h	/^    int flags;$/;"	m	struct:rwhint
+flags	core2.h	/^    cl_mem_flags flags;$/;"	m	struct:region
+flags	core2.h	/^    int flags;$/;"	m	struct:rwhint
 from	protocol.h	/^	int from;$/;"	m	struct:msg_rep
 from	protocol.h	/^	int from;$/;"	m	struct:msg_req
 getcid	client.c	/^int getcid()$/;"	f
 gettid	common.h	/^static inline pid_t gettid()$/;"	f
 gmm_clCreateBuffer	core.c	/^cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int* errcode_CB, int gmm_flags){$/;"	f
-gmm_clReleaseMemObject	core.c	/^cl_int gmm_clReleaseMemObject(cl_mem *memObj){$/;"	f
+gmm_clCreateContext	core.c	/^cl_context gmm_clCreateContext( cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){$/;"	f
+gmm_clReleaseMemObject	core.c	/^cl_int gmm_clReleaseMemObject(cl_mem *memObjPtr){$/;"	f
 gmm_client	protocol.h	/^struct gmm_client {$/;"	s
-gmm_context	core.h	/^struct gmm_context{$/;"	s
+gmm_context	core.h	/^struct gmm_context {$/;"	s
+gmm_context	core2.h	/^struct gmm_context{$/;"	s
 gmm_context_fini	core.c	/^void gmm_context_fini(){$/;"	f
 gmm_context_init	core.c	/^int gmm_context_init(){$/;"	f
+gmm_context_initEX	core.c	/^void gmm_context_initEX(){$/;"	f
+gmm_dump_dptr	debug.c	/^void gmm_dump_dptr(const char *filepath, const void *dptr, const size_t size)$/;"	f
+gmm_dump_region	debug.c	/^void gmm_dump_region($/;"	f
 gmm_fini	interfaces.c	/^void gmm_fini(void)$/;"	f
-gmm_flags	core.h	/^    int gmm_flags;$/;"	m	struct:region
+gmm_flags	core.h	/^	int gmm_flags;$/;"	m	struct:region
+gmm_flags	core2.h	/^    int gmm_flags;$/;"	m	struct:region
 gmm_free	core.c	/^static int gmm_free(struct region *r){$/;"	f	file:
 gmm_global	protocol.h	/^struct gmm_global {$/;"	s
 gmm_init	interfaces.c	/^void gmm_init(void)$/;"	f
+gmm_print_dptr	debug.c	/^void gmm_print_dptr(const void *dptr)$/;"	f
+gmm_print_region	debug.c	/^void gmm_print_region(void *rgn)$/;"	f
 gprint	common.h	32;"	d
 gprint	common.h	48;"	d
 gprint_buffer	common.c	/^char *gprint_buffer = NULL;$/;"	v
@@ -130,15 +227,21 @@ gprint_lines	common.c	/^int gprint_lines = 0;$/;"	v
 gprint_lock	common.c	/^struct spinlock gprint_lock;$/;"	v	typeref:struct:spinlock
 handle_rep_ack	msq.c	/^void handle_rep_ack(struct msg_rep *msg)$/;"	f
 handle_req_evict	msq.c	/^void handle_req_evict(struct msg_req *msg)$/;"	f
-ibuf	core.h	/^    int ibuf;$/;"	m	struct:dma_channel
+ibuf	core.h	/^	int ibuf;					\/\/ The next staging buffer to be used$/;"	m	struct:dma_channel
+ibuf	core2.h	/^    int ibuf;$/;"	m	struct:dma_channel
 ilru	protocol.h	/^	int ilru;$/;"	m	struct:gmm_global
 imru	protocol.h	/^	int imru;$/;"	m	struct:gmm_global
 index	protocol.h	/^	int index;					\/\/ index of this client; -1 means unoccupied$/;"	m	struct:gmm_client
 inext	protocol.h	/^	int inext;					\/\/ index of the next client in the LRU list$/;"	m	struct:gmm_client
+info	server.c	/^int info()$/;"	f
 initialized	interfaces.c	/^static int initialized = 0;$/;"	v	file:
 initlock	spinlock.h	/^static inline void initlock(struct spinlock *lk)$/;"	f
 iprev	protocol.h	/^	int iprev;					\/\/ index of the previous client in the LRU list$/;"	m	struct:gmm_client
 is_client_local	client.c	/^int is_client_local(int client)$/;"	f
+is_dptr	core.h	/^	char is_dptr;$/;"	m	struct:karg
+is_included	core.h	/^static inline int is_included(void **a, int n, void *p)$/;"	f
+karg	core.h	/^struct karg {$/;"	s
+kcb	core.h	/^struct kcb {$/;"	s
 latomic_add	atomic.h	/^static inline long latomic_add(latomic_t *ptr, long val)$/;"	f
 latomic_dec	atomic.h	/^static inline long latomic_dec(latomic_t *ptr)$/;"	f
 latomic_inc	atomic.h	/^static inline long latomic_inc(latomic_t *ptr)$/;"	f
@@ -150,9 +253,15 @@ launch_signal	client.c	/^void launch_signal()$/;"	f
 launch_wait	client.c	/^void launch_wait()$/;"	f
 list_add	list.h	/^static inline void list_add(struct list_head *add, struct list_head *head)$/;"	f
 list_add_tail	list.h	/^static inline void list_add_tail(struct list_head *add, struct list_head *head)$/;"	f
-list_allocated	core.h	/^    struct list_head list_allocated;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::list_head
-list_alloced_add	core.c	/^static void list_alloced_add(struct gmm_context *ctx, struct region *r){$/;"	f	file:
-list_attached	core.h	/^    struct list_head list_attached;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::list_head
+list_alloced	core.h	/^	struct list_head list_alloced;		\/\/ List of all allocated mem regions$/;"	m	struct:gmm_context	typeref:struct:gmm_context::list_head
+list_alloced	core2.h	/^    struct list_head list_alloced;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::list_head
+list_alloced_add	core.c	/^static void list_alloced_add(struct gmm_context *ctx, struct region *r)$/;"	f	file:
+list_alloced_del	core.c	/^static void list_alloced_del(struct gmm_context *ctx, struct region *r)$/;"	f	file:
+list_attached	core.h	/^	struct list_head list_attached;		\/\/ LRU list of attached mem regions$/;"	m	struct:gmm_context	typeref:struct:gmm_context::list_head
+list_attached	core2.h	/^    struct list_head list_attached;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::list_head
+list_attached_add	core.c	/^static void list_attached_add(struct gmm_context *ctx, struct region *r)$/;"	f	file:
+list_attached_del	core.c	/^static void list_attached_del(struct gmm_context *ctx, struct region *r)$/;"	f	file:
+list_attached_mov	core.c	/^static void list_attached_mov(struct gmm_context *ctx, struct region *r)$/;"	f	file:
 list_del	list.h	/^static inline void list_del(struct list_head *entry)$/;"	f
 list_empty	list.h	/^static inline int list_empty(const struct list_head *head)$/;"	f
 list_entry	list.h	88;"	d
@@ -161,14 +270,23 @@ list_for_each_prev	list.h	76;"	d
 list_head	list.h	/^struct list_head {$/;"	s
 list_move	list.h	/^static inline void list_move(struct list_head *list, struct list_head *head)$/;"	f
 list_move_tail	list.h	/^static inline void list_move_tail($/;"	f
-lock	core.h	/^    struct spinlock lock;$/;"	m	struct:dma_channel	typeref:struct:dma_channel::spinlock
-lock	core.h	/^    struct spinlock lock;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::spinlock
-lock	core.h	/^    struct spinlock lock;$/;"	m	struct:region	typeref:struct:region::spinlock
+lock	core.h	/^	struct spinlock lock;				\/\/ TODO: what's the use of this lock??$/;"	m	struct:gmm_context	typeref:struct:gmm_context::spinlock
+lock	core.h	/^	struct spinlock lock;	\/\/ r\/w lock$/;"	m	struct:block	typeref:struct:block::spinlock
+lock	core.h	/^	struct spinlock lock;	\/\/ the lock that protects memory object state$/;"	m	struct:region	typeref:struct:region::spinlock
+lock	core.h	/^	struct spinlock lock;$/;"	m	struct:dma_channel	typeref:struct:dma_channel::spinlock
+lock	core2.h	/^    struct spinlock lock;$/;"	m	struct:dma_channel	typeref:struct:dma_channel::spinlock
+lock	core2.h	/^    struct spinlock lock;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::spinlock
+lock	core2.h	/^    struct spinlock lock;$/;"	m	struct:region	typeref:struct:region::spinlock
+lock	core2.h	/^ struct spinlock lock;$/;"	m	struct:block	typeref:struct:block::spinlock
 lock	protocol.h	/^	struct spinlock lock;		\/\/ This lock works only when the hardware cache$/;"	m	struct:gmm_global	typeref:struct:gmm_global::spinlock
 lock	stats.h	/^	struct spinlock lock;$/;"	m	struct:statistics	typeref:struct:statistics::spinlock
-lock_alloced	core.h	/^    struct spinlock lock_alloced;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::spinlock
-lock_attached	core.h	/^    struct spinlock lock_attached;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::spinlock
+lock_alloced	core.h	/^	struct spinlock lock_alloced;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::spinlock
+lock_alloced	core2.h	/^    struct spinlock lock_alloced;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::spinlock
+lock_attached	core.h	/^	struct spinlock lock_attached;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::spinlock
+lock_attached	core2.h	/^    struct spinlock lock_attached;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::spinlock
 locked	spinlock.h	/^	unsigned int locked;$/;"	m	struct:spinlock
+main	oclTest/test.c	/^int main(){$/;"	f
+main	server.c	/^int main(int argc, char *argv[])$/;"	f
 mem_total	protocol.h	/^	long mem_total;				\/\/ Total size of device memory.$/;"	m	struct:gmm_global
 mem_used	protocol.h	/^	latomic_t mem_used;			\/\/ Size of used (attached) device memory$/;"	m	struct:gmm_global
 memsize_free	client.c	/^long memsize_free()$/;"	f
@@ -186,39 +304,70 @@ msq_send_rep_ack	msq.c	/^int msq_send_rep_ack(int client, long ack)$/;"	f
 msq_send_req_evict	msq.c	/^long msq_send_req_evict(int client, long size_needed, int block)$/;"	f
 mutx_ack	msq.c	/^pthread_mutex_t mutx_ack;$/;"	v
 nclients	protocol.h	/^	int nclients;$/;"	m	struct:gmm_global
+ndptr_arg	core.h	/^struct ndptr_arg {$/;"	s
 next	list.h	/^	struct list_head *next;$/;"	m	struct:list_head	typeref:struct:list_head::list_head
+nrgns	core.h	/^	int nrgns;					\/\/ Number of regions referenced$/;"	m	struct:kcb
 ocl_clCreateBuffer	interfaces.c	/^cl_mem (*ocl_clCreateBuffer)(cl_context, cl_mem_flags, size_t, void*, cl_int)= NULL;$/;"	v
+ocl_clCreateContext	interfaces.c	/^cl_context (*ocl_clCreateContext)( cl_context_properties *,cl_uint ,const cl_device_id *,void * (const char *, const void *, size_t , void *), void *,cl_int *)=NULL;$/;"	v
 ocl_clReleaseMemObject	interfaces.c	/^cl_int (*ocl_clReleaseMemObject)(cl_mem)= NULL;$/;"	v
+off	core.h	/^	unsigned long off;		\/\/ device pointer offset in the region$/;"	m	struct:dptr_arg
 panic	common.c	/^void panic(char *msg)$/;"	f
 pcontext	core.c	/^struct gmm_context *pcontext=NULL;$/;"	v	typeref:struct:gmm_context
 pglobal	client.c	/^struct gmm_global *pglobal = NULL;	\/\/ Global shared memory$/;"	v	typeref:struct:gmm_global
 pid	protocol.h	/^	pid_t pid;$/;"	m	struct:gmm_client
-pinned	core.h	/^    atomic_t pinned;$/;"	m	struct:region
+pinned	core.h	/^	atomic_t pinned;		\/\/ atomic pin counter$/;"	m	struct:region
+pinned	core2.h	/^    atomic_t pinned;$/;"	m	struct:region
 pinned	protocol.h	/^	int pinned;$/;"	m	struct:gmm_client
-platform	core.h	/^    cl_platform_id platform;$/;"	m	struct:gmm_context
+platform	core.h	/^    cl_platform_id *platform;$/;"	m	struct:gmm_context
+platform	core2.h	/^    cl_platform_id platform;$/;"	m	struct:gmm_context
 prev	list.h	/^	struct list_head *prev;$/;"	m	struct:list_head	typeref:struct:list_head::list_head
-pta_addr	core.h	/^    cl_mem *pta_addr;$/;"	m	struct:region
-reading	core.h	/^    atomic_t reading;$/;"	m	struct:region
-region	core.h	/^struct region{$/;"	s
+pta_addr	core.h	/^	cl_mem *pta_addr;			\/\/ dptr array address$/;"	m	struct:region
+pta_addr	core2.h	/^    cl_mem *pta_addr;$/;"	m	struct:region
+r	core.h	/^	struct region *r;		\/\/ for a local victim$/;"	m	struct:victim	typeref:struct:victim::region
+r	core.h	/^	struct region *r;		\/\/ the region this argument points to$/;"	m	struct:dptr_arg	typeref:struct:dptr_arg::region
+reading	core.h	/^	atomic_t reading;		\/\/ being read by how many kernels$/;"	m	struct:region
+reading	core2.h	/^    atomic_t reading;$/;"	m	struct:region
+region	core.h	/^struct region {$/;"	s
+region	core2.h	/^struct region{$/;"	s
+region_inval	core.h	/^static inline void region_inval(struct region *r, int swp)$/;"	f
 region_lookup	core.c	/^struct region * region_lookup(struct gmm_context *ctx, const cl_mem *ptr){$/;"	f
-region_pinned	core.h	15;"	d
+region_pin	core.c	/^static inline void region_pin(struct region *r)$/;"	f	file:
+region_pinned	core.h	156;"	d
+region_pinned	core2.h	15;"	d
+region_state	core.h	/^typedef enum region_state {$/;"	g
+region_state	core2.h	/^typedef enum region_state{$/;"	g
+region_state_t	core.h	/^} region_state_t;$/;"	t	typeref:enum:region_state
+region_state_t	core2.h	/^}region_state_t;$/;"	t	typeref:enum:region_state
+region_unpin	core.c	/^static inline void region_unpin(struct region *r)$/;"	f	file:
+region_valid	core.h	/^static inline void region_valid(struct region *r, int swp)$/;"	f
 release	spinlock.h	/^static inline void release(struct spinlock *lk)$/;"	f
+restart	server.c	/^int restart(size_t mem_total)$/;"	f
 ret	protocol.h	/^	long ret;$/;"	m	struct:msg_rep
-rwhint	core.h	/^    struct rwhint rwhint;$/;"	m	struct:region	typeref:struct:region::rwhint
-rwhint	core.h	/^struct rwhint{$/;"	s
+rgns	core.h	/^	struct region *rgns[NREFS];	\/\/ Regions referenced by the kernel$/;"	m	struct:kcb	typeref:struct:kcb::region
+rwhint	core.h	/^	struct rwhint rwhint;	\/\/ rw hint$/;"	m	struct:region	typeref:struct:region::rwhint
+rwhint	core.h	/^struct rwhint {$/;"	s
+rwhint	core2.h	/^    struct rwhint rwhint;$/;"	m	struct:region	typeref:struct:region::rwhint
+rwhint	core2.h	/^struct rwhint{$/;"	s
 sem_launch	client.c	/^sem_t *sem_launch = SEM_FAILED;		\/\/ Guarding kernel launches$/;"	v
 show_stackframe	common.c	/^static void show_stackframe() {$/;"	f	file:
-size	core.h	/^    long size;$/;"	m	struct:region
+size	core.h	/^	long size;				\/\/ size of the object in bytes$/;"	m	struct:region
+size	core.h	/^	size_t size;$/;"	m	struct:karg
+size	core2.h	/^    long size;$/;"	m	struct:region
 size	protocol.h	/^	int size;$/;"	m	struct:msg
 size	protocol.h	/^	int size;$/;"	m	struct:msg_rep
 size	protocol.h	/^	int size;$/;"	m	struct:msg_req
+size_attached	core.h	/^	latomic_t size_attached;			\/\/ Total size of attached mem regions$/;"	m	struct:gmm_context
 size_detachable	protocol.h	/^	latomic_t size_detachable;$/;"	m	struct:gmm_client
 size_needed	protocol.h	/^	long size_needed;$/;"	m	struct:msg_req
 spinlock	spinlock.h	/^struct spinlock {$/;"	s
-stage_bufs	core.h	/^    void *stage_bufs[NBUFS];$/;"	m	struct:dma_channel
-state	core.h	/^    region_state_t state;$/;"	m	struct:region
+stage_bufs	core.h	/^	void *stage_bufs[NBUFS];	\/\/ Host-pinned staging buffers$/;"	m	struct:dma_channel
+stage_bufs	core2.h	/^    void *stage_bufs[NBUFS];$/;"	m	struct:dma_channel
+start	server.c	/^int start(size_t mem_total)$/;"	f
+state	core.h	/^	region_state_t state;	\/\/ state of the object$/;"	m	struct:region
+state	core2.h	/^    region_state_t state;$/;"	m	struct:region
 statistics	stats.h	/^struct statistics {$/;"	s
-stats	core.h	/^    struct statistics stats;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::statistics
+stats	core.h	/^	struct statistics stats;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::statistics
+stats	core2.h	/^    struct statistics stats;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::statistics
 stats_inc	stats.h	128;"	d
 stats_inc	stats.h	78;"	d
 stats_inc_alloc	stats.h	126;"	d
@@ -237,7 +386,11 @@ stats_time_begin	stats.h	129;"	d
 stats_time_begin	stats.h	87;"	d
 stats_time_end	stats.h	130;"	d
 stats_time_end	stats.h	92;"	d
-swp_addr	core.h	/^    cl_mem *swp_addr;$/;"	m	struct:region
+stop	server.c	/^int stop()$/;"	f
+swp_addr	core.h	/^	cl_mem *swp_addr;			\/\/ host swap buffer address$/;"	m	struct:region
+swp_addr	core2.h	/^    cl_mem *swp_addr;$/;"	m	struct:region
+swp_valid	core.h	/^	int swp_valid;			\/\/ if data copy in host swap buffer is valid$/;"	m	struct:block
+swp_valid	core2.h	/^ int swp_valid;$/;"	m	struct:block
 thread_msq_listener	msq.c	/^void *thread_msq_listener(void *arg)$/;"	f
 tid_msq	msq.c	/^pthread_t tid_msq;$/;"	v
 time_attach	stats.h	/^	double time_attach;			\/\/ Time on attaching (gmm_attach)$/;"	m	struct:statistics
@@ -261,7 +414,15 @@ type	protocol.h	/^	int type;$/;"	m	struct:msg_rep
 type	protocol.h	/^	int type;$/;"	m	struct:msg_req
 update_attached	client.c	/^void update_attached(long delta)$/;"	f
 update_detachable	client.c	/^void update_detachable(long delta)$/;"	f
-usr_addr	core.h	/^    cl_mem *usr_addr;$/;"	m	struct:region
-value_memset	core.h	/^    int  value_memset;$/;"	m	struct:region
-writing	core.h	/^    atomic_t writing;$/;"	m	struct:region
+usr_addr	core.h	/^	cl_mem *usr_addr;			\/\/ copy-on-write user address$/;"	m	struct:region
+usr_addr	core2.h	/^    cl_mem *usr_addr;$/;"	m	struct:region
+value_memset	core.h	/^	int value_memset;		\/\/ value of cudaMemset$/;"	m	struct:region
+value_memset	core2.h	/^    int  value_memset;$/;"	m	struct:region
+verbose	server.c	/^int verbose = 0;$/;"	v
+victim	core.h	/^struct victim {$/;"	s
+victim_select_lfu	replacement.c	/^int victim_select_lfu($/;"	f
+victim_select_lru	replacement.c	/^int victim_select_lru($/;"	f
+victim_select_lru_local	replacement.c	/^int victim_select_lru_local($/;"	f
+writing	core.h	/^	atomic_t writing;		\/\/ being written by how many kernels$/;"	m	struct:region
+writing	core2.h	/^    atomic_t writing;$/;"	m	struct:region
 xchg	spinlock.h	/^static inline unsigned int xchg($/;"	f

@@ -1,6 +1,6 @@
 include gmm.mk
 
-# Specify CUDA install path here
+## Specify CUDA install path here
 CUDAPATH = /usr/local/cuda-6.0
 
 # Name of the GMM shared library

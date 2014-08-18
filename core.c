@@ -24,7 +24,8 @@ static int gmm_free(struct region *m);
 extern cl_mem (*ocl_clCreateMemBuffer)(cl_context , cl_mem_flags, size_t, void *, cl_int*);
 extern cl_int (*ocl_clReleaseMemObject)(cl_mem);
 extern cl_int (*ocl_clReleaseCommandQueue)(cl_command_queue);
-extern cl_command_queue (*ocl_clCreateCommandQueue)(cl_context context, cl_device_id device,cl_command_queue_properties properties,cl_int *errcode_ret);
+extern cl_context(*ocl_clCreateContext)(cl_context_properties * ,cl_uint ,const cl_device_id *,void *(const char*, const void*,size_t, void*), void *,cl_int*);
+extern cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id,cl_command_queue_properties,cl_int *);
 
 struct region * region_lookup(struct gmm_context *ctx, const cl_mem *ptr);
 
@@ -87,10 +88,7 @@ long LMAX(long a, long b)
 }
 
 int gmm_context_init(){
-    cl_int *errcode_CON=NULL;
-    cl_int *errcode_CQ=NULL;
-    cl_uint *numDevices; 
-    cl_uint numPlatform=1;
+
     if(pcontext!=NULL){ 
         gprint(FATAL,"pcontext already exists!\n");
         return -1;
@@ -101,7 +99,7 @@ int gmm_context_init(){
         gprint(FATAL,"malloc failed for pcontext: %s\n",strerror(errno));
         return -1;
     }
-
+    /*
     //get platform and id for the pcontext,then create corresponding context and CQ for
     //the pcontext.
     if(clGetPlatformIDs(numPlatform,pcontext->platform,NULL)!=CL_SUCCESS){
@@ -117,7 +115,7 @@ int gmm_context_init(){
 
         gprint(FATAL,"failed to create context\n");
     }
-
+    */
     initlock(&pcontext->lock);
     latomic_set(&pcontext->size_attached,0L);
     INIT_LIST_HEAD(&pcontext->list_alloced);
@@ -125,6 +123,14 @@ int gmm_context_init(){
     initlock(&pcontext->lock_alloced);
     initlock(&pcontext->lock_attached);
 
+
+    stats_init(&pcontext->stats);
+    return 0;
+}
+
+void gmm_context_initEX(){
+   
+    cl_int * errcode_CQ=NULL; 
     //failed to show the diff between htod and dtoh 
     if(dma_channel_init(pcontext,&pcontext->dma_htod,1)!=0){
         gprint(FATAL,"failed to create HtoD DMA channel\n");
@@ -139,15 +145,13 @@ int gmm_context_init(){
         pcontext=NULL;
         return -1;
     }
-    pcontext->commandQueue_kernel=clCreateCommandQueue(pcontext->context_kernel,pcontext->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_CQ);// add error handler;ERCI
+    pcontext->commandQueue_kernel=clCeateCommandQueue(pcontext->context_kernel,pcontext->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_CQ);// add error handler;ERCI
     if (errcode_CQ!=CL_SUCCESS){
         
-        gprint(FATAL,"failed to create context\n");
+        gprint(FATAL,"failed to create command queue\n");
     } 
-
-    stats_init(&pcontext->stats);
-    return 0;
 }
+
 
 void gmm_context_fini(){
 
@@ -172,6 +176,12 @@ void gmm_context_fini(){
     pcontext=NULL;
 }
 
+cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){
+    pcontext->device=devices;
+    pcontext->context_kernel=ocl_clCreateContext(properties,num_devices,devices,pfn_notify (errinfo, private_info,cb,user_data),user_data,errcode_ret);
+    gmm_context_initEX();//finishing the init process of gmm_context
+    return pcontext->context_kernel;
+}
 
 cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int* errcode_CB, int gmm_flags){
     struct region *r;

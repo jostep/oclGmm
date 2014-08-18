@@ -22,7 +22,7 @@ cudaError_t (*nv_cudaFree)(void *) = NULL;
 
 cl_mem (*ocl_clCreateBuffer)(cl_context, cl_mem_flags, size_t, void*, cl_int)= NULL;
 cl_int (*ocl_clReleaseMemObject)(cl_mem)= NULL;
-
+cl_context (*ocl_clCreateContext)(cl_context_properties *,cl_uint ,const cl_device_id *,void *(const char * , const void* , size_t , void * ), void *,cl_int *)=NULL;
 static int initialized = 0;
 
 // The library constructor.
@@ -39,21 +39,7 @@ void gmm_init(void)
 {
 	INTERCEPT_CL("clCreateBuffer", ocl_clCreateBuffer);
 	INTERCEPT_CL("clReleaseMemObject",ocl_clReleaseMemObject);
-	
-    /*INTERCEPT_CUDA("cudaMemcpy", nv_cudaMemcpy);
-	INTERCEPT_CUDA("cudaMemcpyAsync", nv_cudaMemcpyAsync);
-	INTERCEPT_CUDA("cudaStreamCreate", nv_cudaStreamCreate);
-	INTERCEPT_CUDA("cudaStreamDestroy", nv_cudaStreamDestroy);
-	INTERCEPT_CUDA("cudaStreamSynchronize", nv_cudaStreamSynchronize);
-	INTERCEPT_CUDA("cudaMemGetInfo", nv_cudaMemGetInfo);
-	INTERCEPT_CUDA("cudaSetupArgument", nv_cudaSetupArgument);
-	INTERCEPT_CUDA("cudaConfigureCall", nv_cudaConfigureCall);
-	INTERCEPT_CUDA("cudaMemset", nv_cudaMemset);
-	INTERCEPT_CUDA2("cudaMemsetAsync", nv_cudaMemsetAsync);
-	//INTERCEPT_CUDA2("cudaDeviceSynchronize", nv_cudaDeviceSynchronize);
-	INTERCEPT_CUDA("cudaLaunch", nv_cudaLaunch);
-	INTERCEPT_CUDA("cudaStreamAddCallback", nv_cudaStreamAddCallback);
-    */ 
+    INTERCEPT_CL("clCreateContext",ocl_clCreateContext);	
 
 
     gprint_init();
@@ -74,7 +60,7 @@ void gmm_init(void)
 	// to initialize CUDA runtime and let whatever memory regions
 	// implicitly required by CUDA runtime be allocated now. Those
 	// regions should be always attached and not managed by GMM runtime.
-	do {
+	/*do {
         cl_platform_id platform=NULL;
         cl_device_id device=NULL;
         cl_uint *num_platform;
@@ -87,7 +73,7 @@ void gmm_init(void)
     
         //ERCI: Currently, unable to find out api to acquire the size of the used mem.
 	} while (0);
-
+    */
 	initialized = 1;
 	gprint(DEBUG, "gmm initialized\n");
 }
@@ -110,13 +96,26 @@ void gmm_fini(void)
 }
 
 GMM_EXPORT
+cl_context clCreateContext( cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){
+    cl_context ret;
+    if (initialized){
+        return gmm_clCreateContext(properties,num_devices,devices,pfn_notify (errinfo, private_info,cb, user_data), user_data,errcode_ret);
+    }
+    else{
+        gprint(WARN,"clCreateContext outside the gmm\n");
+        return ocl_clCreateContext(properties,num_devices,devices,pfn_notify (errinfo, private_info,cb,user_data),user_data,errcode_ret);
+    } 
+    return ret;
+}
+
+GMM_EXPORT
 cl_mem clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int *errcode){
     cl_mem ret=NULL;
     if(initialized){
        return gmm_clCreateBuffer(context,flags,size,host_ptr,errcode,0);
     }
     else {
-       gprint(WARN,"clCreateBuffer called outside the GMM\N");
+       gprint(WARN,"clCreateBuffer called outside the GMM\n");
        return ocl_clCreateBuffer(context,flags,size,host_ptr,errcode); 
     }
     return  ret;
