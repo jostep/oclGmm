@@ -178,7 +178,7 @@ void gmm_context_fini(){
 
 cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){
     pcontext->device=devices;
-    pcontext->context_kernel=ocl_clCreateContext(properties,num_devices,devices,pfn_notify (errinfo, private_info,cb,user_data),user_data,errcode_ret);
+    pcontext->context_kernel=ocl_clCreateContext(properties,num_devices,devices,pfn_notify(errinfo, private_info,cb,user_data),user_data,errcode_ret);
     gmm_context_initEX();//finishing the init process of gmm_context
     return pcontext->context_kernel;
 }
