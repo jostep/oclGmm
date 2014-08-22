@@ -86,7 +86,7 @@ int msq_send_rep_ack(int client, long ack)
 	return msq_send(client, (struct msg *)&msg);
 }
 
-int local_victim_evict(long size_needed);
+//int local_victim_evict(long size_needed);
 
 void handle_req_evict(struct msg_req *msg)
 {
@@ -102,7 +102,7 @@ void handle_req_evict(struct msg_req *msg)
 		return;
 	}
 
-	ret = local_victim_evict(msg->size_needed);
+	ret = 0;//local_victim_evict(msg->size_needed);
 	if (msg->block)
 		msq_send_rep_ack(msg->from, ret);
 	//GMM_DPRINT("handle_req_evict: handled\n");

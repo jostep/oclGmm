@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <CL/opencl.h>
 #include <inttypes.h>
+#include <string.h>
+
+#define FALSE 1
+#define TRUE 0
 
 int main(){
 
@@ -18,11 +22,11 @@ int main(){
     cl_ulong localMem;
     char devName[1024];
     int i=0; 
-    
-
+    char *nvidia="NVIDIA Coporation";
+    int flag=FALSE;
     cl_device_id device;
     cl_device_info param_name;
-
+    cl_int *errcode_CC=NULL;
     clGetPlatformIDs(NULL,0,&num_platform);
     printf("Currently, we have %d platforms;\n",num_platform);
     
@@ -33,19 +37,32 @@ int main(){
     
         clGetPlatformInfo(platform[i],CL_PLATFORM_VENDOR,sizeof(vendor),vendor,NULL);
         printf("\tPlatform Vendor:\t%s\n",vendor);
+        if(strcmp(vendor,nvidia)){
+            printf("We've got the right one\n");
+            flag=TRUE;
+        }
+        
+
+
+
 
         clGetDeviceIDs(platform[i],CL_DEVICE_TYPE_ALL,sizeof(devId),devId,&num_Dev);
         printf("number of devices %u\n",num_Dev); 
    
         clGetDeviceInfo(devId[0], CL_DEVICE_NAME, sizeof(devName),devName,NULL);
         printf("\tDevice Name:\t%s\n",devName);
+        
+        if(flag==TRUE){
+            context=clCreateContext(NULL,1,devId,NULL,NULL,errcode_CC);
+            if(errcode_CC==CL_SUCCESS){
+                printf("Context Creating Success!\n");
+            }
 
+        }
     
         clGetDeviceInfo(devId[0],CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem),&mem,NULL);
         printf("The global size is %0.00f \n",(double)mem/1024576);
     }
-    //clGetDeviceInfo(devId[0], CL_DEVICE_NAME, sizeof(device))
-    //printf("We have size %lld\n",param_value);
-
+    
     return 0;
 }

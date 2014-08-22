@@ -23,9 +23,9 @@
 static int gmm_free(struct region *m);
 extern cl_mem (*ocl_clCreateBuffer)(cl_context , cl_mem_flags, size_t, void *, cl_int*);
 extern cl_int (*ocl_clReleaseMemObject)(cl_mem);
-extern cl_int (*ocl_clReleaseCommandQueue)(cl_command_queue);
+//extern cl_int (*ocl_clReleaseCommandQueue)(cl_command_queue);
 extern cl_context(*ocl_clCreateContext)(cl_context_properties * ,cl_uint ,const cl_device_id *,void*, void *,cl_int*);
-extern cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id,cl_command_queue_properties,cl_int *);
+//extern cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id,cl_command_queue_properties,cl_int *);
 
 struct region * region_lookup(struct gmm_context *ctx, const cl_mem *ptr);
 
@@ -145,7 +145,7 @@ void gmm_context_initEX(){
         pcontext=NULL;
         return -1;
     }
-    pcontext->commandQueue_kernel=clCeateCommandQueue(pcontext->context_kernel,pcontext->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_CQ);// add error handler;ERCI
+    pcontext->commandQueue_kernel=clCreateCommandQueue(pcontext->context_kernel,pcontext->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_CQ);// add error handler;ERCI
     if (errcode_CQ!=CL_SUCCESS){
         
         gprint(FATAL,"failed to create command queue\n");
@@ -169,7 +169,7 @@ void gmm_context_fini(){
     dma_channel_fini(&pcontext->dma_dtoh);
     dma_channel_fini(&pcontext->dma_htod);
 
-    ocl_clReleaseCommandQueue(pcontext->commandQueue_kernel);
+    clReleaseCommandQueue(pcontext->commandQueue_kernel);
 
     stats_print(&pcontext->stats);
     free(pcontext);
@@ -257,7 +257,7 @@ static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, in
    int i;
 #endif 
 
-   chan->commandQueue_chan=ocl_clCreateCommandQueue(ctx->context_kernel,ctx->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_DMA);//
+   chan->commandQueue_chan=/*ocl_*/clCreateCommandQueue(ctx->context_kernel,ctx->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_DMA);//
    if(errcode_INIT!=CL_SUCCESS){
         gprint(FATAL,"failed to create channel\n");
    }
@@ -304,7 +304,7 @@ static void dma_channel_fini(struct dma_channel *chan){
     }
 #endif 
 
-    ocl_clReleaseCommandQueue(chan->commandQueue_chan);
+    clReleaseCommandQueue(chan->commandQueue_chan);
 }
 
 cl_int gmm_clReleaseMemObject(cl_mem *memObjPtr){
@@ -395,3 +395,114 @@ re_acquire:
     return 1;
 
 }
+
+/*
+long region_evict(struct region *r)
+{
+	int nblocks = NRBLOCKS(r->size);
+	long size_spared = 0;
+	char *skipped;
+	int i, ret = 0;
+
+	gprint(INFO, "evicting region %p\n", r);
+	//gmm_print_region(r);
+
+	if (!r->dev_addr)
+		panic("dev_addr is null");
+	if (region_pinned(r))
+		panic("evicting a pinned region");
+
+	skipped = (char *)calloc(nblocks, sizeof(char));
+	if (!skipped) {
+		gprint(FATAL, "malloc failed for skipped[]: %s\n", strerror(errno));
+		return -1;
+	}
+
+	// First round
+	for (i = 0; i < nblocks; i++) {
+		if (r->state == STATE_FREEING)
+			goto success;
+		if (try_acquire(&r->blocks[i].lock)) {
+			if (!r->blocks[i].swp_valid) {
+				ret = block_sync(r, i);
+			}
+			release(&r->blocks[i].lock);
+			if (ret != 0)
+				goto finish;	// this is problematic if r is freeing
+			skipped[i] = 0;
+		}
+		else
+			skipped[i] = 1;
+	}
+
+	// Second round
+	for (i = 0; i < nblocks; i++) {
+		if (r->state == STATE_FREEING)
+			goto success;
+		if (skipped[i]) {
+			acquire(&r->blocks[i].lock);
+			if (!r->blocks[i].swp_valid) {
+				ret = block_sync(r, i);
+			}
+			release(&r->blocks[i].lock);
+			if (ret != 0)
+				goto finish;	// this is problematic if r is freeing
+		}
+	}
+
+success:
+	list_attached_del(pcontext, r);
+	if (r->dev_addr) {
+		nv_cudaFree(r->dev_addr);
+		r->dev_addr = NULL;
+		size_spared = r->size;
+	}
+	latomic_sub(&pcontext->size_attached, r->size);
+	update_attached(-r->size);
+	update_detachable(-r->size);
+	region_inval(r, 0);
+	acquire(&r->lock);
+	if (r->state == STATE_FREEING) {
+		if (r->swp_addr) {
+			free(r->swp_addr);
+			// region_lookup will not look up a region marked freed,
+			// so we can safely set swp_addr to null without worrying
+			// about wrong region_lookup results.
+			r->swp_addr = NULL;
+		}
+		r->state = STATE_ZOMBIE;
+	}
+	else
+		r->state = STATE_DETACHED;
+	release(&r->lock);
+
+	gprint(INFO, "region evicted\n");
+	//gmm_print_region(r);
+
+finish:
+	free(skipped);
+	return (ret == 0) ? size_spared : (-1);
+}
+
+
+long local_victim_evict(long size_needed)
+{
+	struct list_head victims;
+	struct victim *v;
+	struct region *r;
+
+	gprint(DEBUG, "local eviction: %ld bytes\n", size_needed);
+	INIT_LIST_HEAD(&victims);
+
+	if (victim_select(size_needed, NULL, 0, 1, &victims) != 0)
+		return -1;
+
+	if (list_empty(&victims))
+		return 0;
+
+	v = list_entry(victims.next, struct victim, entry);
+	r = v->r;
+	free(v);
+	return region_evict(r);
+}
+*/

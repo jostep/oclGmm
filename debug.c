@@ -11,7 +11,7 @@
 #include "core.h"
 
 struct region *region_lookup(struct gmm_context *ctx, const void *ptr);
-int gmm_dtoh(struct region *r, void *dst, const void *src, size_t count);
+//int gmm_dtoh(struct region *r, void *dst, const void *src, size_t count);
 
 extern struct gmm_context *pcontext;
 
@@ -46,10 +46,10 @@ void gmm_dump_region(
 		return;
 	}
 
-	if (gmm_dtoh(r, temp, addr, size) < 0) {
+	/*if (gmm_dtoh(r, temp, addr, size) < 0) {
 		gprint(ERROR, "dtoh failed for region dump\n");
 		goto finish;
-	}
+	}*/
 
 	f = fopen(filepath, "wb");
 	if (!f) {
