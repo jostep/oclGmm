@@ -144,7 +144,7 @@ bytes_u2s	stats.h	/^	long bytes_u2s;				\/\/ user buffer to swap buffer$/;"	m	st
 cid	client.c	/^int cid = -1;						\/\/ Id of this client$/;"	v
 cidtopid	client.c	/^pid_t cidtopid(int cid)$/;"	f
 clCreateBuffer	interfaces.c	/^cl_mem clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int *errcode){$/;"	f
-clCreateContext	interfaces.c	/^cl_context clCreateContext( cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){$/;"	f
+clCreateContext	interfaces.c	/^cl_context clCreateContext(cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify, void *user_data,cl_int *errcode_ret){$/;"	f
 clReleaseMemObject	interfaces.c	/^cl_int clReleaseMemObject(cl_mem memObj){$/;"	f
 client	core.h	/^	int client;				\/\/ for a remote victim$/;"	m	struct:victim
 client_alloc	client.c	/^static int client_alloc()$/;"	f	file:
@@ -199,7 +199,7 @@ from	protocol.h	/^	int from;$/;"	m	struct:msg_req
 getcid	client.c	/^int getcid()$/;"	f
 gettid	common.h	/^static inline pid_t gettid()$/;"	f
 gmm_clCreateBuffer	core.c	/^cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int* errcode_CB, int gmm_flags){$/;"	f
-gmm_clCreateContext	core.c	/^cl_context gmm_clCreateContext( cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){$/;"	f
+gmm_clCreateContext	core.c	/^cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){$/;"	f
 gmm_clReleaseMemObject	core.c	/^cl_int gmm_clReleaseMemObject(cl_mem *memObjPtr){$/;"	f
 gmm_client	protocol.h	/^struct gmm_client {$/;"	s
 gmm_context	core.h	/^struct gmm_context {$/;"	s
@@ -308,7 +308,7 @@ ndptr_arg	core.h	/^struct ndptr_arg {$/;"	s
 next	list.h	/^	struct list_head *next;$/;"	m	struct:list_head	typeref:struct:list_head::list_head
 nrgns	core.h	/^	int nrgns;					\/\/ Number of regions referenced$/;"	m	struct:kcb
 ocl_clCreateBuffer	interfaces.c	/^cl_mem (*ocl_clCreateBuffer)(cl_context, cl_mem_flags, size_t, void*, cl_int)= NULL;$/;"	v
-ocl_clCreateContext	interfaces.c	/^cl_context (*ocl_clCreateContext)( cl_context_properties *,cl_uint ,const cl_device_id *,void * (const char *, const void *, size_t , void *), void *,cl_int *)=NULL;$/;"	v
+ocl_clCreateContext	interfaces.c	/^cl_context (*ocl_clCreateContext)(cl_context_properties *,cl_uint ,const cl_device_id *,void *, void *,cl_int *)=NULL;$/;"	v
 ocl_clReleaseMemObject	interfaces.c	/^cl_int (*ocl_clReleaseMemObject)(cl_mem)= NULL;$/;"	v
 off	core.h	/^	unsigned long off;		\/\/ device pointer offset in the region$/;"	m	struct:dptr_arg
 panic	common.c	/^void panic(char *msg)$/;"	f

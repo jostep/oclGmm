@@ -21,10 +21,10 @@
 
 
 static int gmm_free(struct region *m);
-extern cl_mem (*ocl_clCreateMemBuffer)(cl_context , cl_mem_flags, size_t, void *, cl_int*);
+extern cl_mem (*ocl_clCreateBuffer)(cl_context , cl_mem_flags, size_t, void *, cl_int*);
 extern cl_int (*ocl_clReleaseMemObject)(cl_mem);
 extern cl_int (*ocl_clReleaseCommandQueue)(cl_command_queue);
-extern cl_context(*ocl_clCreateContext)(cl_context_properties * ,cl_uint ,const cl_device_id *,void *(const char*, const void*,size_t, void*), void *,cl_int*);
+extern cl_context(*ocl_clCreateContext)(cl_context_properties * ,cl_uint ,const cl_device_id *,void*, void *,cl_int*);
 extern cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id,cl_command_queue_properties,cl_int *);
 
 struct region * region_lookup(struct gmm_context *ctx, const cl_mem *ptr);
@@ -178,7 +178,7 @@ void gmm_context_fini(){
 
 cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){
     pcontext->device=devices;
-    pcontext->context_kernel=ocl_clCreateContext(properties,num_devices,devices,pfn_notify(errinfo, private_info,cb,user_data),user_data,errcode_ret);
+    pcontext->context_kernel=ocl_clCreateContext(properties,num_devices,devices,pfn_notify,user_data,errcode_ret);
     gmm_context_initEX();//finishing the init process of gmm_context
     return pcontext->context_kernel;
 }
@@ -268,7 +268,7 @@ static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, in
    chan->ibuf=0;
    //
    for (i=0;i<NBUFS;i++){
-        ocl_clCreateMemBuffer(pcontext->context_kernel,CL_MEM_ALLOC_HOST_PTR,BUFSIZE,chan->stage_bufs[i],errcode_DMA);
+        ocl_clCreateBuffer(pcontext->context_kernel,CL_MEM_ALLOC_HOST_PTR,BUFSIZE,chan->stage_bufs[i],errcode_DMA);
         if(errcode_DMA!=CL_SUCCESS){
             gprint(FATAL,"failed for staging buffer\n");
             break;

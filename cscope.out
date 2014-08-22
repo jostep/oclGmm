@@ -1,4 +1,4 @@
-cscope 15 $HOME/oclGmm/oclGmm -q 0000003084 0000239236
+cscope 15 $HOME/oclGmm/oclGmm -q 0000003084 0000238761
 	@atomic.h
 
 1 #iâdeà
@@ -1799,15 +1799,15 @@ oş_şR–—£CommªdQueue
 oş_şC»©eCÚ‹xt
 )(
 ş_cÚ‹xt_´İ”t›s
- *,
+ * ,
 ş_ušt
-,cÚ¡ 
+ ,cÚ¡ 
 ş_deviû_id
- *,* (cÚ¡ *, cÚ¡ *, 
+ *,*(cÚ¡ *, cÚ¡ *,
 size_t
 , *), *,
 ş_št
-);
+*);
 
 28 
 	$ş_commªd_queue
@@ -1815,21 +1815,13 @@ size_t
 oş_şC»©eCommªdQueue
 )(
 ş_cÚ‹xt
- 
-cÚ‹xt
 , 
 ş_deviû_id
- 
-deviû
 ,
 ş_commªd_queue_´İ”t›s
- 
-´İ”t›s
 ,
 ş_št
- *
-”rcode_»t
-);
+ *);
 
 30 
 »giÚ
@@ -2489,7 +2481,7 @@ NULL
 ş_cÚ‹xt
  
 gmm_şC»©eCÚ‹xt
-Ğ
+(
 ş_cÚ‹xt_´İ”t›s
  *
 ´İ”t›s
@@ -2533,33 +2525,17 @@ deviûs
 	gcÚ‹xt_k”Ãl
 =
 oş_şC»©eCÚ‹xt
-Ğ
-ş_cÚ‹xt_´İ”t›s
- *
+(
 ´İ”t›s
 ,
-ş_ušt
- 
 num_deviûs
-,cÚ¡ 
-ş_deviû_id
- *
+,
 deviûs
-,*
+,
 pâ_nÙify
- (cÚ¡ *
-”ršfo
-, cÚ¡ *
-´iv©e_šfo
-, 
-size_t
- 
-cb
-, *
+,
 u£r_d©a
-), *u£r_d©a,
-ş_št
- *
+,
 ”rcode_»t
 );
 
@@ -5421,15 +5397,13 @@ NULL
 	$ş_cÚ‹xt
  (*
 oş_şC»©eCÚ‹xt
-)Ğ
+)(
 ş_cÚ‹xt_´İ”t›s
  *,
 ş_ušt
  ,cÚ¡ 
 ş_deviû_id
- *,* (cÚ¡ *, cÚ¡ *, 
-size_t
- , *), *,
+ *,*, *,
 ş_št
  *)=
 NULL
@@ -5467,91 +5441,91 @@ oş_şR–—£MemObjeù
 oş_şC»©eCÚ‹xt
 );
 
-59 
+45 
 	`g´št_š™
 ();
 
-62 ià(
+48 ià(
 	`gmm_cÚ‹xt_š™
 () == -1) {
 
-63 
+49 
 	`g´št
 (
 FATAL
 , "failedo initialize GMM†ocal context\n");
 
-67 ià(
+53 ià(
 	`ş›Á_©ch
 () == -1) {
 
-68 
+54 
 	`g´št
 (
 FATAL
 , "failedo‡ttachohe GMM global‡rena\n");
 
-69 
+55 
 	`gmm_cÚ‹xt_fši
 ();
 
-91 
+77 
 š™Ÿlized
  = 1;
 
-92 
+78 
 	`g´št
 (
 DEBUG
 , "gmm initialized\n");
 
-93 
+79 
 	}
 }
 
-96 
+82 
 __©Œibu‹__
 ((
 de¡ruùÜ
 ))
 
-97 
+83 
 	$gmm_fši
 ()
 
-99 ià(
+85 ià(
 š™Ÿlized
 ) {
 
-104 
+90 
 	`gmm_cÚ‹xt_fši
 ();
 
-105 
+91 
 	`ş›Á_d‘ach
 ();
 
-106 
+92 
 š™Ÿlized
  = 0;
 
-109 
+95 
 	`g´št_fši
 ();
 
-110 
+96 
 	}
 }
 
-112 
+98 
 GMM_EXPORT
 
 
-113 
+99 
 ş_cÚ‹xt
  
-şC»©eCÚ‹xt
-Ğ
+	$şC»©eCÚ‹xt
+(
 ş_cÚ‹xt_´İ”t›s
  *
 ´İ”t›s
@@ -5565,111 +5539,75 @@ num_deviûs
 deviûs
 ,*
 pâ_nÙify
- (cÚ¡ *
-”ršfo
-, cÚ¡ *
-´iv©e_šfo
-, 
-size_t
- 
-cb
 , *
 u£r_d©a
-), *u£r_d©a,
+,
 ş_št
  *
 ”rcode_»t
 ){
 
-114 
+100 
 ş_cÚ‹xt
  
-	g»t
+»t
 ;
 
-115 ià(
-	gš™Ÿlized
+101 ià(
+š™Ÿlized
 ){
 
-116  
-gmm_şC»©eCÚ‹xt
-Ğ
-ş_cÚ‹xt_´İ”t›s
- *
+102  
+	`gmm_şC»©eCÚ‹xt
+(
 ´İ”t›s
 ,
-ş_ušt
- 
 num_deviûs
-,cÚ¡ 
-ş_deviû_id
- *
+,
 deviûs
-,*
+,
 pâ_nÙify
- (cÚ¡ *
-”ršfo
-, cÚ¡ *
-´iv©e_šfo
 , 
-size_t
- 
-cb
-, *
 u£r_d©a
-), *u£r_d©a,
-ş_št
- *
+,
 ”rcode_»t
 );
 
-119 
-g´št
+105 
+	`g´št
 (
 WARN
 ,"clCreateContext outsidehe gmm\n");
 
-120  
-oş_şC»©eCÚ‹xt
-Ğ
-ş_cÚ‹xt_´İ”t›s
- *
+106  
+	`oş_şC»©eCÚ‹xt
+(
 ´İ”t›s
 ,
-ş_ušt
- 
 num_deviûs
-,cÚ¡ 
-ş_deviû_id
- *
+,
 deviûs
-,*
+,
 pâ_nÙify
- (cÚ¡ *
-”ršfo
-, cÚ¡ *
-´iv©e_šfo
-, 
-size_t
- 
-cb
-, *
+,
 u£r_d©a
-), *u£r_d©a,
-ş_št
- *
+,
 ”rcode_»t
 );
 
-122  
-	g»t
+108  
+»t
 ;
 
-125 
+109 
+	}
+}
+
+111 
 GMM_EXPORT
 
 
-126 
+112 
 ş_mem
  
 	$şC»©eBufãr
@@ -5693,7 +5631,7 @@ ho¡_±r
 ”rcode
 ){
 
-127 
+113 
 ş_mem
  
 »t
@@ -5701,11 +5639,11 @@ ho¡_±r
 NULL
 ;
 
-128 if(
+114 if(
 š™Ÿlized
 ){
 
-129  
+115  
 	`gmm_şC»©eBufãr
 (
 cÚ‹xt
@@ -5719,13 +5657,13 @@ ho¡_±r
 ”rcode
 ,0);
 
-132 
+118 
 	`g´št
 (
 WARN
 ,"clCreateBuffer called outsidehe GMM\n");
 
-133  
+119  
 	`oş_şC»©eBufãr
 (
 cÚ‹xt
@@ -5739,19 +5677,19 @@ ho¡_±r
 ”rcode
 );
 
-135  
+121  
 »t
 ;
 
-136 
+122 
 	}
 }
 
-150 
+136 
 GMM_EXPORT
 
 
-151 
+137 
 ş_št
  
 	$şR–—£MemObjeù
@@ -5761,39 +5699,39 @@ GMM_EXPORT
 memObj
 ){
 
-152 
+138 
 ş_št
  
 »t
 ;
 
-154 if(
+140 if(
 š™Ÿlized
 ){
 
-155  
+141  
 	`gmm_şR–—£MemObjeù
 (&
 memObj
 );
 
-158 
+144 
 	`g´št
 (
 WARN
 ,"clReleaseMemObj Call");
 
-159  
+145  
 	`oş_şR–—£MemObjeù
 (
 memObj
 );
 
-162  
+148  
 »t
 ;
 
-163 
+149 
 	}
 }
 
