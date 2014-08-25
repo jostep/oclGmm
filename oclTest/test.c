@@ -22,7 +22,7 @@ int main(){
     cl_ulong localMem;
     char devName[1024];
     int i=0; 
-    char *nvidia="NVIDIA Coporation";
+    char *nvidia="NVIDIA Corporation";
     int flag=FALSE;
     cl_device_id device;
     cl_device_info param_name;
@@ -37,7 +37,7 @@ int main(){
     
         clGetPlatformInfo(platform[i],CL_PLATFORM_VENDOR,sizeof(vendor),vendor,NULL);
         printf("\tPlatform Vendor:\t%s\n",vendor);
-        if(strcmp(vendor,nvidia)){
+        if(strcmp(vendor,nvidia)==0){
             printf("We've got the right one\n");
             flag=TRUE;
         }
@@ -62,6 +62,7 @@ int main(){
     
         clGetDeviceInfo(devId[0],CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem),&mem,NULL);
         printf("The global size is %0.00f \n",(double)mem/1024576);
+        flag=FALSE;
     }
     
     return 0;
