@@ -62,7 +62,7 @@ void gprint_fini();
 #include <sys/syscall.h>
 static inline pid_t gettid()
 {
-	return (pid_t)syscall(186);
+	return (pid_t)syscall(__NR_gettid);
 }
 #endif
 

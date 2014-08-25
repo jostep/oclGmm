@@ -80,7 +80,7 @@ int client_attach()
 		gprint(FATAL, "message queue init failed\n");
 		goto fail_msq;
 	}
-
+    
 	cid = client_alloc();
 	if (cid == -1) {
 		gprint(FATAL, "failed to allocate client\n");

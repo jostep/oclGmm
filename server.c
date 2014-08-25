@@ -30,6 +30,7 @@ int start(size_t mem_total)
 		exit(-1);
 	}
     */
+    total=1609760768;
 	if (verbose) {
 		fprintf(stderr, "Total GPU memory: %lu bytes.\n", total);
 		fprintf(stderr, "Free GPU memory: %lu bytes.\n", sfree);

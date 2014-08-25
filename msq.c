@@ -203,7 +203,7 @@ int msq_init()
 		setrlimit(RLIMIT_MSGQUEUE, &rlim);
 	}
 #endif
-
+    printf("\tthe current tid is:%d\n",gettid());
 	sprintf(qname, "/gmm_cli_%d", gettid());
 	mqid = mq_open(qname, O_RDONLY | O_CREAT | O_EXCL, 0622, NULL);
 	if (mqid == (mqd_t) -1) {

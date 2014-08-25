@@ -61,7 +61,7 @@ int main(){
         }
     
         clGetDeviceInfo(devId[0],CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem),&mem,NULL);
-        printf("The global size is %0.00f \n",(double)mem/1024576);
+        printf("The global size is %d \n",mem);
         flag=FALSE;
     }
     

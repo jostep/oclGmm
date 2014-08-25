@@ -132,24 +132,28 @@ void gmm_context_initEX(){
    
     cl_int * errcode_CQ=NULL; 
     //failed to show the diff between htod and dtoh 
+    printf("we've finished the first dma_init and before it.\n");
     if(dma_channel_init(pcontext,&pcontext->dma_htod,1)!=0){
         gprint(FATAL,"failed to create HtoD DMA channel\n");
         free(pcontext);
         pcontext=NULL;
-        return -1;
+        return ;
     }    
+    printf("we've finished the first dma_init\n");
     if(dma_channel_init(pcontext,&pcontext->dma_dtoh,0)!=0){
         gprint(FATAL,"failed to create DtoH DMA channel\n");
         dma_channel_fini(&pcontext->dma_htod);
         free(pcontext);
         pcontext=NULL;
-        return -1;
+        return ;
     }
+    printf("we've finished the second dma_init\n");
     pcontext->commandQueue_kernel=clCreateCommandQueue(pcontext->context_kernel,pcontext->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_CQ);// add error handler;ERCI
     if (errcode_CQ!=CL_SUCCESS){
         
         gprint(FATAL,"failed to create command queue\n");
     } 
+    printf("we've finished the command queue creation\n");
 }
 
 
@@ -179,7 +183,9 @@ void gmm_context_fini(){
 cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){
     pcontext->device=devices;
     pcontext->context_kernel=ocl_clCreateContext(properties,num_devices,devices,pfn_notify,user_data,errcode_ret);
+    printf("we are before the INIIEX\n");
     gmm_context_initEX();//finishing the init process of gmm_context
+    printf("initEX finished\n");
     return pcontext->context_kernel;
 }
 
@@ -253,6 +259,7 @@ static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, in
    int ret =0;
    cl_int * errcode_DMA=NULL;
    cl_int * errcode_INIT=NULL;
+   printf("inside the first the commandQueue Creation and before it.");
 #ifdef GMM_CONFIG_DMA_ASYNC
    int i;
 #endif 
@@ -261,7 +268,7 @@ static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, in
    if(errcode_INIT!=CL_SUCCESS){
         gprint(FATAL,"failed to create channel\n");
    }
-   //add error check ERCI
+   printf("inside the first the commandQueue Creation");
 
 #ifdef GMM_CONFIG_DMA_ASYNC
    initlock(&chan->lock);
