@@ -105,6 +105,7 @@ fail_shm:
 }
 
 void client_detach() {
+    printf("we are trying to detach\n");
 	client_free(cid);
 	cid = -1;
 	msq_fini();

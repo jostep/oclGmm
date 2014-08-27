@@ -25,11 +25,11 @@ extern cl_mem (*ocl_clCreateBuffer)(cl_context , cl_mem_flags, size_t, void *, c
 extern cl_int (*ocl_clReleaseMemObject)(cl_mem);
 //extern cl_int (*ocl_clReleaseCommandQueue)(cl_command_queue);
 extern cl_context(*ocl_clCreateContext)(cl_context_properties * ,cl_uint ,const cl_device_id *,void*, void *,cl_int*);
-//extern cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id,cl_command_queue_properties,cl_int *);
+extern cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id,cl_command_queue_properties,cl_int *);
 
 struct region * region_lookup(struct gmm_context *ctx, const cl_mem *ptr);
 
-static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, int htod);
+static int dma_channel_init(struct gmm_context *,struct dma_channel *, int);
 static void dma_channel_fini(struct dma_channel *chan);
 struct gmm_context *pcontext=NULL;
 static void list_alloced_add(struct gmm_context *ctx, struct region *r)
@@ -53,12 +53,15 @@ static void list_attached_add(struct gmm_context *ctx, struct region *r)
 	release(&ctx->lock_attached);
 }
 
+
 static void list_attached_del(struct gmm_context *ctx, struct region *r)
 {
 	acquire(&ctx->lock_attached);
 	list_del(&r->entry_attached);
 	release(&ctx->lock_attached);
 }
+
+
 
 static void list_attached_mov(struct gmm_context *ctx, struct region *r)
 {
@@ -132,8 +135,8 @@ void gmm_context_initEX(){
    
     cl_int * errcode_CQ=NULL; 
     //failed to show the diff between htod and dtoh 
-    printf("we've finished the first dma_init and before it.\n");
-    if(dma_channel_init(pcontext,&pcontext->dma_htod,1)!=0){
+  
+    /*if(dma_channel_init(pcontext,&pcontext->dma_htod,1)!=0){
         gprint(FATAL,"failed to create HtoD DMA channel\n");
         free(pcontext);
         pcontext=NULL;
@@ -148,12 +151,12 @@ void gmm_context_initEX(){
         return ;
     }
     printf("we've finished the second dma_init\n");
-    pcontext->commandQueue_kernel=clCreateCommandQueue(pcontext->context_kernel,pcontext->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_CQ);// add error handler;ERCI
+    */
+    pcontext->commandQueue_kernel=ocl_clCreateCommandQueue(pcontext->context_kernel,pcontext->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_CQ);// add error handler;ERCI
     if (errcode_CQ!=CL_SUCCESS){
         
         gprint(FATAL,"failed to create command queue\n");
     } 
-    printf("we've finished the command queue creation\n");
 }
 
 
@@ -161,10 +164,10 @@ void gmm_context_fini(){
 
     struct list_head *p;
     struct region *r;
-
     while(!list_empty(&pcontext->list_alloced)){
         p=pcontext->list_alloced.next;
         r=list_entry(p, struct region, entry_alloced);
+        
         if(gmm_free(r)){
             list_move_tail(p,&pcontext->list_alloced);
         }
@@ -174,7 +177,7 @@ void gmm_context_fini(){
     dma_channel_fini(&pcontext->dma_htod);
 
     clReleaseCommandQueue(pcontext->commandQueue_kernel);
-
+    
     stats_print(&pcontext->stats);
     free(pcontext);
     pcontext=NULL;
@@ -183,18 +186,21 @@ void gmm_context_fini(){
 cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){
     pcontext->device=devices;
     pcontext->context_kernel=ocl_clCreateContext(properties,num_devices,devices,pfn_notify,user_data,errcode_ret);
-    printf("we are before the INIIEX\n");
+    if(errcode_ret!=CL_SUCCESS){
+        printf("Cannot create the Context for the PC\n");
+    }
     gmm_context_initEX();//finishing the init process of gmm_context
-    printf("initEX finished\n");
     return pcontext->context_kernel;
 }
 
 cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int* errcode_CB, int gmm_flags){
     struct region *r;
     int nblocks;
-
+    gprint(DEBUG,"We are here to create buffer \n");
     gprint(DEBUG,"clCreateBuffer begins, size(%lu), flags(%x)\n",size,flags);
-
+    if(context!=pcontext->context_kernel){
+        gprint(FATAL,"context unmatched\n");
+    }
     if(size>memsize_total()){
         gprint(ERROR,"clCreateBuffer size(%lu) too large(max %ld)\n", size, memsize_total());
         errcode_CB=CL_INVALID_VALUE;
@@ -205,14 +211,13 @@ cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, v
         errcode_CB=CL_INVALID_VALUE;
         return NULL;
     }
-
     r = (struct region*) calloc(1,sizeof(*r));
     if(!r){
         gprint(FATAL,"malloc for a new region: %s\n",strerror(errno));
         errcode_CB=CL_MEM_OBJECT_ALLOCATION_FAILURE;
         return NULL;
     }
-
+    
     r->swp_addr=malloc(size);
     if (!r->swp_addr){
 
@@ -247,28 +252,26 @@ cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, v
     
     list_alloced_add(pcontext, r);
     stats_inc_alloc(&pcontext->stats, size);
-
+    
     gprint(DEBUG, "clCreateBuffer ends : r(%p) swp(%p) pta(%p)\n",r,r->swp_addr,r->pta_addr);
-
-    errcode_CB=CL_SUCCESS;
-
-    return *r->swp_addr; 
+    
+   // errcode_CB=CL_SUCCESS;
+    
+    return *(r->swp_addr); 
 }
 
 static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, int htod){
    int ret =0;
    cl_int * errcode_DMA=NULL;
    cl_int * errcode_INIT=NULL;
-   printf("inside the first the commandQueue Creation and before it.");
 #ifdef GMM_CONFIG_DMA_ASYNC
    int i;
 #endif 
 
-   chan->commandQueue_chan=/*ocl_*/clCreateCommandQueue(ctx->context_kernel,ctx->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_DMA);//
+   chan->commandQueue_chan=ocl_clCreateCommandQueue(ctx->context_kernel,ctx->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_DMA);//
    if(errcode_INIT!=CL_SUCCESS){
         gprint(FATAL,"failed to create channel\n");
    }
-   printf("inside the first the commandQueue Creation");
 
 #ifdef GMM_CONFIG_DMA_ASYNC
    initlock(&chan->lock);
@@ -358,7 +361,7 @@ struct region * region_lookup(struct gmm_context *ctx, const cl_mem *ptr){
 }
 
 static int gmm_free(struct region *r){
-    gprint(DEBUG, "freeing r (%p %p %ld %d %d)\n",r,r->swp_addr,r->size,r->flags,r->state);
+    gprint(DEBUG,"freeing r (%p %p %ld %d %d)\n",r,r->swp_addr,r->size,r->flags,r->state);
 re_acquire:
     acquire(&r->lock);
     switch (r->state){
@@ -385,19 +388,24 @@ re_acquire:
     }
     release(&r->lock);
     list_attached_del(pcontext,r);
+    //printf("deleting 1\n");
     if(r->blocks)
         free(r->blocks);
+    //printf("deleting 2\n");
     if(r->pta_addr)
         free(r->blocks);
+    //printf("deleting 3\n");
     if(r->swp_addr)
         free(r->blocks);
     if(r->dev_addr){
+      //printf("deleting 4\n");
         ocl_clReleaseMemObject(*r->dev_addr);
         latomic_sub(&pcontext->size_attached,r->size);
         update_attached(-r->size);
         update_detachable(-r->size);
     }
     free(r);
+    //printf("after freeing r\n");
     gprint(DEBUG,"region freed\n");
     return 1;
 

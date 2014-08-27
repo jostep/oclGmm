@@ -1,4 +1,4 @@
-cscope 15 $HOME/oclGmm/oclGmm -q 0000003084 0000238761
+cscope 15 $HOME/oclGmm/oclGmm -q 0000003083 0000237795
 	@atomic.h
 
 1 #iâdeà
@@ -1681,7 +1681,9 @@ pid_t
 pid_t
 )
 	`sysÿÎ
-(186);
+(
+__NR_g‘tid
+);
 
 66 
 	}
@@ -1766,7 +1768,7 @@ m
 24 
 	$ş_mem
  (*
-oş_şC»©eMemBufãr
+oş_şC»©eBufãr
 )(
 ş_cÚ‹xt
  , 
@@ -1785,14 +1787,6 @@ oş_şR–—£MemObjeù
 ş_mem
 );
 
-26 
-	$ş_št
- (*
-oş_şR–—£CommªdQueue
-)(
-ş_commªd_queue
-);
-
 27 
 	$ş_cÚ‹xt
 (*
@@ -1803,25 +1797,9 @@ oş_şC»©eCÚ‹xt
 ş_ušt
  ,cÚ¡ 
 ş_deviû_id
- *,*(cÚ¡ *, cÚ¡ *,
-size_t
-, *), *,
+ *,*, *,
 ş_št
 *);
-
-28 
-	$ş_commªd_queue
- (*
-oş_şC»©eCommªdQueue
-)(
-ş_cÚ‹xt
-, 
-ş_deviû_id
-,
-ş_commªd_queue_´İ”t›s
-,
-ş_št
- *);
 
 30 
 »giÚ
@@ -2275,7 +2253,11 @@ pcÚ‹xt
 NULL
 ;
 
-135 if(
+135 
+	`´štf
+("we've finishedhe first dma_init‡nd before it.\n");
+
+136 if(
 	`dma_chªÃl_š™
 (
 pcÚ‹xt
@@ -2283,25 +2265,29 @@ pcÚ‹xt
 dma_htod
 ,1)!=0){
 
-136 
+137 
 	`g´št
 (
 FATAL
 ,"failedo create HtoD DMA channel\n");
 
-137 
+138 
 	`ä“
 (
 pcÚ‹xt
 );
 
-138 
+139 
 pcÚ‹xt
 =
 NULL
 ;
 
-141 if(
+142 
+	`´štf
+("we've finishedhe first dma_init\n");
+
+143 if(
 	`dma_chªÃl_š™
 (
 pcÚ‹xt
@@ -2309,13 +2295,13 @@ pcÚ‹xt
 dma_dtoh
 ,0)!=0){
 
-142 
+144 
 	`g´št
 (
 FATAL
 ,"failedo create DtoH DMA channel\n");
 
-143 
+145 
 	`dma_chªÃl_fši
 (&
 pcÚ‹xt
@@ -2323,24 +2309,28 @@ pcÚ‹xt
 dma_htod
 );
 
-144 
+146 
 	`ä“
 (
 pcÚ‹xt
 );
 
-145 
+147 
 pcÚ‹xt
 =
 NULL
 ;
 
-148 
+150 
+	`´štf
+("we've finishedhe second dma_init\n");
+
+151 
 pcÚ‹xt
 ->
 commªdQueue_k”Ãl
 =
-	`şC—‹CommªdQueue
+	`şC»©eCommªdQueue
 ÕcÚ‹xt->
 cÚ‹xt_k”Ãl
 ,pcÚ‹xt->
@@ -2351,39 +2341,43 @@ CL_QUEUE_PROFILING_ENABLE
 ”rcode_CQ
 );
 
-149 ià(
+152 ià(
 ”rcode_CQ
 !=
 CL_SUCCESS
 ){
 
-151 
+154 
 	`g´št
 (
 FATAL
 ,"failedo create command queue\n");
 
-153 
+156 
+	`´štf
+("we've finishedhe command queue creation\n");
+
+157 
 	}
 }
 
-156 
+160 
 	$gmm_cÚ‹xt_fši
 (){
 
-158 
+162 
 li¡_h—d
  *
 p
 ;
 
-159 
+163 
 »giÚ
  *
 r
 ;
 
-161 !
+165 !
 	`li¡_em±y
 (&
 pcÚ‹xt
@@ -2391,7 +2385,7 @@ pcÚ‹xt
 li¡_®loûd
 )){
 
-162 
+166 
 p
 =
 pcÚ‹xt
@@ -2401,7 +2395,7 @@ li¡_®loûd
 Ãxt
 ;
 
-163 
+167 
 r
 =
 	`li¡_’Œy
@@ -2413,13 +2407,13 @@ p
 ’Œy_®loûd
 );
 
-164 if(
+168 if(
 	`gmm_ä“
 (
 r
 )){
 
-165 
+169 
 	`li¡_move_
 (
 p
@@ -2429,7 +2423,7 @@ pcÚ‹xt
 li¡_®loûd
 );
 
-169 
+173 
 	`dma_chªÃl_fši
 (&
 pcÚ‹xt
@@ -2437,7 +2431,7 @@ pcÚ‹xt
 dma_dtoh
 );
 
-170 
+174 
 	`dma_chªÃl_fši
 (&
 pcÚ‹xt
@@ -2445,15 +2439,15 @@ pcÚ‹xt
 dma_htod
 );
 
-172 
-	`oş_şR–—£CommªdQueue
+176 
+	`şR–—£CommªdQueue
 (
 pcÚ‹xt
 ->
 commªdQueue_k”Ãl
 );
 
-174 
+178 
 	`¡©s_´št
 (&
 pcÚ‹xt
@@ -2461,23 +2455,23 @@ pcÚ‹xt
 ¡©s
 );
 
-175 
+179 
 	`ä“
 (
 pcÚ‹xt
 );
 
-176 
+180 
 pcÚ‹xt
 =
 NULL
 ;
 
-177 
+181 
 	}
 }
 
-179 
+183 
 ş_cÚ‹xt
  
 gmm_şC»©eCÚ‹xt
@@ -2511,7 +2505,7 @@ u£r_d©a
 ”rcode_»t
 ){
 
-180 
+184 
 	gpcÚ‹xt
 ->
 	gdeviû
@@ -2519,7 +2513,7 @@ u£r_d©a
 deviûs
 ;
 
-181 
+185 
 	gpcÚ‹xt
 ->
 	gcÚ‹xt_k”Ãl
@@ -2539,17 +2533,25 @@ u£r_d©a
 ”rcode_»t
 );
 
-182 
+186 
+´štf
+("we‡re beforehe INIIEX\n");
+
+187 
 gmm_cÚ‹xt_š™EX
 ();
 
-183  
+188 
+´štf
+("initEX finished\n");
+
+189  
 	gpcÚ‹xt
 ->
 	gcÚ‹xt_k”Ãl
 ;
 
-186 
+192 
 ş_mem
  
 	$gmm_şC»©eBufãr
@@ -2575,17 +2577,17 @@ ho¡_±r
 gmm_æags
 ){
 
-187 
+193 
 »giÚ
  *
 r
 ;
 
-188 
+194 
 nblocks
 ;
 
-190 
+196 
 	`g´št
 (
 DEBUG
@@ -2595,13 +2597,13 @@ size
 æags
 );
 
-192 if(
+198 if(
 size
 >
 	`memsize_tÙ®
 ()){
 
-193 
+199 
 	`g´št
 (
 ERROR
@@ -2611,21 +2613,21 @@ size
 	`memsize_tÙ®
 ());
 
-194 
+200 
 ”rcode_CB
 =
 CL_INVALID_VALUE
 ;
 
-195  
+201  
 NULL
 ;
 
-197 if(
+203 if(
 size
 <=0){
 
-198 
+204 
 	`g´št
 (
 ERROR
@@ -2633,17 +2635,17 @@ ERROR
 size
 );
 
-199 
+205 
 ”rcode_CB
 =
 CL_INVALID_VALUE
 ;
 
-200  
+206  
 NULL
 ;
 
-203 
+209 
 r
  = (
 »giÚ
@@ -2651,11 +2653,11 @@ r
 	`ÿÎoc
 (1,(*r));
 
-204 if(!
+210 if(!
 r
 ){
 
-205 
+211 
 	`g´št
 (
 FATAL
@@ -2665,17 +2667,17 @@ FATAL
 ”ºo
 ));
 
-206 
+212 
 ”rcode_CB
 =
 CL_MEM_OBJECT_ALLOCATION_FAILURE
 ;
 
-207  
+213  
 NULL
 ;
 
-210 
+216 
 r
 ->
 swp_addr
@@ -2685,13 +2687,13 @@ swp_addr
 size
 );
 
-211 ià(!
+217 ià(!
 r
 ->
 swp_addr
 ){
 
-213 
+219 
 	`g´št
 (
 FATAL
@@ -2701,33 +2703,33 @@ FATAL
 ”ºo
 ));
 
-214 
+220 
 	`ä“
 (
 r
 );
 
-215 
+221 
 ”rcode_CB
 =
 CL_MEM_OBJECT_ALLOCATION_FAILURE
 ;
 
-216  
+222  
 NULL
 ;
 
-219 ià(
+225 ià(
 gmm_æags
  & 
 HINT_PTARRAY
 ){
 
-220 if(
+226 if(
 size
 %(*)){
 
-221 
+227 
 	`g´št
  (
 ERROR
@@ -2735,7 +2737,7 @@ ERROR
 size
 );
 
-222 
+228 
 	`ä“
 (
 r
@@ -2743,23 +2745,23 @@ r
 swp_addr
 );
 
-223 
+229 
 	`ä“
 (
 r
 );
 
-224 
+230 
 ”rcode_CB
 =
 CL_INVALID_VALUE
 ;
 
-225  
+231  
 NULL
 ;
 
-228 
+234 
 r
 ->
 ±a_addr
@@ -2769,13 +2771,13 @@ r
 size
 );
 
-229 ià(!
+235 ià(!
 r
 ->
 ±a_addr
 ){
 
-231 
+237 
 	`g´št
 (
 FATAL
@@ -2785,29 +2787,29 @@ FATAL
 ”ºo
 ));
 
-232 
+238 
 	`ä“
 (
 r
 );
 
-233 
+239 
 ”rcode_CB
 =
 CL_MEM_OBJECT_ALLOCATION_FAILURE
 ;
 
-234  
+240  
 NULL
 ;
 
-237 
+243 
 r
 ->
 size
 = () size;
 
-238 
+244 
 r
 ->
 ¡©e
@@ -2815,19 +2817,19 @@ r
 STATE_DETACHED
 ;
 
-239 
+245 
 r
 ->
 æags
 =flags;
 
-240 
+246 
 r
 ->
 gmm_æags
 =gmm_flags;
 
-242 
+248 
 	`li¡_®loûd_add
 (
 pcÚ‹xt
@@ -2835,7 +2837,7 @@ pcÚ‹xt
 r
 );
 
-243 
+249 
 	`¡©s_šc_®loc
 (&
 pcÚ‹xt
@@ -2845,7 +2847,7 @@ pcÚ‹xt
 size
 );
 
-245 
+251 
 	`g´št
 (
 DEBUG
@@ -2857,23 +2859,23 @@ swp_addr
 ±a_addr
 );
 
-247 
+253 
 ”rcode_CB
 =
 CL_SUCCESS
 ;
 
-249  *
+255  *
 r
 ->
 swp_addr
 ;
 
-250 
+256 
 	}
 }
 
-252 
+258 
 	$dma_chªÃl_š™
 (
 gmm_cÚ‹xt
@@ -2887,11 +2889,11 @@ chª
 htod
 ){
 
-253 
+259 
 »t
  =0;
 
-254 
+260 
 ş_št
  * 
 ”rcode_DMA
@@ -2899,7 +2901,7 @@ htod
 NULL
 ;
 
-255 
+261 
 ş_št
  * 
 ”rcode_INIT
@@ -2907,20 +2909,24 @@ NULL
 NULL
 ;
 
-256 #ifdeà
+262 
+	`´štf
+("insidehe firsthe commandQueue Creation‡nd before it.");
+
+263 #ifdeà
 GMM_CONFIG_DMA_ASYNC
 
 
-257 
+264 
 i
 ;
 
-260 
+267 
 chª
 ->
 commªdQueue_chª
-=
-	`oş_şC»©eCommªdQueue
+ğ
+	`şC»©eCommªdQueue
 (
 ùx
 ->
@@ -2933,23 +2939,27 @@ CL_QUEUE_PROFILING_ENABLE
 ”rcode_DMA
 );
 
-261 if(
+268 if(
 ”rcode_INIT
 !=
 CL_SUCCESS
 ){
 
-262 
+269 
 	`g´št
 (
 FATAL
 ,"failedo create channel\n");
 
-266 #ifdeà
+271 
+	`´štf
+("insidehe firsthe commandQueue Creation");
+
+273 #ifdeà
 GMM_CONFIG_DMA_ASYNC
 
 
-267 
+274 
 	`š™lock
 (&
 chª
@@ -2957,20 +2967,20 @@ chª
 lock
 );
 
-268 
+275 
 chª
 ->
 ibuf
 =0;
 
-270 
+277 
 i
 =0;i<
 NBUFS
 ;i++){
 
-271 
-	`oş_şC»©eMemBufãr
+278 
+	`oş_şC»©eBufãr
 (
 pcÚ‹xt
 ->
@@ -2989,25 +2999,25 @@ i
 ”rcode_DMA
 );
 
-272 if(
+279 if(
 ”rcode_DMA
 !=
 CL_SUCCESS
 ){
 
-273 
+280 
 	`g´št
 (
 FATAL
 ,"failed for staging buffer\n");
 
-276 
+283 
 ”rcode_DMA
 =
 NULL
 ;
 
-277 
+284 
 chª
 ->
 ¡age_bufs
@@ -3023,19 +3033,19 @@ cÚ‹xt_k”Ãl
 ”rcode_DMA
 );
 
-278 if(
+285 if(
 ”rcode_DMA
 !=
 CL_SUCCESS
 ){
 
-279 
+286 
 	`g´št
 (
 FATAL
 ,"failedo create for staging buffer\n");
 
-280 
+287 
 	`oş_şR–—£MemObjeù
 (
 chª
@@ -3045,17 +3055,17 @@ chª
 i
 ]);
 
-283 ià(
+290 ià(
 i
 <
 NBUFS
 ){
 
-284 --
+291 --
 i
 >0){
 
-285 
+292 
 	`şR–—£Ev’t
 (
 chª
@@ -3065,7 +3075,7 @@ ev’ts
 i
 ]);
 
-286 
+293 
 	`oş_şR–—£MemObjeù
 (
 chª
@@ -3075,19 +3085,19 @@ chª
 i
 ]);
 
-290 
+297 
 »t
 =-1;
 
-294  
+301  
 »t
 ;
 
-295 
+302 
 	}
 }
 
-297 
+304 
 	$dma_chªÃl_fši
 (
 dma_chªÃl
@@ -3095,21 +3105,21 @@ dma_chªÃl
 chª
 ){
 
-298 #ifdeà
+305 #ifdeà
 GMM_CONFIG_DMA_ASYNC
 
 
-299 
+306 
 i
 ;
 
-301 
+308 
 i
 =0;i<
 NBUFS
 ;i++){
 
-302 
+309 
 	`şR–—£Ev’t
 (
 chª
@@ -3119,7 +3129,7 @@ ev’ts
 i
 ]);
 
-303 
+310 
 	`oş_şR–—£MemObjeù
 (
 chª
@@ -3129,19 +3139,19 @@ chª
 i
 ]);
 
-307 
-	`oş_şR–—£CommªdQueue
+314 
+	`şR–—£CommªdQueue
 (
 chª
 ->
 commªdQueue_chª
 );
 
-308 
+315 
 	}
 }
 
-310 
+317 
 ş_št
  
 	$gmm_şR–—£MemObjeù
@@ -3151,23 +3161,23 @@ commªdQueue_chª
 memObjPŒ
 ){
 
-312 
+319 
 »giÚ
  *
 r
 ;
 
-313 
+320 
 li¡_h—d
  *
 pos
 ;
 
-314 
+321 
 found
 =0;
 
-316 ià(!(
+323 ià(!(
 r
 ğ
 	`»giÚ_lookup
@@ -3177,7 +3187,7 @@ pcÚ‹xt
 memObjPŒ
 ))){
 
-317 
+324 
 	`ä“
 (
 r
@@ -3185,7 +3195,7 @@ r
 blocks
 );
 
-318 
+325 
 	`g´št
 (
 ERROR
@@ -3193,7 +3203,7 @@ ERROR
 memObjPŒ
 );
 
-320 
+327 
 	`¡©s_šc_ä“d
 (&
 pcÚ‹xt
@@ -3205,25 +3215,25 @@ r
 size
 );
 
-321 if(
+328 if(
 	`gmm_ä“
 (
 r
 )<0)
 
-322  
+329  
 CL_INVALID_MEM_OBJECT
 ;
 
-323  
+330  
 CL_SUCCESS
 ;
 
-324 
+331 
 	}
 }
 
-326 
+333 
 »giÚ
  * 
 	$»giÚ_lookup
@@ -3237,7 +3247,7 @@ gmm_cÚ‹xt
 ±r
 ){
 
-328 
+335 
 »giÚ
  *
 r
@@ -3245,17 +3255,17 @@ r
 NULL
 ;
 
-329 
+336 
 li¡_h—d
  *
 pos
 ;
 
-330 
+337 
 found
  =0;
 
-332 
+339 
 	`acquœe
  (&
 ùx
@@ -3263,7 +3273,7 @@ found
 lock_®loûd
 );
 
-333 
+340 
 	`li¡_fÜ_—ch
 (
 pos
@@ -3273,7 +3283,7 @@ pos
 li¡_®loûd
 ){
 
-334 
+341 
 r
 ğ
 	`li¡_’Œy
@@ -3285,7 +3295,7 @@ pos
 ’Œy_®loûd
 );
 
-335 ià(
+342 ià(
 r
 ->
 ¡©e
@@ -3295,7 +3305,7 @@ STATE_FREEING
 STATE_ZOMBIE
 ){
 
-338 if((()
+345 if((()
 ±r
  >=()(
 r
@@ -3303,11 +3313,11 @@ r
 swp_addr
 ))&&
 
-339 (()
+346 (()
 ±r
 <
 
-340 (()(
+347 (()(
 r
 ->
 swp_addr
@@ -3315,11 +3325,11 @@ swp_addr
 size
 )))){
 
-341 
+348 
 found
  =1;
 
-346 
+353 
 	`»Ëa£
 (&
 ùx
@@ -3327,25 +3337,25 @@ found
 lock_®loûd
 );
 
-347 if(!
+354 if(!
 found
 ){
 
-348 
+355 
 r
 =
 NULL
 ;
 
-350  
+357  
 r
 ;
 
-351 
+358 
 	}
 }
 
-353 
+360 
 	$gmm_ä“
 (
 »giÚ
@@ -3353,7 +3363,7 @@ r
 r
 ){
 
-354 
+361 
 	`g´št
 (
 DEBUG
@@ -3369,11 +3379,11 @@ size
 ¡©e
 );
 
-355 
+362 
 »_acquœe
 :
 
-356 
+363 
 	`acquœe
 (&
 r
@@ -3381,57 +3391,29 @@ r
 lock
 );
 
-357 
+364 
 r
 ->
 ¡©e
 ){
 
-358 
+365 
 STATE_ATTACHED
 :
 
-359 if(!
+366 if(!
 	`»giÚ_pšÃd
 (
 r
 ))
 
-360 
+367 
 	`li¡_©ched_d–
 (
 pcÚ‹xt
 ,
 r
 );
-
-362 
-	`»Ëa£
-(&
-r
-->
-lock
-);
-
-363 
-	`sched_y›ld
-();
-
-364 
-»_acquœe
-;
-
-367 
-STATE_EVICTING
-:
-
-368 
-r
-->
-¡©e
-=
-STATE_FREEING
-;
 
 369 
 	`»Ëa£
@@ -3442,16 +3424,44 @@ lock
 );
 
 370 
+	`sched_y›ld
+();
+
+371 
+»_acquœe
+;
+
+374 
+STATE_EVICTING
+:
+
+375 
+r
+->
+¡©e
+=
+STATE_FREEING
+;
+
+376 
+	`»Ëa£
+(&
+r
+->
+lock
+);
+
+377 
 	`g´št
 (
 DEBUG
 ,"region set freeing");
 
-372 
+379 
 STATE_FREEING
 :
 
-373 
+380 
 	`»Ëa£
 (&
 r
@@ -3459,15 +3469,15 @@ r
 lock
 );
 
-374 
+381 
 	`sched_y›ld
 ();
 
-375 
+382 
 »_acquœe
 ;
 
-379 
+386 
 	`»Ëa£
 (&
 r
@@ -3475,7 +3485,7 @@ r
 lock
 );
 
-380 
+387 
 	`li¡_©ched_d–
 (
 pcÚ‹xt
@@ -3483,13 +3493,13 @@ pcÚ‹xt
 r
 );
 
-381 if(
+388 if(
 r
 ->
 blocks
 )
 
-382 
+389 
 	`ä“
 (
 r
@@ -3497,13 +3507,13 @@ r
 blocks
 );
 
-383 if(
+390 if(
 r
 ->
 ±a_addr
 )
 
-384 
+391 
 	`ä“
 (
 r
@@ -3511,13 +3521,13 @@ r
 blocks
 );
 
-385 if(
+392 if(
 r
 ->
 swp_addr
 )
 
-386 
+393 
 	`ä“
 (
 r
@@ -3525,13 +3535,13 @@ r
 blocks
 );
 
-387 if(
+394 if(
 r
 ->
 dev_addr
 ){
 
-388 
+395 
 	`oş_şR–—£MemObjeù
 (*
 r
@@ -3539,7 +3549,7 @@ r
 dev_addr
 );
 
-389 
+396 
 	`Ïtomic_sub
 (&
 pcÚ‹xt
@@ -3551,7 +3561,7 @@ r
 size
 );
 
-390 
+397 
 	`upd©e_©ched
 (-
 r
@@ -3559,7 +3569,7 @@ r
 size
 );
 
-391 
+398 
 	`upd©e_d‘achabË
 (-
 r
@@ -3567,19 +3577,19 @@ r
 size
 );
 
-393 
+400 
 	`ä“
 (
 r
 );
 
-394 
+401 
 	`g´št
 (
 DEBUG
 ,"region freed\n");
 
-397 
+404 
 	}
 }
 
@@ -4309,338 +4319,6 @@ gmm_cÚ‹xt_š™
 gmm_cÚ‹xt_fši
 ();
 
-	@core2.h
-
-1 #iâdeà
-_GMM_CORE_H_
-
-
-2 
-	#_GMM_CORE_H_
-
-
-	)
-
-4 
-	~<¡dšt.h
->
-
-5 
-	~<sys/time.h
->
-
-8 
-	~"li¡.h
-"
-
-9 
-	~"¥šlock.h
-"
-
-10 
-	~"©omic.h
-"
-
-11 
-	~"¡©s.h
-"
-
-13 
-	#NBUFS
- 2
-
-	)
-
-14 
-	#BUFSIZE
- (512*1024)
-
-	)
-
-15 
-	#»giÚ_pšÃd
-(
-r
-è
-	`©omic_»ad
-(&(Ô)->
-pšÃd
-));
-
-	)
-
-17 
-	e»giÚ_¡©e
-{
-
-18 
-	mSTATE_DETACHED
-=0,
-
-19 
-	mSTATE_ATTACHED
-,
-
-20 
-	mSTATE_FREEING
-,
-
-21 
-	mSTATE_EVICTING
-,
-
-22 
-	mSTATE_ZOMBIE
-
-
-23 }
-	t»giÚ_¡©e_t
-;
-
-25 
-	srwhšt
-{
-
-26 
-	mæags
-;
-
-29 
-	sblock
-{
-
-30 
-	mdev_v®id
-;
-
-31 
-	mswp_v®id
-;
-
-32 
-¥šlock
- 
-	mlock
-;
-
-35 
-	sdma_chªÃl
-{
-
-36 
-¥šlock
- 
-	mlock
-;
-
-37 
-ş_commªd_queue
- 
-	mcommªdQueue_chª
-;
-
-38 
-	mibuf
-;
-
-39 *
-	m¡age_bufs
-[
-NBUFS
-];
-
-40 
-ş_ev’t
- 
-	mev’ts
-[
-NBUFS
-];
-
-43 
-	srwhšt
-{
-
-44 
-	mæags
-;
-
-47 
-	sgmm_cÚ‹xt
-{
-
-48 
-¥šlock
- 
-	mlock
-;
-
-49 
-li¡_h—d
- 
-	mli¡_®loûd
-;
-
-50 
-li¡_h—d
- 
-	mli¡_©ched
-;
-
-51 
-¥šlock
- 
-	mlock_©ched
-;
-
-52 
-¥šlock
- 
-	mlock_®loûd
-;
-
-53 
-dma_chªÃl
- 
-	mdma_htod
-;
-
-54 
-dma_chªÃl
- 
-	mdma_dtoh
-;
-
-55 
-ş_¶©fÜm_id
- 
-	m¶©fÜm
-;
-
-56 
-ş_deviû_id
- *
-	mdeviû
-;
-
-57 
-ş_cÚ‹xt
- 
-	mcÚ‹xt_k”Ãl
-;
-
-58 
-ş_commªd_queue
- 
-	mcommªdQueue_k”Ãl
-;
-
-59 
-¡©i¡ics
- 
-	m¡©s
-;
-
-62 
-	s»giÚ
-{
-
-64 
-	msize
-;
-
-65 
-ş_mem
- *
-	mdev_addr
-;
-
-66 
-ş_mem
- *
-	mswp_addr
-;
-
-67 
-ş_mem
- *
-	m±a_addr
-;
-
-68 
-ş_mem
- *
-	mu¤_addr
-;
-
-69 
-	mv®ue_mem£t
-;
-
-70 
-block
- *
-	mblocks
-;
-
-71 
-¥šlock
- 
-	mlock
-;
-
-72 
-»giÚ_¡©e_t
- 
-	m¡©e
-;
-
-73 
-©omic_t
- 
-	mpšÃd
-;
-
-74 
-©omic_t
- 
-	m»adšg
-;
-
-75 
-©omic_t
- 
-	mwr™šg
-;
-
-76 
-ş_mem_æags
- 
-	mæags
-;
-
-77 
-	mgmm_æags
-;
-
-78 
-rwhšt
- 
-	mrwhšt
-;
-
-80 
-li¡_h—d
- 
-	m’Œy_®loûd
-;
-
-81 
-li¡_h—d
- 
-	m’Œy_©ched
-;
-
 	@debug.c
 
 6 
@@ -4677,22 +4355,6 @@ gmm_cÚ‹xt
 ùx
 , cÚ¡ *
 ±r
-);
-
-14 
-gmm_dtoh
-(
-»giÚ
- *
-r
-, *
-d¡
-, cÚ¡ *
-¤c
-, 
-size_t
- 
-couÁ
 );
 
 16 
@@ -4842,28 +4504,6 @@ FATAL
 (
 ”ºo
 ));
-
-49 ià(
-	`gmm_dtoh
-(
-r
-, 
-‹mp
-, 
-addr
-, 
-size
-) < 0) {
-
-50 
-	`g´št
-(
-ERROR
-, "dtoh failed for„egion dump\n");
-
-51 
-fšish
-;
 
 54 
 f
@@ -5524,8 +5164,8 @@ GMM_EXPORT
 99 
 ş_cÚ‹xt
  
-	$şC»©eCÚ‹xt
-(
+şC»©eCÚ‹xt
+(cÚ¡ 
 ş_cÚ‹xt_´İ”t›s
  *
 ´İ”t›s
@@ -5537,11 +5177,21 @@ num_deviûs
 ş_deviû_id
  *
 deviûs
-,*
+,(
+CL_CALLBACK
+* 
 pâ_nÙify
+)(cÚ¡ *
+”ršfo
+, cÚ¡ *
+´iv©e_šfo
+, 
+size_t
+ 
+cb
 , *
 u£r_d©a
-,
+), *u£r_d©a,
 ş_št
  *
 ”rcode_»t
@@ -5557,7 +5207,11 @@ u£r_d©a
 š™Ÿlized
 ){
 
-102  
+102 
+	`´štf
+("we‡re insidehe GMM‡ndryo call\n");
+
+103  
 	`gmm_şC»©eCÚ‹xt
 (
 ´İ”t›s
@@ -5573,13 +5227,13 @@ u£r_d©a
 ”rcode_»t
 );
 
-105 
+106 
 	`g´št
 (
 WARN
 ,"clCreateContext outsidehe gmm\n");
 
-106  
+107  
 	`oş_şC»©eCÚ‹xt
 (
 ´İ”t›s
@@ -5595,19 +5249,19 @@ u£r_d©a
 ”rcode_»t
 );
 
-108  
+109  
 »t
 ;
 
-109 
+110 
 	}
 }
 
-111 
+112 
 GMM_EXPORT
 
 
-112 
+113 
 ş_mem
  
 	$şC»©eBufãr
@@ -5631,7 +5285,7 @@ ho¡_±r
 ”rcode
 ){
 
-113 
+114 
 ş_mem
  
 »t
@@ -5639,11 +5293,11 @@ ho¡_±r
 NULL
 ;
 
-114 if(
+115 if(
 š™Ÿlized
 ){
 
-115  
+116  
 	`gmm_şC»©eBufãr
 (
 cÚ‹xt
@@ -5657,13 +5311,13 @@ ho¡_±r
 ”rcode
 ,0);
 
-118 
+119 
 	`g´št
 (
 WARN
 ,"clCreateBuffer called outsidehe GMM\n");
 
-119  
+120  
 	`oş_şC»©eBufãr
 (
 cÚ‹xt
@@ -5677,19 +5331,19 @@ ho¡_±r
 ”rcode
 );
 
-121  
+122  
 »t
 ;
 
-122 
+123 
 	}
 }
 
-136 
+137 
 GMM_EXPORT
 
 
-137 
+138 
 ş_št
  
 	$şR–—£MemObjeù
@@ -5699,39 +5353,39 @@ GMM_EXPORT
 memObj
 ){
 
-138 
+139 
 ş_št
  
 »t
 ;
 
-140 if(
+141 if(
 š™Ÿlized
 ){
 
-141  
+142  
 	`gmm_şR–—£MemObjeù
 (&
 memObj
 );
 
-144 
+145 
 	`g´št
 (
 WARN
 ,"clReleaseMemObj Call");
 
-145  
+146  
 	`oş_şR–—£MemObjeù
 (
 memObj
 );
 
-148  
+149  
 »t
 ;
 
-149 
+150 
 	}
 }
 
@@ -6563,12 +6217,6 @@ msg
 	}
 }
 
-89 
-loÿl_viùim_eviù
-(
-size_Ãeded
-);
-
 91 
 	$hªdË_»q_eviù
 (
@@ -6609,13 +6257,7 @@ FATAL
 
 105 
 »t
- = 
-	`loÿl_viùim_eviù
-(
-msg
-->
-size_Ãeded
-);
+ = 0;
 
 106 ià(
 msg
@@ -6987,6 +6629,12 @@ RLIMIT_MSGQUEUE
 ¾im
 );
 
+206 
+	`´štf
+("\‰hcu¼’ˆtid is:%d\n",
+	`g‘tid
+());
+
 207 
 	`¥rštf
 (
@@ -7219,93 +6867,127 @@ ack
 	~<š‰y³s.h
 >
 
-6 
+5 
+	~<¡ršg.h
+>
+
+7 
+	#FALSE
+ 1
+
+	)
+
+8 
+	#TRUE
+ 0
+
+	)
+
+10 
 	$maš
 (){
 
-8 
+12 
 v’dÜ
 [1024];
 
-9 
+13 
 ş_ušt
  
 num_¶©fÜm
 ;
 
-10 
+14 
 ş_deviû_id
  
 devId
 [10];
 
-11 
+15 
 ş_ušt
  
 num_Dev
 ;
 
-12 
+16 
 devU£d
 ;
 
-13 
+17 
 ş_cÚ‹xt
  
 cÚ‹xt
 ;
 
-14 
+18 
 ş_commªd_queue
  
 cqueue
 ;
 
-15 
+19 
 ş_´og¿m
  
 ´og¿m
 ;
 
-16 
+20 
 ş_k”Ãl
  
 k”Ãl
 ;
 
-17 
+21 
 ş_ulÚg
  
 mem
 ;
 
-18 
+22 
 ş_ulÚg
  
 loÿlMem
 ;
 
-19 
+23 
 devName
 [1024];
 
-20 
+24 
 i
 =0;
 
-23 
+25 *
+nvidŸ
+="NVIDIA Corporation";
+
+26 
+æag
+=
+FALSE
+;
+
+27 
 ş_deviû_id
  
 deviû
 ;
 
-24 
+28 
 ş_deviû_šfo
  
 ·¿m_Çme
 ;
 
-26 
+29 
+ş_št
+ *
+”rcode_CC
+=
+NULL
+;
+
+30 
 	`şG‘PÏtfÜmIDs
 (
 NULL
@@ -7313,13 +6995,13 @@ NULL
 num_¶©fÜm
 );
 
-27 
+31 
 	`´štf
 ("Cu¼’y, whav%d…ÏtfÜms;\n",
 num_¶©fÜm
 );
 
-29 
+33 
 ş_¶©fÜm_id
  * 
 ¶©fÜm
@@ -7329,7 +7011,7 @@ num_¶©fÜm
 num_¶©fÜm
 *(cl_platform_id));
 
-30 
+34 
 	`şG‘PÏtfÜmIDs
 (
 num_¶©fÜm
@@ -7339,13 +7021,13 @@ num_¶©fÜm
 NULL
 );
 
-32 
+36 
 i
 =0;i<
 num_¶©fÜm
 ;i++){
 
-34 
+38 
 	`şG‘PÏtfÜmInfo
 (
 ¶©fÜm
@@ -7359,13 +7041,31 @@ v’dÜ
 NULL
 );
 
-35 
+39 
 	`´štf
 ("\tPÏtfÜm V’dÜ:\t%s\n",
 v’dÜ
 );
 
-37 
+40 if(
+	`¡rcmp
+(
+v’dÜ
+,
+nvidŸ
+)==0){
+
+41 
+	`´štf
+("We've gothe„ight one\n");
+
+42 
+æag
+=
+TRUE
+;
+
+49 
 	`şG‘DeviûIDs
 (
 ¶©fÜm
@@ -7379,13 +7079,13 @@ devId
 num_Dev
 );
 
-38 
+50 
 	`´štf
 ("numb” oàdeviû %u\n",
 num_Dev
 );
 
-40 
+52 
 	`şG‘DeviûInfo
 (
 devId
@@ -7397,13 +7097,41 @@ devName
 NULL
 );
 
-41 
+53 
 	`´štf
 ("\tDeviû Name:\t%s\n",
 devName
 );
 
-44 
+55 if(
+æag
+==
+TRUE
+){
+
+56 
+cÚ‹xt
+=
+	`şC»©eCÚ‹xt
+(
+NULL
+,1,
+devId
+,NULL,NULL,
+”rcode_CC
+);
+
+57 if(
+”rcode_CC
+==
+CL_SUCCESS
+){
+
+58 
+	`´štf
+("Context Creating Success!\n");
+
+63 
 	`şG‘DeviûInfo
 (
 devId
@@ -7415,13 +7143,19 @@ mem
 NULL
 );
 
-45 
+64 
 	`´štf
-("Thglob® sizi %0.00à\n",()
+("Thglob® sizi %d \n",
 mem
-/1024576);
+);
 
-51 
+65 
+æag
+=
+FALSE
+;
+
+69 
 	}
 }
 
@@ -8417,11 +8151,15 @@ i
 shmfd
 ;
 
-33 ià(
+33 
+tÙ®
+=1609760768;
+
+34 ià(
 v”bo£
 ) {
 
-34 
+35 
 	`årštf
 (
 ¡d”r
@@ -8429,7 +8167,7 @@ v”bo£
 tÙ®
 );
 
-35 
+36 
 	`årštf
 (
 ¡d”r
@@ -8437,27 +8175,27 @@ tÙ®
 sä“
 );
 
-37 ià(
+38 ià(
 mem_tÙ®
  > 0 && mem_tÙ® <ğ
 tÙ®
 )
 
-38 
+39 
 tÙ®
  = 
 mem_tÙ®
 ;
 
-40 
+41 
 tÙ®
  -= 200000000;
 
-41 ià(
+42 ià(
 v”bo£
 ) {
 
-42 
+43 
 	`årštf
 (
 ¡d”r
@@ -8465,13 +8203,13 @@ v”bo£
 tÙ®
 );
 
-43 
+44 
 	`årštf
 (
 ¡d”r
 , "Setting GMM ...\n");
 
-47 
+48 
 £m
  = 
 	`£m_İ’
@@ -8483,7 +8221,7 @@ O_CREAT
 O_EXCL
 , 0666, 1);
 
-48 ià(
+49 ià(
 £m
  =ğ
 SEM_FAILED
@@ -8493,25 +8231,25 @@ SEM_FAILED
 EEXIST
 ) {
 
-49 
+50 
 	`³¼Ü
 ("Semaphore‡lreadyƒxists; haveo unlink it‡nd†ink‡gain");
 
-50 ià(
+51 ià(
 	`£m_uÆšk
 (
 GMM_SEM_LAUNCH
 ) == -1) {
 
-51 
+52 
 	`³¼Ü
 ("Failedo„emove semaphore; quitting");
 
-52 
+53 
 	`ex™
 (1);
 
-54 
+55 
 £m
  = 
 	`£m_İ’
@@ -8523,41 +8261,41 @@ O_CREAT
 O_EXCL
 , 0666, 1);
 
-55 ià(
+56 ià(
 £m
  =ğ
 SEM_FAILED
 ) {
 
-56 
+57 
 	`³¼Ü
 ("Failedo create semaphore‡gain; quitting");
 
-57 
+58 
 	`ex™
 (1);
 
-60 ià(
+61 ià(
 £m
  =ğ
 SEM_FAILED
 ) {
 
-61 
+62 
 	`³¼Ü
 ("Failedo create semaphore;ƒxiting");
 
-62 
+63 
 	`ex™
 (1);
 
-65 
+66 
 	`£m_şo£
 (
 £m
 );
 
-70 
+71 
 shmfd
  = 
 	`shm_İ’
@@ -8571,7 +8309,7 @@ O_CREAT
 O_EXCL
 , 0644);
 
-71 ià(
+72 ià(
 shmfd
  =ğ-1 && 
 ”ºo
@@ -8579,25 +8317,25 @@ shmfd
 EEXIST
 ) {
 
-72 
+73 
 	`³¼Ü
 ("Shared memory‡lreadyƒxists; unlink it‡nd†ink‡gain");
 
-73 ià(
+74 ià(
 	`shm_uÆšk
 (
 GMM_SHM_GLOBAL
 ) == -1) {
 
-74 
+75 
 	`³¼Ü
 ("Failedo„emove shared memory; quitting");
 
-75 
+76 
 ç_shm
 ;
 
-77 
+78 
 shmfd
  = 
 	`shm_İ’
@@ -8611,31 +8349,31 @@ O_CREAT
 O_EXCL
 , 0644);
 
-78 ià(
+79 ià(
 shmfd
  == -1) {
 
-79 
+80 
 	`³¼Ü
 ("Failedo create shared memory‡gain; quitting");
 
-80 
+81 
 ç_shm
 ;
 
-83 ià(
+84 ià(
 shmfd
  == -1) {
 
-84 
+85 
 	`³¼Ü
 ("Failedo create shared memory; quitting");
 
-85 
+86 
 ç_shm
 ;
 
-88 ià(
+89 ià(
 	`árunÿ‹
 (
 shmfd
@@ -8643,15 +8381,15 @@ shmfd
 gmm_glob®
 )) == -1) {
 
-89 
+90 
 	`³¼Ü
 ("Failedoruncatehe shared memory; quitting");
 
-90 
+91 
 ç_Œunÿ‹
 ;
 
-93 
+94 
 pglob®
  = (
 gmm_glob®
@@ -8661,7 +8399,7 @@ gmm_glob®
 NULL
 , (*pglobal),
 
-94 
+95 
 PROT_READ
  | 
 PROT_WRITE
@@ -8671,21 +8409,21 @@ MAP_SHARED
 shmfd
 , 0);
 
-95 ià(
+96 ià(
 pglob®
  =ğ
 MAP_FAILED
 ) {
 
-96 
+97 
 	`³¼Ü
 ("failedo mmaphe shared memory; quitting");
 
-97 
+98 
 ç_mm­
 ;
 
-100 
+101 
 pglob®
 ->
 mem_tÙ®
@@ -8693,7 +8431,7 @@ mem_tÙ®
 tÙ®
 ;
 
-101 
+102 
 	`Ïtomic_£t
 (&
 pglob®
@@ -8701,7 +8439,7 @@ pglob®
 mem_u£d
 , 0);
 
-102 
+103 
 	`š™lock
 (&
 pglob®
@@ -8709,13 +8447,13 @@ pglob®
 lock
 );
 
-103 
+104 
 pglob®
 ->
 nş›Ás
  = 0;
 
-104 
+105 
 pglob®
 ->
 ru
@@ -8723,7 +8461,7 @@ pglob®
 imru
  = -1;
 
-105 
+106 
 	`mem£t
 (
 pglob®
@@ -8733,13 +8471,13 @@ pglob®
 NCLIENTS
 );
 
-106 
+107 
 i
  = 0; i < 
 NCLIENTS
 ; i++) {
 
-107 
+108 
 pglob®
 ->
 ş›Ás
@@ -8749,7 +8487,7 @@ i
 šdex
  = -1;
 
-108 
+109 
 pglob®
 ->
 ş›Ás
@@ -8759,7 +8497,7 @@ i
 šext
  = -1;
 
-109 
+110 
 pglob®
 ->
 ş›Ás
@@ -8769,99 +8507,99 @@ i
 »v
  = -1;
 
-112 
+113 
 	`munm­
 (
 pglob®
 , (*pglobal));
 
-113 
+114 
 	`şo£
 (
 shmfd
 );
 
-115 ià(
+116 ià(
 v”bo£
 )
 
-116 
+117 
 	`årštf
 (
 ¡d”r
 , "Setting done!\nGMM started.\n");
 
-119 
+120 
 ç_mm­
 :
 
-120 
+121 
 ç_Œunÿ‹
 :
 
-121 
+122 
 	`şo£
 (
 shmfd
 );
 
-122 
+123 
 	`shm_uÆšk
 (
 GMM_SHM_GLOBAL
 );
 
-123 
+124 
 ç_shm
 :
 
-124 
+125 
 	`£m_uÆšk
 (
 GMM_SEM_LAUNCH
 );
 
-127 
+128 
 	}
 }
 
-129 
+130 
 	$¡İ
 ()
 
-131 ià(
+132 ià(
 	`shm_uÆšk
 (
 GMM_SHM_GLOBAL
 ) == -1) {
 
-132 
+133 
 	`³¼Ü
 ("Failedo unlink shared memory");
 
-135 ià(
+136 ià(
 	`£m_uÆšk
 (
 GMM_SEM_LAUNCH
 ) == -1) {
 
-136 
+137 
 	`³¼Ü
 ("Failedo unlink semaphore");
 
-139 ià(
+140 ià(
 v”bo£
 )
 
-140 
+141 
 	`´štf
 ("GMM stopped\n");
 
-142 
+143 
 	}
 }
 
-144 
+145 
 	$»¡¬t
 (
 size_t
@@ -8869,37 +8607,37 @@ size_t
 mem_tÙ®
 )
 
-146 
+147 
 	`¡İ
 ();
 
-147  
+148  
 	`¡¬t
 (
 mem_tÙ®
 );
 
-148 
+149 
 	}
 }
 
-151 
+152 
 	$šfo
 ()
 
-153 
+154 
 gmm_glob®
  *
 pglob®
 ;
 
-154 
+155 
 shmfd
 , 
 iş›Á
 ;
 
-156 
+157 
 shmfd
  = 
 	`shm_İ’
@@ -8909,11 +8647,11 @@ GMM_SHM_GLOBAL
 O_RDWR
 , 0);
 
-157 ià(
+158 ià(
 shmfd
  == -1) {
 
-158 
+159 
 	`årštf
 (
 ¡d”r
@@ -8923,7 +8661,7 @@ shmfd
 ”ºo
 ));
 
-162 
+163 
 pglob®
  = (
 gmm_glob®
@@ -8933,7 +8671,7 @@ gmm_glob®
 NULL
 , (*pglobal),
 
-163 
+164 
 PROT_READ
  | 
 PROT_WRITE
@@ -8943,13 +8681,13 @@ MAP_SHARED
 shmfd
 , 0);
 
-164 ià(
+165 ià(
 pglob®
  =ğ
 MAP_FAILED
 ) {
 
-165 
+166 
 	`årštf
 (
 ¡d”r
@@ -8959,25 +8697,25 @@ MAP_FAILED
 ”ºo
 ));
 
-166 
+167 
 	`şo£
 (
 shmfd
 );
 
-169 
+170 
 	`şo£
 (
 shmfd
 );
 
-171 
+172 
 	`årštf
 (
 ¡d”r
 , "GMM status:\n");
 
-172 
+173 
 	`årštf
 (
 ¡d”r
@@ -8987,7 +8725,7 @@ pglob®
 mem_tÙ®
 );
 
-173 
+174 
 	`årštf
 (
 ¡d”r
@@ -8997,13 +8735,13 @@ pglob®
 mem_u£d
 );
 
-174 
+175 
 	`årštf
 (
 ¡d”r
 , "\tclients in mru order:");
 
-176 
+177 
 	`acquœe
 (&
 pglob®
@@ -9011,25 +8749,25 @@ pglob®
 lock
 );
 
-177 ià(
+178 ià(
 pglob®
 ->
 imru
  == -1)
 
-178 
+179 
 	`årštf
 (
 ¡d”r
 , "\t[None]\n");
 
-180 
+181 
 	`årštf
 (
 ¡d”r
 , "\n");
 
-181 
+182 
 iş›Á
  = 
 pglob®
@@ -9037,7 +8775,7 @@ pglob®
 imru
 ; iclient != -1;
 
-182 
+183 
 iş›Á
  = 
 pglob®
@@ -9047,7 +8785,7 @@ pglob®
 šext
 ) {
 
-183 
+184 
 gmm_ş›Á
  *
 ş›Á
@@ -9059,7 +8797,7 @@ pglob®
 iş›Á
 ];
 
-184 
+185 
 	`årštf
 (
 ¡d”r
@@ -9069,7 +8807,7 @@ iş›Á
 pid
 );
 
-185 
+186 
 	`årštf
 (
 ¡d”r
@@ -9079,7 +8817,7 @@ pid
 pšÃd
 );
 
-186 
+187 
 	`årštf
 (
 ¡d”r
@@ -9089,7 +8827,7 @@ pšÃd
 size_d‘achabË
 );
 
-188 
+189 
 	`»Ëa£
 (&
 pglob®
@@ -9097,11 +8835,11 @@ pglob®
 lock
 );
 
-191 
+192 
 	}
 }
 
-193 
+194 
 	$maš
 (
 ¬gc
@@ -9109,115 +8847,115 @@ lock
 ¬gv
 [])
 
-195 
+196 
 İtiÚ
  
 İtiÚs
 [7];
 
-196 *
+197 *
 İts
  = "serm:vi";
 
-197 
+198 
 commªd
  = '\0';
 
-198 
+199 
 mem_tÙ®
  = 0;
 
-199 
+200 
 c
 , 
 »t
  = 0;
 
-201 
+202 
 	`mem£t
 (
 İtiÚs
 , 0, (options[0]) * 7);
 
-202 
+203 
 İtiÚs
 [0].
 Çme
  = "start";
 
-203 
+204 
 İtiÚs
 [0].
 v®
  = 's';
 
-204 
+205 
 İtiÚs
 [1].
 Çme
  = "stop";
 
-205 
+206 
 İtiÚs
 [1].
 v®
  = 'e';
 
-206 
+207 
 İtiÚs
 [2].
 Çme
  = "restart";
 
-207 
+208 
 İtiÚs
 [2].
 v®
  = 'r';
 
-208 
+209 
 İtiÚs
 [3].
 Çme
  = "mem-size";
 
-209 
+210 
 İtiÚs
 [3].
 v®
  = 'm';
 
-210 
+211 
 İtiÚs
 [3].
 has_¬g
  = 1;
 
-211 
+212 
 İtiÚs
 [4].
 Çme
  = "verbose";
 
-212 
+213 
 İtiÚs
 [4].
 v®
  = 'v';
 
-213 
+214 
 İtiÚs
 [4].
 Çme
  = "info";
 
-214 
+215 
 İtiÚs
 [4].
 v®
  = 'i';
 
-216 (
+217 (
 c
  = 
 	`g‘İt_lÚg
@@ -9233,27 +8971,27 @@ c
 NULL
 )) != -1) {
 
-217 
+218 
 c
 ) {
 
-219 
+220 
 commªd
  = 's';
 
-222 
+223 
 commªd
  = 'e';
 
-225 
+226 
 commªd
  = 'r';
 
-228 
+229 
 commªd
  = 'i';
 
-231 
+232 
 mem_tÙ®
  = 
 	`©Ş
@@ -9261,21 +8999,21 @@ mem_tÙ®
 İrg
 );
 
-234 
+235 
 v”bo£
  = 1;
 
-237 ià(
+238 ià(
 İtİt
  == 'm')
 
-238 
+239 
 	`årštf
 (
 ¡d”r
 , "Please specify memory size\n");
 
-240 
+241 
 	`årštf
 (
 ¡d”r
@@ -9283,15 +9021,15 @@ v”bo£
 c
 );
 
-244 
+245 
 	`abÜt
 ();
 
-249 ià(
+250 ià(
 commªd
  == 's')
 
-250 
+251 
 »t
  = 
 	`¡¬t
@@ -9299,21 +9037,21 @@ commªd
 mem_tÙ®
 );
 
-251 ià(
+252 ià(
 commªd
  == 'e')
 
-252 
+253 
 »t
  = 
 	`¡İ
 ();
 
-253 ià(
+254 ià(
 commªd
  == 'r')
 
-254 
+255 
 »t
  =
 	`»¡¬t
@@ -9321,31 +9059,31 @@ commªd
 mem_tÙ®
 );
 
-255 ià(
+256 ià(
 commªd
  == 'i')
 
-256 
+257 
 »t
  = 
 	`šfo
 ();
 
-258 
+259 
 	`årštf
 (
 ¡d”r
 , "No‡ction specified\n");
 
-259 
+260 
 »t
  = -1;
 
-262  
+263  
 »t
 ;
 
-263 
+264 
 	}
 }
 
@@ -43026,8 +42764,8 @@ __END_DECLS
 .
 1
 /usr/include
-53
-855
+52
+847
 atomic.h
 client.c
 client.h
@@ -43035,7 +42773,6 @@ common.c
 common.h
 core.c
 core.h
-core2.h
 debug.c
 debug.h
 gmm.h

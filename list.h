@@ -42,13 +42,17 @@ static inline void list_add_tail(struct list_head *add, struct list_head *head)
 // Delete a list entry by making the prev/next entries point to each other.
 static inline void __list_del(struct list_head * prev, struct list_head * next)
 {
+    printf("deleting 3\n"); 
 	next->prev = prev;
+    printf("deleted prev\n");
 	prev->next = next;
+    printf("deleted next\n");
 }
 
 // Delete an entry from list.
 static inline void list_del(struct list_head *entry)
 {
+    printf("lets see the ptrs: %p and %p ",entry->prev,entry->next);
 	__list_del(entry->prev, entry->next);
 }
 
@@ -64,6 +68,7 @@ static inline void list_move_tail(
 		struct list_head *list,
 		struct list_head *head)
 {
+    printf("before del the list\n");
 	list_del(list);
 	list_add_tail(list, head);
 }

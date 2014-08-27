@@ -23,6 +23,7 @@ cudaError_t (*nv_cudaFree)(void *) = NULL;
 cl_mem (*ocl_clCreateBuffer)(cl_context, cl_mem_flags, size_t, void*, cl_int)= NULL;
 cl_int (*ocl_clReleaseMemObject)(cl_mem)= NULL;
 cl_context (*ocl_clCreateContext)(cl_context_properties *,cl_uint ,const cl_device_id *,void*, void *,cl_int *)=NULL;
+cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id,cl_command_queue_properties, cl_int *)=NULL;
 static int initialized = 0;
 
 // The library constructor.
@@ -40,7 +41,7 @@ void gmm_init(void)
 	INTERCEPT_CL("clCreateBuffer", ocl_clCreateBuffer);
 	INTERCEPT_CL("clReleaseMemObject",ocl_clReleaseMemObject);
     INTERCEPT_CL("clCreateContext",ocl_clCreateContext);	
-
+    INTERCEPT_CL("clCreateCommandQueue",ocl_clCreateCommandQueue);
 
     gprint_init();
     
@@ -99,7 +100,6 @@ GMM_EXPORT
 cl_context clCreateContext(const cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void (CL_CALLBACK* pfn_notify)(const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){
     cl_context ret;
     if (initialized){
-        printf("we are inside the GMM and try to call\n");
         return gmm_clCreateContext(properties,num_devices,devices,pfn_notify, user_data,errcode_ret);
     }
     else{
@@ -113,7 +113,7 @@ GMM_EXPORT
 cl_mem clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int *errcode){
     cl_mem ret=NULL;
     if(initialized){
-       return gmm_clCreateBuffer(context,flags,size,host_ptr,errcode,0);
+       ret=gmm_clCreateBuffer(context,flags,size,host_ptr,errcode,0);
     }
     else {
        gprint(WARN,"clCreateBuffer called outside the GMM\n");
@@ -149,6 +149,21 @@ cl_int clReleaseMemObject(cl_mem memObj){
     return ret;
 }
 
+GMM_EXPORT
+cl_command_queue clCreateCommandQueue(cl_context context,cl_device_id device,cl_command_queue_properties properties, cl_int *errcode_CQ){
+    
+    cl_command_queue ret;
+    if(initialized){
+        return ocl_clCreateCommandQueue(context, device, properties, errcode_CQ);
+    }
+    else{
+        return ocl_clCreateCommandQueue(context, device, properties, errcode_CQ);
+    }
+
+
+    return ret;
+
+}
 
 
 /*

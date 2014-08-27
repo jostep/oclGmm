@@ -27,6 +27,8 @@ int main(){
     cl_device_id device;
     cl_device_info param_name;
     cl_int *errcode_CC=NULL;
+    cl_mem buffer;
+    cl_int *errcode_CB=NULL;
     clGetPlatformIDs(NULL,0,&num_platform);
     printf("Currently, we have %d platforms;\n",num_platform);
     
@@ -57,12 +59,18 @@ int main(){
             if(errcode_CC==CL_SUCCESS){
                 printf("Context Creating Success!\n");
             }
-
+          
+           buffer=clCreateBuffer(context,CL_MEM_READ_WRITE,100*sizeof(cl_int),NULL,errcode_CB);
+            if(errcode_CB==CL_SUCCESS){
+                printf("Buffer Creating succes!  %p\n",errcode_CB);
+            }
+            
         }
-    
+         
         clGetDeviceInfo(devId[0],CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem),&mem,NULL);
         printf("The global size is %d \n",mem);
         flag=FALSE;
+        
     }
     
     return 0;
