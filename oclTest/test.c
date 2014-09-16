@@ -61,8 +61,13 @@ int main(){
             }
           
            buffer=clCreateBuffer(context,CL_MEM_READ_WRITE,100*sizeof(cl_int),NULL,errcode_CB);
-            if(errcode_CB==CL_SUCCESS){
-                printf("Buffer Creating succes!  %p\n",errcode_CB);
+            if(errcode_CB!=CL_SUCCESS){
+                printf("Buffer Creating failed!  %p\n",errcode_CB);
+            }
+            printf("the address of the buffer is %p\n",buffer);
+
+            if(CL_SUCCESS!=clReleaseMemObject(buffer)){
+                printf("Buffer Deleting unsuccessful");
             }
             
         }

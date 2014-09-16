@@ -1,0 +1,8 @@
+rm -f gmmctl libgmm.so *.o .depend
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.0/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_REPLACEMENT_LRU -MM client.c common.c core.c interfaces.c msq.c replacement.c stats.c debug.c > .depend
+gcc -c -l OpenCL -Wall -g\
+		-I/usr/local/cuda-6.0/include  server.c -o server.o -lpthread -lrt
+gcc -L/usr/local/cuda-6.0/lib64 server.o -o  gmmctl -lpthread -lrt
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.0/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_REPLACEMENT_LRU   -c -o client.o client.c
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.0/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_REPLACEMENT_LRU   -c -o common.o common.c
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.0/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_REPLACEMENT_LRU   -c -o core.o core.c

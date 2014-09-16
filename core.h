@@ -42,10 +42,10 @@ struct block {
 // each block are maintained separately.
 struct region {
 	long size;				// size of the object in bytes
-	cl_mem *dev_addr;			// device memory address
-	cl_mem *swp_addr;			// host swap buffer address
-	cl_mem *pta_addr;			// dptr array address
-	cl_mem *usr_addr;			// copy-on-write user address
+	cl_mem dev_addr;			// device memory address
+	cl_mem swp_addr;			// host swap buffer address
+	cl_mem pta_addr;			// dptr array address
+	cl_mem usr_addr;			// copy-on-write user address
 	int value_memset;		// value of cudaMemset
 	struct block *blocks;	// device memory blocks
 	struct spinlock lock;	// the lock that protects memory object state

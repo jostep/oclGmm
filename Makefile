@@ -21,7 +21,7 @@ endif
 # The compiler/linker settings
 CC := gcc
 #NVCC := $(CUDAPATH)/bin/nvcc
-CFLAGS := -Wall -pthread -fPIC -fvisibility=hidden \
+CFLAGS := -g -Wall -pthread -fPIC -fvisibility=hidden \
 	-I$(CUDAPATH)/include  \
 	-DGMM_PRINT_LEVEL=$(PRINT_LEVEL) $(FLAG_PRINT_BUFFER) $(GMM_CONFIGS)
 LDFLAGS := -shared -pthread -ldl -fPIC -OpenCL
@@ -43,10 +43,10 @@ depend : .depend
 %.c: ;
 
 gmmctl : server.o
-	$(CC) -L$(CUDAPATH)/lib64 $^ -o $@ -lpthread -lrt
+	$(CC) -L$(CUDAPATH)/lib64 $^ -o  $@ -lpthread -lrt
 
 server.o : server.c protocol.h spinlock.h list.h atomic.h
-	$(CC) -c -l OpenCL -Wall \
+	$(CC) -c -l OpenCL -Wall -g\
 		-I$(CUDAPATH)/include  $< -o $@ -lpthread -lrt
 
 $(LIBGMM): $(OBJS)

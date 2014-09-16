@@ -1,6 +1,7 @@
 #ifndef _GMM_LIST_H_
 #define _GMM_LIST_H_
 
+#include "common.h"
 // Here is a copy of Linux's implementation of double linked list and the
 // related operations that are interesting to us.
 
@@ -42,20 +43,21 @@ static inline void list_add_tail(struct list_head *add, struct list_head *head)
 // Delete a list entry by making the prev/next entries point to each other.
 static inline void __list_del(struct list_head * prev, struct list_head * next)
 {
-    printf("deleting 3\n"); 
 	next->prev = prev;
-    printf("deleted prev\n");
 	prev->next = next;
-    printf("deleted next\n");
 }
 
 // Delete an entry from list.
 static inline void list_del(struct list_head *entry)
 {
-    printf("lets see the ptrs: %p and %p ",entry->prev,entry->next);
-	__list_del(entry->prev, entry->next);
+    gprint(DEBUG,"lets see the ptrs: previous entry addr%p and next entry addr %p\n",entry->prev,entry->next);
+    if((entry->prev==NULL)&&(entry->next=NULL)){
+        gprint(WARN,"deleting empty ptrs\n");
+    }
+    else{
+	    __list_del(entry->prev, entry->next);
+    }
 }
-
 // Delete from one list and add as another's head.
 static inline void list_move(struct list_head *list, struct list_head *head)
 {
@@ -68,7 +70,6 @@ static inline void list_move_tail(
 		struct list_head *list,
 		struct list_head *head)
 {
-    printf("before del the list\n");
 	list_del(list);
 	list_add_tail(list, head);
 }

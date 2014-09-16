@@ -14,14 +14,11 @@
 #include "CL/opencl.h"
 
 // Original OpenCL handlers
-//
-/*
-cudaError_t (*nv_cudaMalloc)(void **, size_t) = NULL;
-cudaError_t (*nv_cudaFree)(void *) = NULL;
-*/
 
 cl_mem (*ocl_clCreateBuffer)(cl_context, cl_mem_flags, size_t, void*, cl_int)= NULL;
 cl_int (*ocl_clReleaseMemObject)(cl_mem)= NULL;
+cl_int (*ocl_clEnqueueFillBuffer)(cl_command_queue, cl_mem, const void *, size_t, size_t,size_t, cl_uint, const cl_event, cl_event)=NULL;
+cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event)=NULL;
 cl_context (*ocl_clCreateContext)(cl_context_properties *,cl_uint ,const cl_device_id *,void*, void *,cl_int *)=NULL;
 cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id,cl_command_queue_properties, cl_int *)=NULL;
 static int initialized = 0;
@@ -42,7 +39,9 @@ void gmm_init(void)
 	INTERCEPT_CL("clReleaseMemObject",ocl_clReleaseMemObject);
     INTERCEPT_CL("clCreateContext",ocl_clCreateContext);	
     INTERCEPT_CL("clCreateCommandQueue",ocl_clCreateCommandQueue);
-
+    INTERCEPT_CL("clEnqueueFillBuffer",ocl_clEnqueueFillBuffer);
+    INTERCEPT_CL("clEnqueueWriteBuffer",ocl_clEnqueueWriteBuffer);
+    
     gprint_init();
     
 
@@ -57,24 +56,6 @@ void gmm_init(void)
 		return;
 	}
 
-	// Before marking GMM context initialized, invoke an NV function
-	// to initialize CUDA runtime and let whatever memory regions
-	// implicitly required by CUDA runtime be allocated now. Those
-	// regions should be always attached and not managed by GMM runtime.
-	/*do {
-        cl_platform_id platform=NULL;
-        cl_device_id device=NULL;
-        cl_uint *num_platform;
-        cl_uint *num_device;
-        cl_ulong mem;
-       
-        clGetPlatformIDs(1,platform,num_platform);
-        clGetDeviceIDs(platform,CL_DEVICE_TYPE_ALL,sizeof(device),device,num_device);
-        clGetDeviceInfo(device,CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem),&mem,NULL);
-    
-        //ERCI: Currently, unable to find out api to acquire the size of the used mem.
-	} while (0);
-    */
 	initialized = 1;
 	gprint(DEBUG, "gmm initialized\n");
 }
@@ -109,6 +90,19 @@ cl_context clCreateContext(const cl_context_properties *properties,cl_uint num_d
     return ret;
 }
 
+
+GMM_EXPORT
+cl_int clEnqueueFillBuffer(cl_command_queue command_queue, cl_mem buffer, const void *pattern, size_t pattern_size, size_t offset,size_t size, cl_uint num_events_in_wait_list,const cl_event *event_wait_list, cl_event * event){
+    if(initialized){
+        int value = (int)(pattern);
+
+        return gmm_clEnqueueFillBuffer(command_queue, buffer, value, pattern_size, offset, size, num_events_in_wait_list, event_wait_list, event);
+    }
+    else {
+        return ocl_clEnqueueFillBuffer(command_queue, buffer, pattern, pattern_size, offset, size, num_events_in_wait_list, event_wait_list, event);
+    }
+}
+
 GMM_EXPORT
 cl_mem clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int *errcode){
     cl_mem ret=NULL;
@@ -121,28 +115,17 @@ cl_mem clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void 
     }
     return  ret;
 }
-/*
-// GMM-specific: allowing passing dptr array hints.
-GMM_EXPORT
-cudaError_t cudaMallocEx(void **devPtr, size_t size, int flags)
-{
-	if (initialized)
-		return gmm_cudaMalloc(devPtr, size, flags);
-	else {
-		gprint(WARN, "cudaMallocEx called outside GMM\n");
-		return nv_cudaMalloc(devPtr, size);
-	}
-}
-*/
+
 GMM_EXPORT
 cl_int clReleaseMemObject(cl_mem memObj){
+    
     cl_int ret;
-
     if(initialized){
-        return gmm_clReleaseMemObject(&memObj);
+        printf("inside the INTERCEPT, the ptr of memObj is  %p\n",memObj);
+        return gmm_clReleaseMemObject(memObj);
     }
     else{
-        gprint(WARN,"clReleaseMemObj Call");
+        gprint(WARN,"clReleaseMemObj Call out side the gmm");
         return ocl_clReleaseMemObject(memObj);
     }
 
@@ -165,6 +148,18 @@ cl_command_queue clCreateCommandQueue(cl_context context,cl_device_id device,cl_
 
 }
 
+GMM_EXPORT
+cl_int clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, 
+        size_t offset, size_t cb, const void * ptr, cl_uint num_events_in_wait_list, 
+        const cl_event *events_wait_list, cl_event *event){
+
+    if(initialized){
+        return ocl_clEnqueueWriteBuffer(command_queue, buffer, blocking_write, offset, cb, ptr, num_events_in_wait_list, events_wait_list,event);
+    }
+    else 
+        return ocl_clEnqueueWriteBuffer(command_queue, buffer, blocking_write, offset, cb, ptr, num_events_in_wait_list, events_wait_list, event);
+
+}
 
 /*
  *

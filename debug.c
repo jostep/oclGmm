@@ -102,7 +102,7 @@ void gmm_dump_dptr(const char *filepath, const void *dptr, const size_t size)
 		return;
 	}
 
-	if (dptr + size > r->swp_addr + r->size) {
+	if (dptr + size > &(r->swp_addr) + r->size) {//potential bug
 		gprint(DEBUG, "bad dump range for gmm_dump\n");
 		return;
 	}
