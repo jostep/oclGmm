@@ -802,10 +802,9 @@ static int gmm_memset(struct region *r, cl_mem *dst, int value, size_t count)
 	gprint(DEBUG, "memset: r(%p %p %ld) dst(%p) value(%d) count(%lu)\n", \
 			r, r->swp_addr, r->size, dst, value, count);
 
-/*	if (r->flags & HINT_PTARRAY)
+	if (r->flags & HINT_PTARRAY)
 		return gmm_memset_pta(r, dst, value, count);
-*/
-/*
+
     if (r->state == STATE_DETACHED) {
         gprint(DEBUG, "memset: setting a detached region\n");
 #ifdef GMM_CONFIG_COW
@@ -872,6 +871,18 @@ finish:
 	return ret;
 }
 
+*/
+
+static int gmm_htod(
+        struct region *r,
+        cl_mem dst,
+        cl_mem src,
+        size_t count
+        )
+{
+    
+
+}
 
 
 
@@ -906,27 +917,24 @@ static int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem buffe
     }
 
     stats_time_begin();
-    if(cow){
+    /*if(cow){
 
         stats_time_begin();
         if(gmm_)
         
     }
-    else{
+    else{*/
         if(gmm_htod(r,dst,src,count)<0)
             return CL_INVALID_MEM_OBJECT;
-    }
+    //}
     stats_time_end(&pcontext->stats,time_htod);
     stats_inc(&pcontext->stats,bytes_htod, count);
     
     return CL_SUCCESS;
 }
 
-static int gmm_htod(
-        struct region *r,
-        void *dst,
 
-*/
+
 
 
 

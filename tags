@@ -3,7 +3,7 @@
 !_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
-!_TAG_PROGRAM_VERSION	5.8	//
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 .DEFAULT_GOAL	Makefile	/^.DEFAULT_GOAL := all$/;"	m
 ALIGNUP	core.h	152;"	d
 BLOCKIDX	core.h	149;"	d
@@ -199,6 +199,7 @@ gmm_global	protocol.h	/^struct gmm_global {$/;"	s
 gmm_htod_block	core.c	/^static int gmm_htod_block($/;"	f	file:
 gmm_htod_pta	core.c	/^static int gmm_htod_pta($/;"	f	file:
 gmm_init	interfaces.c	/^void gmm_init(void)$/;"	f
+gmm_memcpy_dtoh	core.c	/^static int gmm_memcpy_dtoh(void *dst, const void *src, unsigned long size)$/;"	f	file:
 gmm_memcpy_htod	core.c	/^static int gmm_memcpy_htod(cl_mem dst, const cl_mem src, unsigned long size){$/;"	f	file:
 gmm_memset	core.c	/^static int gmm_memset(struct region *r, cl_mem buffer,int value, size_t count){$/;"	f	file:
 gmm_print_dptr	debug.c	/^void gmm_print_dptr(const void *dptr)$/;"	f
