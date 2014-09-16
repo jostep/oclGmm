@@ -3,7 +3,7 @@
 !_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
-!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+!_TAG_PROGRAM_VERSION	5.8	//
 .DEFAULT_GOAL	Makefile	/^.DEFAULT_GOAL := all$/;"	m
 ALIGNUP	core.h	152;"	d
 BLOCKIDX	core.h	149;"	d
@@ -114,6 +114,7 @@ atomic_read	atomic.h	/^static inline int atomic_read(atomic_t *ptr)$/;"	f
 atomic_set	atomic.h	/^static inline void atomic_set(atomic_t *ptr, int val)$/;"	f
 atomic_sub	atomic.h	/^static inline int atomic_sub(atomic_t *ptr, int val)$/;"	f
 atomic_t	atomic.h	/^typedef volatile int atomic_t;$/;"	t
+begin_dma	core.c	/^static void begin_dma(struct dma_channel *chan){$/;"	f	file:
 block	core.h	/^struct block {$/;"	s
 block	protocol.h	/^	int block;$/;"	m	struct:msg_req
 block_sync	core.c	/^static int block_sync(struct region *r, int block)$/;"	f	file:
@@ -198,6 +199,7 @@ gmm_global	protocol.h	/^struct gmm_global {$/;"	s
 gmm_htod_block	core.c	/^static int gmm_htod_block($/;"	f	file:
 gmm_htod_pta	core.c	/^static int gmm_htod_pta($/;"	f	file:
 gmm_init	interfaces.c	/^void gmm_init(void)$/;"	f
+gmm_memcpy_htod	core.c	/^static int gmm_memcpy_htod(cl_mem dst, const cl_mem src, unsigned long size){$/;"	f	file:
 gmm_memset	core.c	/^static int gmm_memset(struct region *r, cl_mem buffer,int value, size_t count){$/;"	f	file:
 gmm_print_dptr	debug.c	/^void gmm_print_dptr(const void *dptr)$/;"	f
 gmm_print_region	debug.c	/^void gmm_print_region(void *rgn)$/;"	f

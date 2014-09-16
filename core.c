@@ -519,6 +519,80 @@ finish:
     return ret;
 } 
 
+static int gmm_memcpy_dtoh(void *dst, const void *src, unsigned long size)
+{
+	struct dma_channel *chan = &pcontext->dma_dtoh;
+	unsigned long	off_dtos,	// Device to Stage buffer
+    off_stoh,	// Stage buffer to Host buffer
+    delta;
+	int ret = 0, ibuf_old;
+    
+	begin_dma(chan);
+    
+	// First issue DtoH commands for all staging buffers
+	ibuf_old = chan->ibuf;
+	off_dtos = 0;
+	while (off_dtos < size && off_dtos < NBUFS * BUFSIZE) {
+		delta = MIN(off_dtos + BUFSIZE, size) - off_dtos;
+		if (cudaMemcpyAsync(chan->stage_bufs[chan->ibuf], src + off_dtos,
+                            delta, cudaMemcpyDeviceToHost, chan->stream) != cudaSuccess) {
+			gprint(FATAL, "cudaMemcpyAsync failed in dtoh\n");
+			ret = -1;
+			goto finish;
+		}
+		if (cudaEventRecord(chan->events[chan->ibuf], chan->stream)
+            != cudaSuccess) {
+			gprint(FATAL, "cudaEventRecord failed in dtoh\n");
+			ret = -1;
+			goto finish;
+		}
+        
+		chan->ibuf = (chan->ibuf + 1) % NBUFS;
+		off_dtos += delta;
+	}
+    
+	// Now copy data to user buffer, meanwhile issuing the
+	// rest DtoH commands if any.
+	chan->ibuf = ibuf_old;
+	off_stoh = 0;
+	while (off_stoh < size) {
+		delta = MIN(off_stoh + BUFSIZE, size) - off_stoh;
+        
+		if (cudaEventSynchronize(chan->events[chan->ibuf]) != cudaSuccess) {
+			gprint(FATAL, "cudaEventSynchronize failed in dtoh\n");
+			ret = -1;
+			goto finish;
+		}
+		memcpy(dst + off_stoh, chan->stage_bufs[chan->ibuf], delta);
+		off_stoh += delta;
+        
+		if (off_dtos < size) {
+			delta = MIN(off_dtos + BUFSIZE, size) - off_dtos;
+			if (cudaMemcpyAsync(chan->stage_bufs[chan->ibuf], src + off_dtos,
+                                delta, cudaMemcpyDeviceToHost, chan->stream)
+                != cudaSuccess) {
+				gprint(FATAL, "cudaMemcpyAsync failed in dtoh\n");
+				ret = -1;
+				goto finish;
+			}
+			if (cudaEventRecord(chan->events[chan->ibuf], chan->stream)
+                != cudaSuccess) {
+				gprint(FATAL, "cudaEventRecord failed in dtoh\n");
+				ret = -1;
+				goto finish;
+			}
+			off_dtos += delta;
+		}
+        
+		chan->ibuf = (chan->ibuf + 1) % NBUFS;
+	}
+    
+finish:
+	end_dma(chan);
+	return ret;
+}
+
+
 static int gmm_htod_pta(
         struct region *r,
         cl_mem dst,
