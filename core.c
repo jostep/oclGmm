@@ -873,16 +873,147 @@ finish:
 
 */
 
+#if defined(GMM_CONFIG_HTOD_RADICAL)
+// The radical version
 static int gmm_htod(
-        struct region *r,
-        cl_mem dst,
-        cl_mem src,
-        size_t count
-        )
+                    struct region *r,
+                    void *dst,
+                    const void *src,
+                    size_t count)
 {
+	int iblock, ifirst, ilast;
+	unsigned long off, end;
+	void *s = (void *)src;
+	char *skipped;
+	int ret = 0;
     
-
+	if (r->flags & HINT_PTARRAY)
+		return gmm_htod_pta(r, dst, src, count);
+    
+	off = (unsigned long)(dst - r->swp_addr);
+	end = off + count;
+	ifirst = BLOCKIDX(off);
+	ilast = BLOCKIDX(end - 1);
+	skipped = (char *)calloc(ilast - ifirst + 1, sizeof(char));
+	if (!skipped) {
+		gprint(FATAL, "malloc failed for skipped[]: %s\n", strerror(errno));
+		return -1;
+	}
+    
+	// For each full-block over-writing, set dev_valid=0 and swp_valid=1.
+	// Since we know the memory range being over-written, setting flags ahead
+	// help prevent the evictor, if there is one, from wasting time evicting
+	// those blocks. This is one unique advantage of us compared with CPU
+	// memory management, where the OS usually does not have such interfaces
+	// or knowledge.
+	for (iblock = ifirst; iblock <= ilast; iblock++) {
+		unsigned long size = MIN(BLOCKUP(off), end) - off;
+		if ((offset % BLOCKSIZE) == 0 &&
+			(size == BLOCKSIZE || (offset + size) == r->size)) {
+			if (try_acquire(&r->blocks[iblock].lock)) {
+				r->blocks[iblock].dev_valid = 0;
+				r->blocks[iblock].swp_valid = 1;
+				release(&r->blocks[iblock].lock);
+			}
+		}
+		off += size;
+	}
+    
+	// Then, copy data block by block, skipping blocks that are not available
+	// for immediate operation (very likely due to being evicted). skipped[]
+	// records whether a block was skipped.
+	off = (unsigned long)(dst - r->swp_addr);
+	for (iblock = ifirst; iblock <= ilast; iblock++) {
+		unsigned long size = MIN(BLOCKUP(off), end) - off;
+		ret = gmm_htod_block(r, off, s, size, iblock, 1,
+                             skipped + (iblock - ifirst));
+		if (ret != 0)
+			goto finish;
+		s += size;
+		off += size;
+	}
+    
+	// Finally, copy the rest blocks, no skipping.
+	off = (unsigned long)(dst - r->swp_addr);
+	s = (void *)src;
+	for (iblock = ifirst; iblock <= ilast; iblock++) {
+		unsigned long size = MIN(BLOCKUP(off), end) - off;
+		if (skipped[iblock - ifirst]) {
+			ret = gmm_htod_block(r, off, s, size, iblock, 0, NULL);
+			if (ret != 0)
+				goto finish;
+		}
+		s += size;
+		off += size;
+	}
+    
+finish:
+	free(skipped);
+	return ret;
 }
+#else
+// The conservative version
+static int gmm_htod(
+                    struct region *r,
+                    void *dst,
+                    const void *src,
+                    size_t count)
+{
+	unsigned long off, end, size;
+	int ifirst, ilast, iblock;
+	void *s = (void *)src;
+	char *skipped;
+	int ret = 0;
+    
+	gprint(DEBUG, "htod: r(%p %p %ld %d %d) dst(%p) src(%p) count(%lu)\n", \
+           r, r->swp_addr, r->size, r->flags, r->state, dst, src, count);
+    
+	if (r->flags & HINT_PTARRAY)
+		return gmm_htod_pta(r, dst, src, count);
+    
+	off = (unsigned long)(dst - r->swp_addr);
+	end = off + count;
+	ifirst = BLOCKIDX(off);
+	ilast = BLOCKIDX(end - 1);
+	skipped = (char *)calloc(ilast - ifirst + 1, sizeof(char));
+	if (!skipped) {
+		gprint(FATAL, "malloc failed for skipped[]: %s\n", strerror(errno));
+		return -1;
+	}
+    
+	// Copy data block by block, skipping blocks that are not available
+	// for immediate operation (very likely due to being evicted).
+	// skipped[] records whether each block was skipped.
+	for (iblock = ifirst; iblock <= ilast; iblock++) {
+		size = MIN(BLOCKUP(off), end) - off;
+		ret = gmm_htod_block(r, off, s, size, iblock, 1,
+                             skipped + (iblock - ifirst));
+		if (ret != 0)
+			goto finish;
+		s += size;
+		off += size;
+	}
+    
+	// Then, copy the rest blocks, no skipping.
+	off = (unsigned long)(dst - r->swp_addr);
+	s = (void *)src;
+	for (iblock = ifirst; iblock <= ilast; iblock++) {
+		size = MIN(BLOCKUP(off), end) - off;
+		if (skipped[iblock - ifirst]) {
+			ret = gmm_htod_block(r, off, s, size, iblock, 0, NULL);
+			if (ret != 0)
+				goto finish;
+		}
+		s += size;
+		off += size;
+	}
+    
+finish:
+	free(skipped);
+	return ret;
+}
+#endif
+
 
 
 
