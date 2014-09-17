@@ -1,4 +1,4 @@
-cscope 15 $HOME/oclGmm -q 0000003133 0000249945
+cscope 15 $HOME/oclGmm -q 0000003138 0000254416
 	@atomic.h
 
 1 #i‚de‡
@@ -5431,6 +5431,930 @@ DEBUG
 	}
 }
 
+876 #i‡
+deföed
+(
+GMM_CONFIG_HTOD_RADICAL
+)
+
+878 
+	$gmm_htod
+(
+
+879 
+ªgi⁄
+ *
+r
+,
+
+880 *
+d°
+,
+
+881 c⁄° *
+§c
+,
+
+882 
+size_t
+ 
+cou¡
+)
+
+884 
+iblock
+, 
+ifú°
+, 
+ûa°
+;
+
+885 
+off
+, 
+íd
+;
+
+886 *
+s
+ = (*)
+§c
+;
+
+887 *
+skù≥d
+;
+
+888 
+ªt
+ = 0;
+
+890 i‡(
+r
+->
+Êags
+ & 
+HINT_PTARRAY
+)
+
+891  
+	`gmm_htod_±a
+(
+r
+, 
+d°
+, 
+§c
+, 
+cou¡
+);
+
+893 
+off
+ = ()(
+d°
+ - 
+r
+->
+swp_addr
+);
+
+894 
+íd
+ = 
+off
+ + 
+cou¡
+;
+
+895 
+ifú°
+ = 
+	`BLOCKIDX
+(
+off
+);
+
+896 
+ûa°
+ = 
+	`BLOCKIDX
+(
+íd
+ - 1);
+
+897 
+skù≥d
+ = (*)
+	`ˇŒoc
+(
+ûa°
+ - 
+ifú°
+ + 1, ());
+
+898 i‡(!
+skù≥d
+) {
+
+899 
+	`g¥öt
+(
+FATAL
+, "mÆlo¯Áûed f‹ skù≥d[]: %s\n", 
+	`°ªº‹
+(
+î∫o
+));
+
+909 
+iblock
+ = 
+ifú°
+; iblock <
+ûa°
+; iblock++) {
+
+910 
+size
+ = 
+	`MIN
+(
+	`BLOCKUP
+(
+off
+), 
+íd
+) - off;
+
+911 i‡((
+off£t
+ % 
+BLOCKSIZE
+) == 0 &&
+
+912 (
+size
+ =
+BLOCKSIZE
+ || (
+off£t
+ + sizeË=
+r
+->size)) {
+
+913 i‡(
+	`åy_acquúe
+(&
+r
+->
+blocks
+[
+iblock
+].
+lock
+)) {
+
+914 
+r
+->
+blocks
+[
+iblock
+].
+dev_vÆid
+ = 0;
+
+915 
+r
+->
+blocks
+[
+iblock
+].
+swp_vÆid
+ = 1;
+
+916 
+	`ªÀa£
+(&
+r
+->
+blocks
+[
+iblock
+].
+lock
+);
+
+919 
+off
+ +
+size
+;
+
+925 
+off
+ = ()(
+d°
+ - 
+r
+->
+swp_addr
+);
+
+926 
+iblock
+ = 
+ifú°
+; iblock <
+ûa°
+; iblock++) {
+
+927 
+size
+ = 
+	`MIN
+(
+	`BLOCKUP
+(
+off
+), 
+íd
+) - off;
+
+928 
+ªt
+ = 
+	`gmm_htod_block
+(
+r
+, 
+off
+, 
+s
+, 
+size
+, 
+iblock
+, 1,
+
+929 
+skù≥d
+ + (
+iblock
+ - 
+ifú°
+));
+
+930 i‡(
+ªt
+ != 0)
+
+931 
+föish
+;
+
+932 
+s
+ +
+size
+;
+
+933 
+off
+ +
+size
+;
+
+937 
+off
+ = ()(
+d°
+ - 
+r
+->
+swp_addr
+);
+
+938 
+s
+ = (*)
+§c
+;
+
+939 
+iblock
+ = 
+ifú°
+; iblock <
+ûa°
+; iblock++) {
+
+940 
+size
+ = 
+	`MIN
+(
+	`BLOCKUP
+(
+off
+), 
+íd
+) - off;
+
+941 i‡(
+skù≥d
+[
+iblock
+ - 
+ifú°
+]) {
+
+942 
+ªt
+ = 
+	`gmm_htod_block
+(
+r
+, 
+off
+, 
+s
+, 
+size
+, 
+iblock
+, 0, 
+NULL
+);
+
+943 i‡(
+ªt
+ != 0)
+
+944 
+föish
+;
+
+946 
+s
+ +
+size
+;
+
+947 
+off
+ +
+size
+;
+
+950 
+föish
+:
+
+951 
+	`‰ì
+(
+skù≥d
+);
+
+952  
+ªt
+;
+
+953 
+	}
+}
+
+956 
+	$gmm_htod
+(
+
+957 
+ªgi⁄
+ *
+r
+,
+
+958 *
+d°
+,
+
+959 c⁄° *
+§c
+,
+
+960 
+size_t
+ 
+cou¡
+)
+
+962 
+off
+, 
+íd
+, 
+size
+;
+
+963 
+ifú°
+, 
+ûa°
+, 
+iblock
+;
+
+964 *
+s
+ = (*)
+§c
+;
+
+965 *
+skù≥d
+;
+
+966 
+ªt
+ = 0;
+
+968 
+	`g¥öt
+(
+DEBUG
+, "htod:Ñ(%p %p %ld %d %d) dst(%p) src(%p) count(%lu)\n", \
+
+969 
+r
+,Ñ->
+swp_addr
+,Ñ->
+size
+,Ñ->
+Êags
+,Ñ->
+°©e
+, 
+d°
+, 
+§c
+, 
+cou¡
+);
+
+971 i‡(
+r
+->
+Êags
+ & 
+HINT_PTARRAY
+)
+
+972  
+	`gmm_htod_±a
+(
+r
+, 
+d°
+, 
+§c
+, 
+cou¡
+);
+
+974 
+off
+ = ()(
+d°
+ - 
+r
+->
+swp_addr
+);
+
+975 
+íd
+ = 
+off
+ + 
+cou¡
+;
+
+976 
+ifú°
+ = 
+	`BLOCKIDX
+(
+off
+);
+
+977 
+ûa°
+ = 
+	`BLOCKIDX
+(
+íd
+ - 1);
+
+978 
+skù≥d
+ = (*)
+	`ˇŒoc
+(
+ûa°
+ - 
+ifú°
+ + 1, ());
+
+979 i‡(!
+skù≥d
+) {
+
+980 
+	`g¥öt
+(
+FATAL
+, "mÆlo¯Áûed f‹ skù≥d[]: %s\n", 
+	`°ªº‹
+(
+î∫o
+));
+
+987 
+iblock
+ = 
+ifú°
+; iblock <
+ûa°
+; iblock++) {
+
+988 
+size
+ = 
+	`MIN
+(
+	`BLOCKUP
+(
+off
+), 
+íd
+) - off;
+
+989 
+ªt
+ = 
+	`gmm_htod_block
+(
+r
+, 
+off
+, 
+s
+, 
+size
+, 
+iblock
+, 1,
+
+990 
+skù≥d
+ + (
+iblock
+ - 
+ifú°
+));
+
+991 i‡(
+ªt
+ != 0)
+
+992 
+föish
+;
+
+993 
+s
+ +
+size
+;
+
+994 
+off
+ +
+size
+;
+
+998 
+off
+ = ()(
+d°
+ - 
+r
+->
+swp_addr
+);
+
+999 
+s
+ = (*)
+§c
+;
+
+1000 
+iblock
+ = 
+ifú°
+; iblock <
+ûa°
+; iblock++) {
+
+1001 
+size
+ = 
+	`MIN
+(
+	`BLOCKUP
+(
+off
+), 
+íd
+) - off;
+
+1002 i‡(
+skù≥d
+[
+iblock
+ - 
+ifú°
+]) {
+
+1003 
+ªt
+ = 
+	`gmm_htod_block
+(
+r
+, 
+off
+, 
+s
+, 
+size
+, 
+iblock
+, 0, 
+NULL
+);
+
+1004 i‡(
+ªt
+ != 0)
+
+1005 
+föish
+;
+
+1007 
+s
+ +
+size
+;
+
+1008 
+off
+ +
+size
+;
+
+1011 
+föish
+:
+
+1012 
+	`‰ì
+(
+skù≥d
+);
+
+1013  
+ªt
+;
+
+1014 
+	}
+}
+
+1020 
+	$gmm_˛EnqueueWrôeBuf„r
+(
+˛_comm™d_queue
+ 
+comm™d_queue
+, 
+˛_mem
+ 
+buf„r
+, 
+˛_boﬁ
+ 
+blockög_wrôe
+, 
+size_t
+ 
+off£t
+, size_à
+cou¡
+, c⁄° *
+±r
+, 
+˛_uöt
+ 
+num_evíts_ö_waô_li°
+, c⁄° 
+˛_evít
+ *
+evít_waô_li°
+, cl_evít* 
+evít
+){
+
+1022 
+dma_ch™√l
+ *
+ch™
+ = &
+pc⁄ãxt
+->
+dma_htod
+;
+
+1023 
+off
+, 
+dñè
+;
+
+1024 
+ªt
+=0, 
+ûa°
+;
+
+1026 
+ªgi⁄
+ * 
+r
+;
+
+1027 i‡(
+cou¡
+<=0){
+
+1028  
+CL_INVALID_VALUE
+;
+
+1031 
+r
+ = 
+	`ªgi⁄_lookup
+(
+pc⁄ãxt
+, 
+d°
+);
+
+1032 if(!
+r
+){
+
+1033 
+	`g¥öt
+(
+ERROR
+,"ˇ¬Ÿ födÅhêªgi⁄ c⁄èöög %∞ö htod\n",
+d°
+);
+
+1034  
+CL_INVALID_MEM_OBJECT
+;
+
+1037 if(
+r
+->
+°©e
+=
+STATE_FREEING
+||r->
+STATE
+==
+ZOMBIE
+){
+
+1038 
+	`g¥öt
+(
+WARN
+,"regionálready freed\n");
+
+1039  
+CL_INVALID_VALUE
+;
+
+1041 i‡(
+r
+->
+Êags
+&& 
+FLAG_COW
+){
+
+1042 
+	`g¥öt
+(
+ERROR
+,"HtoD,theÑegion isÅagged on COW\n");
+
+1043  
+CL_INVALID_MEM_OBJECT
+;
+
+1045 if(
+d°
++
+cou¡
+ > 
+r
+->
+swp_addr
+ +Ñ->
+size
+){
+
+1046 
+	`g¥öt
+(
+ERROR
+,"htod out ofÑegion boundary\n");
+
+1047  
+CL_INVALID_VALUE
+;
+
+1050 
+	`°©s_time_begö
+();
+
+1058 if(
+	`gmm_htod
+(
+r
+,
+d°
+,
+§c
+,
+cou¡
+)<0)
+
+1059  
+CL_INVALID_MEM_OBJECT
+;
+
+1061 
+	`°©s_time_íd
+(&
+pc⁄ãxt
+->
+°©s
+,
+time_htod
+);
+
+1062 
+	`°©s_öc
+(&
+pc⁄ãxt
+->
+°©s
+,
+byãs_htod
+, 
+cou¡
+);
+
+1064  
+CL_SUCCESS
+;
+
+1065 
+	}
+}
+
 	@core.h
 
 1 #i‚de‡
@@ -7516,7 +8440,7 @@ evít
 ){
 
 157  
-	`o˛_˛EnqueueWrôeBuf„r
+	`gmm_˛EnqueueWrôeBuf„r
 (
 comm™d_queue
 , 

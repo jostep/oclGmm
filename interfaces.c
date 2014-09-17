@@ -41,6 +41,7 @@ void gmm_init(void)
     INTERCEPT_CL("clCreateCommandQueue",ocl_clCreateCommandQueue);
     INTERCEPT_CL("clEnqueueFillBuffer",ocl_clEnqueueFillBuffer);
     INTERCEPT_CL("clEnqueueWriteBuffer",ocl_clEnqueueWriteBuffer);
+    INTERCEPT_CL("clEnqueueReadBuffer",ocl_clEnqueueWriteBuffer);
     
     gprint_init();
     
@@ -161,6 +162,18 @@ cl_int clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bo
 
 }
 
+GMM_EXPORT
+cl_int clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, 
+        size_t offset, size_t cb, const void * ptr, cl_uint num_events_in_wait_list, 
+        const cl_event *events_wait_list, cl_event *event){
+
+    if(initialized){
+        return ocl_clEnqueueReadBuffer(command_queue, buffer, blocking_read, offset, cb, ptr, num_events_in_wait_list, events_wait_list,event);
+    }
+    else 
+        return ocl_clEnqueueReadBuffer(command_queue, buffer, blocking_read, offset, cb, ptr, num_events_in_wait_list, events_wait_list, event);
+
+}
 /*
  *
  *

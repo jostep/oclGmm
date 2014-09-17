@@ -41,7 +41,7 @@ struct block {
 // must be attached/detached together. But the valid and dirty statuses of
 // each block are maintained separately.
 struct region {
-	long size;				// size of the object in bytes
+	unsigned long size;				// size of the object in bytes
 	cl_mem dev_addr;			// device memory address
 	cl_mem swp_addr;			// host swap buffer address
 	cl_mem pta_addr;			// dptr array address
