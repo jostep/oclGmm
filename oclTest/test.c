@@ -64,19 +64,21 @@ int main(){
             if(errcode_CB!=CL_SUCCESS){
                 printf("Buffer Creating failed!  %p\n",errcode_CB);
             }
-            printf("the address of the buffer is %p\n",buffer);
 
-            if(CL_SUCCESS!=clReleaseMemObject(buffer)){
+            printf("right before releasing?\n");
+
+            /*if(CL_SUCCESS!=clReleaseMemObject(buffer)){
                 printf("Buffer Deleting unsuccessful");
-            }
+            }*/
             
+
+            printf("right after Releasing?\n");
         }
+        
          
         clGetDeviceInfo(devId[0],CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem),&mem,NULL);
         printf("The global size is %d \n",mem);
-        flag=FALSE;
-        
+        flag=FALSE;    
     }
-    
     return 0;
 }

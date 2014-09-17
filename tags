@@ -169,6 +169,7 @@ dma_dtoh	core.h	/^	struct dma_channel dma_dtoh;		\/\/ DtoH DMA channel$/;"	m	str
 dma_htod	core.h	/^	struct dma_channel dma_htod;		\/\/ HtoD DMA channel$/;"	m	struct:gmm_context	typeref:struct:gmm_context::dma_channel
 dptr	core.h	/^	void *dptr;				\/\/ the actual device memory address$/;"	m	struct:dptr_arg
 dptr_arg	core.h	/^struct dptr_arg {$/;"	s
+end_dma	core.c	/^static void end_dma(struct dma_channel *chan){$/;"	f	file:
 entry	core.h	/^	struct list_head entry;$/;"	m	struct:victim	typeref:struct:victim::list_head
 entry_alloced	core.h	/^	struct list_head entry_alloced;		\/\/ linked to the list of allocated$/;"	m	struct:region	typeref:struct:region::list_head
 entry_attached	core.h	/^	struct list_head entry_attached;	\/\/ linked to the list of attached$/;"	m	struct:region	typeref:struct:region::list_head
@@ -184,7 +185,7 @@ gettid	common.h	/^static inline pid_t gettid()$/;"	f
 gmm_clCreateBuffer	core.c	/^cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int* errcode_CB, int gmm_flags){$/;"	f
 gmm_clCreateContext	core.c	/^cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){$/;"	f
 gmm_clEnqueueFillBuffer	core.c	/^cl_int gmm_clEnqueueFillBuffer(cl_command_queue command_queue, cl_mem  buffer, int value, size_t pattern_size, size_t offset,size_t size, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){$/;"	f
-gmm_clEnqueueWriteBuffer	core.c	/^static int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, size_t offset, size_t count, const void *ptr, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){$/;"	f	file:
+gmm_clEnqueueWriteBuffer	core.c	/^static int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_bool blocking_write, size_t offset, size_t count, const void *src, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){$/;"	f	file:
 gmm_clReleaseMemObject	core.c	/^cl_int gmm_clReleaseMemObject(cl_mem memObjPtr){$/;"	f
 gmm_client	protocol.h	/^struct gmm_client {$/;"	s
 gmm_context	core.h	/^struct gmm_context {$/;"	s
@@ -201,9 +202,10 @@ gmm_htod	core.c	/^static int gmm_htod($/;"	f	file:
 gmm_htod_block	core.c	/^static int gmm_htod_block($/;"	f	file:
 gmm_htod_pta	core.c	/^static int gmm_htod_pta($/;"	f	file:
 gmm_init	interfaces.c	/^void gmm_init(void)$/;"	f
-gmm_memcpy_dtoh	core.c	/^static int gmm_memcpy_dtoh(void *dst, const void *src, unsigned long size)$/;"	f	file:
-gmm_memcpy_htod	core.c	/^static int gmm_memcpy_htod(cl_mem dst, const cl_mem src, unsigned long size){$/;"	f	file:
+gmm_memcpy_dtoh	core.c	/^static int gmm_memcpy_dtoh(cl_mem dst, cl_mem src, unsigned long size)$/;"	f	file:
+gmm_memcpy_htod	core.c	/^static int gmm_memcpy_htod(cl_mem dst, const void * src, unsigned long size){$/;"	f	file:
 gmm_memset	core.c	/^static int gmm_memset(struct region *r, cl_mem buffer,int value, size_t count){$/;"	f	file:
+gmm_memset_pta	core.c	/^static int gmm_memset_pta(struct region * r, cl_mem dst, int value, size_t count){$/;"	f	file:
 gmm_print_dptr	debug.c	/^void gmm_print_dptr(const void *dptr)$/;"	f
 gmm_print_region	debug.c	/^void gmm_print_region(void *rgn)$/;"	f
 gprint	common.h	32;"	d
@@ -323,8 +325,8 @@ rwhint	core.h	/^	struct rwhint rwhint;	\/\/ rw hint$/;"	m	struct:region	typeref:
 rwhint	core.h	/^struct rwhint {$/;"	s
 sem_launch	client.c	/^sem_t *sem_launch = SEM_FAILED;		\/\/ Guarding kernel launches$/;"	v
 show_stackframe	common.c	/^static void show_stackframe() {$/;"	f	file:
-size	core.h	/^	long size;				\/\/ size of the object in bytes$/;"	m	struct:region
 size	core.h	/^	size_t size;$/;"	m	struct:karg
+size	core.h	/^	unsigned long size;				\/\/ size of the object in bytes$/;"	m	struct:region
 size	protocol.h	/^	int size;$/;"	m	struct:msg
 size	protocol.h	/^	int size;$/;"	m	struct:msg_rep
 size	protocol.h	/^	int size;$/;"	m	struct:msg_req

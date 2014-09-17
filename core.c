@@ -30,7 +30,7 @@ extern cl_int (*ocl_clEnqueueFillBuffer)(cl_command_queue, cl_mem,const void * ,
 void gmm_context_initEX();
 static int gmm_memset(struct region *r, cl_mem buffer, int value, size_t count);
 extern cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t, const void* , cl_uint, const cl_event *, cl_event *);
-extern cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t, const void* , cl_uint, const cl_event *, cl_event *);
+//extern cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t, const void* , cl_uint, const cl_event *, cl_event *);
 
 
 struct region * region_lookup(struct gmm_context *ctx, const cl_mem ptr);
@@ -39,6 +39,7 @@ static void dma_channel_fini(struct dma_channel *chan);
 struct gmm_context *pcontext=NULL;
 static int block_sync(struct region *r, int block);
 static int gmm_htod_block(struct region *r,unsigned long offset,const void *src,unsigned long size,int block,int skip,char *skipped);
+
 
 
 static void list_alloced_add(struct gmm_context *ctx, struct region *r)
@@ -104,6 +105,13 @@ static void begin_dma(struct dma_channel *chan){
     acquire(&chan->lock);
 #endif
 }
+
+static void end_dma(struct dma_channel *chan){
+#ifdef GMM_CONFIG_DMA_ASYNC
+    release(&chan->lock);
+#endif
+}
+
 
 int gmm_context_init(){
 
@@ -257,7 +265,23 @@ cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, v
             errcode_CB=CL_MEM_OBJECT_ALLOCATION_FAILURE;
             return NULL;
         }
+        gprint(DEBUG,"pta_addr (%p) alloced for %p\n",r->pta_addr,r);
     }
+    
+    nblocks= NRBLOCKS(size);
+    r->blocks=(struct block*)calloc(nblocks,sizeof(struct block));
+    if(!r->blocks){
+        gprint(FATAL,"malloc failed for blocks array:%s\n",strerror(errno));
+        if(r->pta_addr){
+            free(r->pta_addr);
+        }
+        free(r->swp_addr);
+        free(r);
+        return NULL;
+    }
+
+
+
     r->size= (long) size;
     r->state= STATE_DETACHED;
     r->flags=flags;
@@ -330,8 +354,6 @@ static void dma_channel_fini(struct dma_channel *chan){
 
 cl_int gmm_clReleaseMemObject(cl_mem memObjPtr){
     
-    struct list_head *pos;
-    int found=0;
     struct region *r;
     if (!(r= region_lookup(pcontext, memObjPtr))){
         free(r->blocks);
@@ -372,7 +394,7 @@ struct region * region_lookup(struct gmm_context *ctx, const cl_mem ptr){
 }
 
 static int gmm_free(struct region *r){
-    gprint(DEBUG,"freeing r (r %p|| swp_addr%p|| size %ld||flags %d||r-state %d)\n",r,r->swp_addr,r->size,r->flags,r->state);
+    gprint(DEBUG,"freeing r (r %p|| swp_addr%p|| size %ld||flags %d||r-state %d)\n",r,r->swp_addr,r->size,r->gmm_flags,r->state);
 re_acquire:
     acquire(&r->lock);
     switch (r->state){
@@ -456,7 +478,11 @@ cl_int gmm_clEnqueueFillBuffer(cl_command_queue command_queue, cl_mem  buffer, i
     return CL_SUCCESS; 
 }
 
-
+static int gmm_memset_pta(struct region * r, cl_mem dst, int value, size_t count){
+    unsigned long off=(unsigned long)dst - (unsigned long)r->swp_addr;
+    memset((void*)((unsigned long)r->pta_addr+off),value,count);
+    return 0;
+}
 
 static int gmm_memset(struct region *r, cl_mem buffer,int value, size_t count){
     
@@ -468,7 +494,7 @@ static int gmm_memset(struct region *r, cl_mem buffer,int value, size_t count){
 
     gprint(DEBUG,"memset: r(%p,%p,%ld)dst(%p)value(%d)count(%lu)",\
            r,r->swp_addr,r->size,buffer,value,count);
-    if(r->gmm_flags & HINT_PTARRAY){
+    if(r->gmm_flags && HINT_PTARRAY){
         return gmm_memset_pta(r,buffer,value,count);
     }
     if(r->state==STATE_DETACHED){
@@ -545,7 +571,7 @@ static int gmm_memcpy_dtoh(cl_mem dst, cl_mem src, unsigned long size)
 	off_dtos = 0;
 	while (off_dtos < size && off_dtos < NBUFS * BUFSIZE) {
 		delta = MIN(off_dtos + BUFSIZE, size) - off_dtos;
-		if(ocl_clEnqueueReadBuffer(chan->commandQueue_chan, (cl_mem)((unsigned long)src+off_dtos),CL_FALSE,0,
+		if(clEnqueueReadBuffer(chan->commandQueue_chan, (cl_mem)((unsigned long)src+off_dtos),CL_FALSE,0,
                         delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
 			gprint(FATAL,"Read Buffer Async failed in dtoh\n");
 			ret = -1;
@@ -579,7 +605,7 @@ static int gmm_memcpy_dtoh(cl_mem dst, cl_mem src, unsigned long size)
         
 		if (off_dtos < size) {
 			delta = MIN(off_dtos + BUFSIZE, size) - off_dtos;
-		    if(ocl_clEnqueueReadBuffer(chan->commandQueue_chan, 
+		    if(clEnqueueReadBuffer(chan->commandQueue_chan, 
                         (cl_mem)((unsigned long)src+off_dtos),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
 				gprint(FATAL, "openCL memcpy Async failed in dtoh\n");
 				ret = -1;
@@ -638,11 +664,37 @@ static int gmm_memcpy_htod(cl_mem dst, const void * src, unsigned long size){
     off=0;
     while(off<size){
         delta=MIN(off+BUFSIZE, size)-off;
-        if(off);
+        if(clWaitForEvents(1,&chan->events[chan->ibuf])!=CL_SUCCESS){
+            gprint(FATAL,"sync failed in htod");
+            ret=-1;
+            goto finish;
+        }
+        memcpy((void *)chan->stage_bufs[chan->ibuf],src+off,delta);
+        if(ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,(cl_mem)((unsigned long)dst+off),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)){
+            gprint(FATAL,"cl write buffer failed in htod\n");
+            ret=-1;
+            goto finish;
+        }
+
+        if(clEnqueueMarker(chan->commandQueue_chan,&chan->events[chan->ibuf])!=CL_SUCCESS){
+            gprint(FATAL,"cl marker failed in htod\n");
+            ret=-1;
+            goto finish;
+        }
+        ilast=chan->ibuf;
+        chan->ibuf=(chan->ibuf+1)%NBUFS;
+        off+=delta;
+    }
+
+    if(clWaitForEvents(1,&chan->events[ilast])!=CL_SUCCESS){
+        gprint(FATAL,"cl event sync failed in htod\n");
+        ret=-1;
     }
 
 
-
+finish:
+    end_dma(chan);
+    return ret;
 }
 static int gmm_htod_block(
                           struct region *r,
@@ -967,7 +1019,7 @@ finish:
 static int gmm_htod(
                     struct region *r,
                     cl_mem dst,
-                    const  src,
+                    const void *src,
                     size_t count)
 {
 	unsigned long off, end, size;
@@ -980,7 +1032,7 @@ static int gmm_htod(
            r, r->swp_addr, r->size, r->flags, r->state, dst, src, count);
     
 	if (r->flags & HINT_PTARRAY)
-		return gmm_htod_pta(r, dst, src, count);
+		return gmm_htod_pta(r, dst, (void *)src, count);
     
 	off = (unsigned long)dst -(unsigned long)r->swp_addr;
 	end = off + count;
@@ -1006,7 +1058,7 @@ static int gmm_htod(
 	}
     
 	// Then, copy the rest blocks, no skipping.
-	off = (unsigned long)(dst - r->swp_addr);
+	off = (unsigned long)dst -(unsigned long)r->swp_addr;
 	s = (void *)src;
 	for (iblock = ifirst; iblock <= ilast; iblock++) {
 		size = MIN(BLOCKUP(off), end) - off;
@@ -1028,11 +1080,8 @@ finish:
 
 
 
-static int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_bool blocking_write, size_t offset, size_t count, const void *src, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){
+cl_int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_bool blocking_write, size_t offset, size_t count, const void *src, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){
     
-    struct dma_channel *chan = &pcontext->dma_htod;
-    unsigned long off, delta;
-    int ret=0, ilast;
 
     struct region * r;
     if (count<=0){
@@ -1045,7 +1094,7 @@ static int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, 
         return CL_INVALID_MEM_OBJECT;
     }
 
-    if(r->state== STATE_FREEING||r->STATE==ZOMBIE){
+    if(r->state== STATE_FREEING||r->state==STATE_ZOMBIE){
         gprint(WARN,"region already freed\n");
         return CL_INVALID_VALUE;
     }
@@ -1066,7 +1115,7 @@ static int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, 
         
     }
     else{*/
-        if(gmm_htod(r,dst,src,count)<0)
+            if(gmm_htod(r,dst,(void *)src,count)<0)
             return CL_INVALID_MEM_OBJECT;
     //}
     stats_time_end(&pcontext->stats,time_htod);

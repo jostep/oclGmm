@@ -19,6 +19,7 @@ cl_mem (*ocl_clCreateBuffer)(cl_context, cl_mem_flags, size_t, void*, cl_int)= N
 cl_int (*ocl_clReleaseMemObject)(cl_mem)= NULL;
 cl_int (*ocl_clEnqueueFillBuffer)(cl_command_queue, cl_mem, const void *, size_t, size_t,size_t, cl_uint, const cl_event, cl_event)=NULL;
 cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event)=NULL;
+//cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event)=NULL;
 cl_context (*ocl_clCreateContext)(cl_context_properties *,cl_uint ,const cl_device_id *,void*, void *,cl_int *)=NULL;
 cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id,cl_command_queue_properties, cl_int *)=NULL;
 static int initialized = 0;
@@ -41,7 +42,7 @@ void gmm_init(void)
     INTERCEPT_CL("clCreateCommandQueue",ocl_clCreateCommandQueue);
     INTERCEPT_CL("clEnqueueFillBuffer",ocl_clEnqueueFillBuffer);
     INTERCEPT_CL("clEnqueueWriteBuffer",ocl_clEnqueueWriteBuffer);
-    INTERCEPT_CL("clEnqueueReadBuffer",ocl_clEnqueueWriteBuffer);
+    //INTERCEPT_CL("clEnqueueReadBuffer",ocl_clEnqueueReadBuffer);
     
     gprint_init();
     
@@ -162,10 +163,10 @@ cl_int clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bo
 
 }
 
+
+/*
 GMM_EXPORT
-cl_int clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, 
-        size_t offset, size_t cb, const void * ptr, cl_uint num_events_in_wait_list, 
-        const cl_event *events_wait_list, cl_event *event){
+cl_int clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, size_t offset, size_t cb, const void * ptr, cl_uint num_events_in_wait_list, const cl_event *events_wait_list, cl_event *event){
 
     if(initialized){
         return ocl_clEnqueueReadBuffer(command_queue, buffer, blocking_read, offset, cb, ptr, num_events_in_wait_list, events_wait_list,event);
@@ -174,6 +175,11 @@ cl_int clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem buffer, cl_boo
         return ocl_clEnqueueReadBuffer(command_queue, buffer, blocking_read, offset, cb, ptr, num_events_in_wait_list, events_wait_list, event);
 
 }
+*/
+
+
+
+
 /*
  *
  *

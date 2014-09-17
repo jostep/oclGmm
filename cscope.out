@@ -1,4 +1,4 @@
-cscope 15 $HOME/oclGmm -q 0000003138 0000254416
+cscope 15 $HOME/oclGmm -q 0000003133 0000256388
 	@atomic.h
 
 1 #i‚de‡
@@ -1847,8 +1847,8 @@ size_t
 r
 , 
 ˛_mem
- *
-d°
+ 
+buf„r
 , 
 vÆue
 , 
@@ -1875,7 +1875,7 @@ size_t
 ˛_evít
  *, cl_event *);
 
-35 
+36 
 ªgi⁄
  * 
 	`ªgi⁄_lookup
@@ -1889,7 +1889,7 @@ gmm_c⁄ãxt
 ±r
 );
 
-36 
+37 
 	`dma_ch™√l_öô
 (
 gmm_c⁄ãxt
@@ -1897,7 +1897,7 @@ gmm_c⁄ãxt
 dma_ch™√l
  *, );
 
-37 
+38 
 	`dma_ch™√l_föi
 (
 dma_ch™√l
@@ -1905,31 +1905,13 @@ dma_ch™√l
 ch™
 );
 
-38 
+39 
 gmm_c⁄ãxt
  *
 pc⁄ãxt
 =
 NULL
 ;
-
-39 
-	`gmm_mem£t
-(
-ªgi⁄
- *
-r
-, 
-˛_mem
- 
-buf„r
-,
-vÆue
-, 
-size_t
- 
-cou¡
-);
 
 40 
 	`block_sync
@@ -1951,9 +1933,7 @@ r
 off£t
 ,c⁄° *
 §c
-,
-
-42 \
+,
 size
 ,
 block
@@ -1963,7 +1943,7 @@ skù
 skù≥d
 );
 
-45 
+44 
 	$li°_Ælo˚d_add
 (
 gmm_c⁄ãxt
@@ -1975,7 +1955,7 @@ gmm_c⁄ãxt
 r
 )
 
-47 
+46 
 	`acquúe
 (&
 ˘x
@@ -1983,7 +1963,7 @@ r
 lock_Ælo˚d
 );
 
-48 
+47 
 	`li°_add
 (&
 r
@@ -1995,7 +1975,7 @@ r
 li°_Ælo˚d
 );
 
-49 
+48 
 	`ªÀa£
 (&
 ˘x
@@ -2003,11 +1983,11 @@ li°_Ælo˚d
 lock_Ælo˚d
 );
 
-50 
+49 
 	}
 }
 
-52 
+51 
 	$li°_Ælo˚d_dñ
 (
 gmm_c⁄ãxt
@@ -2019,7 +1999,7 @@ gmm_c⁄ãxt
 r
 )
 
-54 
+53 
 	`acquúe
 (&
 ˘x
@@ -2027,7 +2007,7 @@ r
 lock_Ælo˚d
 );
 
-55 
+54 
 	`li°_dñ
 (&
 r
@@ -2035,7 +2015,7 @@ r
 íåy_Ælo˚d
 );
 
-56 
+55 
 	`ªÀa£
 (&
 ˘x
@@ -2043,11 +2023,11 @@ r
 lock_Ælo˚d
 );
 
-57 
+56 
 	}
 }
 
-59 
+58 
 	$li°_©èched_add
 (
 gmm_c⁄ãxt
@@ -2059,7 +2039,7 @@ gmm_c⁄ãxt
 r
 )
 
-61 
+60 
 	`acquúe
 (&
 ˘x
@@ -2067,7 +2047,7 @@ r
 lock_©èched
 );
 
-62 
+61 
 	`li°_add
 (&
 r
@@ -2079,7 +2059,7 @@ r
 li°_©èched
 );
 
-63 
+62 
 	`ªÀa£
 (&
 ˘x
@@ -2087,11 +2067,11 @@ li°_©èched
 lock_©èched
 );
 
-64 
+63 
 	}
 }
 
-67 
+66 
 	$li°_©èched_dñ
 (
 gmm_c⁄ãxt
@@ -2103,7 +2083,7 @@ gmm_c⁄ãxt
 r
 )
 
-69 
+68 
 	`acquúe
 (&
 ˘x
@@ -2111,7 +2091,7 @@ r
 lock_©èched
 );
 
-70 
+69 
 	`li°_dñ
 (&
 r
@@ -2119,7 +2099,7 @@ r
 íåy_©èched
 );
 
-71 
+70 
 	`ªÀa£
 (&
 ˘x
@@ -2127,11 +2107,11 @@ r
 lock_©èched
 );
 
-72 
+71 
 	}
 }
 
-76 
+75 
 	$li°_©èched_mov
 (
 gmm_c⁄ãxt
@@ -2143,7 +2123,7 @@ gmm_c⁄ãxt
 r
 )
 
-78 
+77 
 	`acquúe
 (&
 ˘x
@@ -2151,7 +2131,7 @@ r
 lock_©èched
 );
 
-79 
+78 
 	`li°_move
 (&
 r
@@ -2163,7 +2143,7 @@ r
 li°_©èched
 );
 
-80 
+79 
 	`ªÀa£
 (&
 ˘x
@@ -2171,11 +2151,11 @@ li°_©èched
 lock_©èched
 );
 
-81 
+80 
 	}
 }
 
-84 
+83 
 ölöe
  
 	$ªgi⁄_pö
@@ -2185,7 +2165,7 @@ lock_©èched
 r
 )
 
-86 
+85 
 pö√d
  = 
 	`©omic_öc
@@ -2193,11 +2173,11 @@ pö√d
 r
 )->pinned);
 
-87 i‡(
+86 i‡(
 pö√d
  == 0)
 
-88 
+87 
 	`upd©e_dëachabÀ
 (-
 r
@@ -2205,11 +2185,11 @@ r
 size
 );
 
-89 
+88 
 	}
 }
 
-91 
+90 
 ölöe
  
 	$ªgi⁄_u≈ö
@@ -2219,7 +2199,7 @@ size
 r
 )
 
-93 
+92 
 pö√d
  = 
 	`©omic_dec
@@ -2227,11 +2207,11 @@ pö√d
 r
 )->pinned);
 
-94 i‡(
+93 i‡(
 pö√d
  == 1)
 
-95 
+94 
 	`upd©e_dëachabÀ
 (
 r
@@ -2239,11 +2219,11 @@ r
 size
 );
 
-96 
+95 
 	}
 }
 
-98 
+97 
 	$LMAX
 (
 a
@@ -2251,17 +2231,17 @@ a
 b
 )
 
-100  
+99  
 a
  < 
 b
  ? b :á;
 
-101 
+100 
 	}
 }
 
-103 
+102 
 	$begö_dma
 (
 dma_ch™√l
@@ -2269,11 +2249,11 @@ dma_ch™√l
 ch™
 ){
 
-104 #ifde‡
+103 #ifde‡
 GMM_CONFIG_DMA_ASYNC
 
 
-105 
+104 
 	`acquúe
 (&
 ch™
@@ -2281,27 +2261,51 @@ ch™
 lock
 );
 
-107 
+106 
 	}
 }
 
-109 
+108 
+	$íd_dma
+(
+dma_ch™√l
+ *
+ch™
+){
+
+109 #ifde‡
+GMM_CONFIG_DMA_ASYNC
+
+
+110 
+	`ªÀa£
+(&
+ch™
+->
+lock
+);
+
+112 
+	}
+}
+
+115 
 	$gmm_c⁄ãxt_öô
 (){
 
-111 if(
+117 if(
 pc⁄ãxt
 !=
 NULL
 ){
 
-112 
+118 
 	`g¥öt
 (
 FATAL
 ,"pcontextálreadyÉxists!\n");
 
-116 
+122 
 pc⁄ãxt
  = (
 gmm_c⁄ãxt
@@ -2309,11 +2313,11 @@ gmm_c⁄ãxt
 	`mÆloc
 ( (*pcontext));
 
-117 if(!
+123 if(!
 pc⁄ãxt
 ){
 
-118 
+124 
 	`g¥öt
 (
 FATAL
@@ -2323,7 +2327,7 @@ FATAL
 î∫o
 ));
 
-122 
+128 
 	`öôlock
 (&
 pc⁄ãxt
@@ -2331,7 +2335,7 @@ pc⁄ãxt
 lock
 );
 
-123 
+129 
 	`œtomic_£t
 (&
 pc⁄ãxt
@@ -2339,7 +2343,7 @@ pc⁄ãxt
 size_©èched
 ,0L);
 
-124 
+130 
 	`INIT_LIST_HEAD
 (&
 pc⁄ãxt
@@ -2347,7 +2351,7 @@ pc⁄ãxt
 li°_Ælo˚d
 );
 
-125 
+131 
 	`INIT_LIST_HEAD
 (&
 pc⁄ãxt
@@ -2355,7 +2359,7 @@ pc⁄ãxt
 li°_©èched
 );
 
-126 
+132 
 	`öôlock
 (&
 pc⁄ãxt
@@ -2363,7 +2367,7 @@ pc⁄ãxt
 lock_Ælo˚d
 );
 
-127 
+133 
 	`öôlock
 (&
 pc⁄ãxt
@@ -2371,7 +2375,7 @@ pc⁄ãxt
 lock_©èched
 );
 
-130 
+136 
 	`°©s_öô
 (&
 pc⁄ãxt
@@ -2379,15 +2383,15 @@ pc⁄ãxt
 °©s
 );
 
-132 
+138 
 	}
 }
 
-134 
+140 
 	$gmm_c⁄ãxt_öôEX
 (){
 
-135 
+141 
 	`g¥öt
 (
 DEBUG
@@ -2397,7 +2401,7 @@ pc⁄ãxt
 dma_htod
 );
 
-136 
+142 
 ˛_öt
  * 
 îrcode_CQ
@@ -2405,7 +2409,7 @@ dma_htod
 NULL
 ;
 
-155 
+161 
 pc⁄ãxt
 ->
 comm™dQueue_kî√l
@@ -2421,39 +2425,39 @@ CL_QUEUE_PROFILING_ENABLE
 îrcode_CQ
 );
 
-156 i‡(
+162 i‡(
 îrcode_CQ
 !=
 CL_SUCCESS
 ){
 
-158 
+164 
 	`g¥öt
 (
 FATAL
 ,"failedÅo create command queue\n");
 
-160 
+166 
 	}
 }
 
-163 
+169 
 	$gmm_c⁄ãxt_föi
 (){
 
-165 
+171 
 li°_hód
  *
 p
 ;
 
-166 
+172 
 ªgi⁄
  *
 r
 ;
 
-167 !
+173 !
 	`li°_em±y
 (&
 pc⁄ãxt
@@ -2461,7 +2465,7 @@ pc⁄ãxt
 li°_Ælo˚d
 )){
 
-168 
+174 
 p
 =
 pc⁄ãxt
@@ -2471,7 +2475,7 @@ li°_Ælo˚d
 √xt
 ;
 
-169 
+175 
 r
 =
 	`li°_íåy
@@ -2483,13 +2487,13 @@ p
 íåy_Ælo˚d
 );
 
-170 if(!
+176 if(!
 	`gmm_‰ì
 (
 r
 )){
 
-171 
+177 
 	`li°_move_èû
 (
 p
@@ -2499,7 +2503,7 @@ pc⁄ãxt
 li°_Ælo˚d
 );
 
-175 
+181 
 	`dma_ch™√l_föi
 (&
 pc⁄ãxt
@@ -2507,7 +2511,7 @@ pc⁄ãxt
 dma_dtoh
 );
 
-176 
+182 
 	`dma_ch™√l_föi
 (&
 pc⁄ãxt
@@ -2515,7 +2519,7 @@ pc⁄ãxt
 dma_htod
 );
 
-178 
+184 
 	`˛Rñó£Comm™dQueue
 (
 pc⁄ãxt
@@ -2523,7 +2527,7 @@ pc⁄ãxt
 comm™dQueue_kî√l
 );
 
-180 
+186 
 	`°©s_¥öt
 (&
 pc⁄ãxt
@@ -2531,23 +2535,23 @@ pc⁄ãxt
 °©s
 );
 
-181 
+187 
 	`‰ì
 (
 pc⁄ãxt
 );
 
-182 
+188 
 pc⁄ãxt
 =
 NULL
 ;
 
-183 
+189 
 	}
 }
 
-185 
+191 
 ˛_c⁄ãxt
  
 gmm_˛Cª©eC⁄ãxt
@@ -2581,7 +2585,7 @@ u£r_d©a
 îrcode_ªt
 ){
 
-186 
+192 
 	gpc⁄ãxt
 ->
 	gdevi˚
@@ -2589,7 +2593,7 @@ u£r_d©a
 devi˚s
 ;
 
-187 
+193 
 	gpc⁄ãxt
 ->
 	gc⁄ãxt_kî√l
@@ -2609,27 +2613,27 @@ u£r_d©a
 îrcode_ªt
 );
 
-188 
+194 
 g¥öt
 (
 DEBUG
 ,"ocl hasÇot finished?");
 
-189 if(
+195 if(
 	gîrcode_ªt
 !=
 CL_SUCCESS
 ){
 
-190 
+196 
 ¥ötf
 ("Cannot createÅhe Context forÅhe PC\n");
 
-192 
+198 
 gmm_c⁄ãxt_öôEX
 ();
 
-193 if(
+199 if(
 dma_ch™√l_öô
 (
 pc⁄ãxt
@@ -2637,29 +2641,29 @@ pc⁄ãxt
 dma_htod
 ,1)!=0){
 
-194 
+200 
 g¥öt
 (
 FATAL
 ,"failedÅo create HtoD DMA channel\n");
 
-195 
+201 
 ‰ì
 (
 pc⁄ãxt
 );
 
-196 
+202 
 	gpc⁄ãxt
 =
 NULL
 ;
 
-199 
+205 
 ¥ötf
 ("we've finishedÅhe first dma_init\n");
 
-200 if(
+206 if(
 dma_ch™√l_öô
 (
 pc⁄ãxt
@@ -2667,13 +2671,13 @@ pc⁄ãxt
 dma_dtoh
 ,0)!=0){
 
-201 
+207 
 g¥öt
 (
 FATAL
 ,"failedÅo create DtoH DMA channel\n");
 
-202 
+208 
 dma_ch™√l_föi
 (&
 pc⁄ãxt
@@ -2681,29 +2685,29 @@ pc⁄ãxt
 dma_htod
 );
 
-203 
+209 
 ‰ì
 (
 pc⁄ãxt
 );
 
-204 
+210 
 	gpc⁄ãxt
 =
 NULL
 ;
 
-207 
+213 
 ¥ötf
 ("we've finishedÅhe second dma_init\n");
 
-208  
+214  
 	gpc⁄ãxt
 ->
 	gc⁄ãxt_kî√l
 ;
 
-211 
+217 
 ˛_mem
  
 	$gmm_˛Cª©eBuf„r
@@ -2729,17 +2733,17 @@ ho°_±r
 gmm_Êags
 ){
 
-212 
+218 
 ªgi⁄
  *
 r
 ;
 
-213 
+219 
 nblocks
 ;
 
-214 
+220 
 	`g¥öt
 (
 DEBUG
@@ -2749,7 +2753,7 @@ size
 Êags
 );
 
-215 if(
+221 if(
 c⁄ãxt
 !=
 pc⁄ãxt
@@ -2757,19 +2761,19 @@ pc⁄ãxt
 c⁄ãxt_kî√l
 ){
 
-216 
+222 
 	`g¥öt
 (
 FATAL
 ,"context unmatched\n");
 
-218 if(
+224 if(
 size
 >
 	`memsize_tŸÆ
 ()){
 
-219 
+225 
 	`g¥öt
 (
 ERROR
@@ -2779,21 +2783,21 @@ size
 	`memsize_tŸÆ
 ());
 
-220 
+226 
 îrcode_CB
 =
 CL_INVALID_VALUE
 ;
 
-221  
+227  
 NULL
 ;
 
-223 if(
+229 if(
 size
 <=0){
 
-224 
+230 
 	`g¥öt
 (
 ERROR
@@ -2801,17 +2805,17 @@ ERROR
 size
 );
 
-225 
+231 
 îrcode_CB
 =
 CL_INVALID_VALUE
 ;
 
-226  
+232  
 NULL
 ;
 
-228 
+234 
 r
  = (
 ªgi⁄
@@ -2819,11 +2823,11 @@ r
 	`ˇŒoc
 (1,(*r));
 
-229 if(!
+235 if(!
 r
 ){
 
-230 
+236 
 	`g¥öt
 (
 FATAL
@@ -2833,17 +2837,17 @@ FATAL
 î∫o
 ));
 
-231 
+237 
 îrcode_CB
 =
 CL_MEM_OBJECT_ALLOCATION_FAILURE
 ;
 
-232  
+238  
 NULL
 ;
 
-235 
+241 
 r
 ->
 swp_addr
@@ -2853,13 +2857,13 @@ swp_addr
 size
 );
 
-236 i‡(!
+242 i‡(!
 r
 ->
 swp_addr
 ){
 
-238 
+244 
 	`g¥öt
 (
 FATAL
@@ -2869,33 +2873,33 @@ FATAL
 î∫o
 ));
 
-239 
+245 
 	`‰ì
 (
 r
 );
 
-240 
+246 
 îrcode_CB
 =
 CL_MEM_OBJECT_ALLOCATION_FAILURE
 ;
 
-241  
+247  
 NULL
 ;
 
-244 i‡(
+250 i‡(
 gmm_Êags
  & 
 HINT_PTARRAY
 ){
 
-245 if(
+251 if(
 size
 %(*)){
 
-246 
+252 
 	`g¥öt
  (
 ERROR
@@ -2903,7 +2907,7 @@ ERROR
 size
 );
 
-247 
+253 
 	`‰ì
 (
 r
@@ -2911,23 +2915,23 @@ r
 swp_addr
 );
 
-248 
+254 
 	`‰ì
 (
 r
 );
 
-249 
+255 
 îrcode_CB
 =
 CL_INVALID_VALUE
 ;
 
-250  
+256  
 NULL
 ;
 
-253 
+259 
 r
 ->
 ±a_addr
@@ -2937,13 +2941,13 @@ r
 size
 );
 
-254 i‡(!
+260 i‡(!
 r
 ->
 ±a_addr
 ){
 
-256 
+262 
 	`g¥öt
 (
 FATAL
@@ -2953,29 +2957,107 @@ FATAL
 î∫o
 ));
 
-257 
+263 
 	`‰ì
 (
 r
 );
 
-258 
+264 
 îrcode_CB
 =
 CL_MEM_OBJECT_ALLOCATION_FAILURE
 ;
 
-259  
+265  
 NULL
 ;
 
-262 
+267 
+	`g¥öt
+(
+DEBUG
+,"±a_add∏(%pËÆlo˚d f‹ %p\n",
+r
+->
+±a_addr
+,r);
+
+270 
+nblocks
+
+	`NRBLOCKS
+(
+size
+);
+
+271 
+r
+->
+blocks
+=(
+block
+*)
+	`ˇŒoc
+(
+nblocks
+,(block));
+
+272 if(!
+r
+->
+blocks
+){
+
+273 
+	`g¥öt
+(
+FATAL
+,"mÆlo¯Áûed f‹ block†¨øy:%s\n",
+	`°ªº‹
+(
+î∫o
+));
+
+274 if(
+r
+->
+±a_addr
+){
+
+275 
+	`‰ì
+(
+r
+->
+±a_addr
+);
+
+277 
+	`‰ì
+(
+r
+->
+swp_addr
+);
+
+278 
+	`‰ì
+(
+r
+);
+
+279  
+NULL
+;
+
+284 
 r
 ->
 size
 = () size;
 
-263 
+285 
 r
 ->
 °©e
@@ -2983,19 +3065,19 @@ r
 STATE_DETACHED
 ;
 
-264 
+286 
 r
 ->
 Êags
 =flags;
 
-265 
+287 
 r
 ->
 gmm_Êags
 =gmm_flags;
 
-267 
+289 
 	`li°_Ælo˚d_add
 (
 pc⁄ãxt
@@ -3003,7 +3085,7 @@ pc⁄ãxt
 r
 );
 
-268 
+290 
 	`°©s_öc_Æloc
 (&
 pc⁄ãxt
@@ -3013,7 +3095,7 @@ pc⁄ãxt
 size
 );
 
-270 
+292 
 	`g¥öt
 (
 DEBUG
@@ -3025,23 +3107,23 @@ swp_addr
 ±a_addr
 );
 
-272 
+294 
 îrcode_CB
 =
 CL_SUCCESS
 ;
 
-274  
+296  
 r
 ->
 swp_addr
 ;
 
-275 
+297 
 	}
 }
 
-277 
+299 
 	$dma_ch™√l_öô
 (
 gmm_c⁄ãxt
@@ -3055,11 +3137,11 @@ ch™
 htod
 ){
 
-278 
+300 
 ªt
  =0;
 
-279 
+301 
 ˛_öt
  * 
 îrcode_DMA
@@ -3067,7 +3149,7 @@ htod
 NULL
 ;
 
-280 
+302 
 ˛_öt
  * 
 îrcode_INIT
@@ -3075,15 +3157,15 @@ NULL
 NULL
 ;
 
-281 #ifde‡
+303 #ifde‡
 GMM_CONFIG_DMA_ASYNC
 
 
-282 
+304 
 i
 ;
 
-285 
+307 
 ch™
 ->
 comm™dQueue_ch™
@@ -3101,23 +3183,23 @@ CL_QUEUE_PROFILING_ENABLE
 îrcode_DMA
 );
 
-286 if(
+308 if(
 îrcode_INIT
 !=
 CL_SUCCESS
 ){
 
-287 
+309 
 	`g¥öt
 (
 FATAL
 ,"failedÅo create channel\n");
 
-290 #ifde‡
+312 #ifde‡
 GMM_CONFIG_DMA_ASYNC
 
 
-291 
+313 
 	`öôlock
 (&
 ch™
@@ -3125,19 +3207,19 @@ ch™
 lock
 );
 
-292 
+314 
 ch™
 ->
 ibuf
 =0;
 
-294 
+316 
 i
 =0;i<
 NBUFS
 ;i++){
 
-295 
+317 
 	`o˛_˛Cª©eBuf„r
 (
 pc⁄ãxt
@@ -3157,25 +3239,25 @@ i
 îrcode_DMA
 );
 
-296 if(
+318 if(
 îrcode_DMA
 !=
 CL_SUCCESS
 ){
 
-297 
+319 
 	`g¥öt
 (
 FATAL
 ,"failed for staging buffer\n");
 
-300 
+322 
 îrcode_DMA
 =
 NULL
 ;
 
-301 
+323 
 ch™
 ->
 °age_bufs
@@ -3191,19 +3273,19 @@ c⁄ãxt_kî√l
 îrcode_DMA
 );
 
-302 if(
+324 if(
 îrcode_DMA
 !=
 CL_SUCCESS
 ){
 
-303 
+325 
 	`g¥öt
 (
 FATAL
 ,"failedÅo create for staging buffer\n");
 
-304 
+326 
 	`o˛_˛Rñó£MemObje˘
 (
 ch™
@@ -3213,17 +3295,17 @@ ch™
 i
 ]);
 
-308 i‡(
+330 i‡(
 i
 <
 NBUFS
 ){
 
-309 --
+331 --
 i
 >0){
 
-310 
+332 
 	`˛Rñó£Evít
 (
 ch™
@@ -3233,7 +3315,7 @@ evíts
 i
 ]);
 
-311 
+333 
 	`o˛_˛Rñó£MemObje˘
 (
 ch™
@@ -3243,19 +3325,19 @@ ch™
 i
 ]);
 
-313 
+335 
 ªt
 =-1;
 
-316  
+338  
 ªt
 ;
 
-317 
+339 
 	}
 }
 
-319 
+341 
 	$dma_ch™√l_föi
 (
 dma_ch™√l
@@ -3263,21 +3345,21 @@ dma_ch™√l
 ch™
 ){
 
-320 #ifde‡
+342 #ifde‡
 GMM_CONFIG_DMA_ASYNC
 
 
-321 
+343 
 i
 ;
 
-323 
+345 
 i
 =0;i<
 NBUFS
 ;i++){
 
-324 
+346 
 	`˛Rñó£Evít
 (
 ch™
@@ -3287,7 +3369,7 @@ evíts
 i
 ]);
 
-325 
+347 
 	`o˛_˛Rñó£MemObje˘
 (
 ch™
@@ -3297,7 +3379,7 @@ ch™
 i
 ]);
 
-329 
+351 
 	`˛Rñó£Comm™dQueue
 (
 ch™
@@ -3305,11 +3387,11 @@ ch™
 comm™dQueue_ch™
 );
 
-330 
+352 
 	}
 }
 
-332 
+354 
 ˛_öt
  
 	$gmm_˛Rñó£MemObje˘
@@ -3319,23 +3401,13 @@ comm™dQueue_ch™
 memObjPå
 ){
 
-334 
-li°_hód
- *
-pos
-;
-
-335 
-found
-=0;
-
-336 
+356 
 ªgi⁄
  *
 r
 ;
 
-337 i‡(!(
+357 i‡(!(
 r
 
 	`ªgi⁄_lookup
@@ -3345,7 +3417,7 @@ pc⁄ãxt
 memObjPå
 ))){
 
-338 
+358 
 	`‰ì
 (
 r
@@ -3353,7 +3425,7 @@ r
 blocks
 );
 
-339 
+359 
 	`g¥öt
 (
 ERROR
@@ -3361,13 +3433,13 @@ ERROR
 memObjPå
 );
 
-341 
+361 
 	`g¥öt
 (
 DEBUG
 ,"after freeingÅhe blocksándÑegionÜookup");
 
-342 
+362 
 	`°©s_öc_‰ìd
 (&
 pc⁄ãxt
@@ -3379,25 +3451,25 @@ r
 size
 );
 
-343 if(
+363 if(
 	`gmm_‰ì
 (
 r
 )<0)
 
-344  
+364  
 CL_INVALID_MEM_OBJECT
 ;
 
-345  
+365  
 CL_SUCCESS
 ;
 
-346 
+366 
 	}
 }
 
-348 
+368 
 ªgi⁄
  * 
 	$ªgi⁄_lookup
@@ -3411,7 +3483,7 @@ gmm_c⁄ãxt
 ±r
 ){
 
-350 
+370 
 ªgi⁄
  *
 r
@@ -3419,17 +3491,17 @@ r
 NULL
 ;
 
-351 
+371 
 li°_hód
  *
 pos
 ;
 
-352 
+372 
 found
  =0;
 
-354 
+374 
 	`acquúe
  (&
 ˘x
@@ -3437,7 +3509,7 @@ found
 lock_Ælo˚d
 );
 
-355 
+375 
 	`li°_f‹_óch
 (
 pos
@@ -3447,7 +3519,7 @@ pos
 li°_Ælo˚d
 ){
 
-356 
+376 
 r
 
 	`li°_íåy
@@ -3459,7 +3531,7 @@ pos
 íåy_Ælo˚d
 );
 
-357 i‡(
+377 i‡(
 r
 ->
 °©e
@@ -3469,7 +3541,7 @@ STATE_FREEING
 STATE_ZOMBIE
 ){
 
-360 if((()(
+380 if((()(
 ±r
 Ë>=()(
 r
@@ -3477,11 +3549,11 @@ r
 swp_addr
 ))&&
 
-361 (()(
+381 (()(
 ±r
 )<
 
-362 (()(
+382 (()(
 r
 ->
 swp_addr
@@ -3489,11 +3561,11 @@ swp_addr
 size
 )))){
 
-363 
+383 
 found
  =1;
 
-368 
+388 
 	`ªÀa£
 (&
 ˘x
@@ -3501,25 +3573,25 @@ found
 lock_Ælo˚d
 );
 
-369 if(!
+389 if(!
 found
 ){
 
-370 
+390 
 r
 =
 NULL
 ;
 
-372  
+392  
 r
 ;
 
-373 
+393 
 	}
 }
 
-375 
+395 
 	$gmm_‰ì
 (
 ªgi⁄
@@ -3527,7 +3599,7 @@ r
 r
 ){
 
-376 
+396 
 	`g¥öt
 (
 DEBUG
@@ -3538,16 +3610,16 @@ swp_addr
 ,r->
 size
 ,r->
-Êags
+gmm_Êags
 ,r->
 °©e
 );
 
-377 
+397 
 ª_acquúe
 :
 
-378 
+398 
 	`acquúe
 (&
 r
@@ -3555,23 +3627,23 @@ r
 lock
 );
 
-379 
+399 
 r
 ->
 °©e
 ){
 
-380 
+400 
 STATE_ATTACHED
 :
 
-381 if(!
+401 if(!
 	`ªgi⁄_pö√d
 (
 r
 ))
 
-382 
+402 
 	`li°_©èched_dñ
 (
 pc⁄ãxt
@@ -3579,7 +3651,7 @@ pc⁄ãxt
 r
 );
 
-384 
+404 
 	`ªÀa£
 (&
 r
@@ -3587,19 +3659,19 @@ r
 lock
 );
 
-385 
+405 
 	`sched_yõld
 ();
 
-386 
+406 
 ª_acquúe
 ;
 
-389 
+409 
 STATE_EVICTING
 :
 
-390 
+410 
 r
 ->
 °©e
@@ -3607,7 +3679,7 @@ r
 STATE_FREEING
 ;
 
-391 
+411 
 	`ªÀa£
 (&
 r
@@ -3615,17 +3687,17 @@ r
 lock
 );
 
-392 
+412 
 	`g¥öt
 (
 DEBUG
 ,"region set freeing");
 
-394 
+414 
 STATE_FREEING
 :
 
-395 
+415 
 	`ªÀa£
 (&
 r
@@ -3633,15 +3705,15 @@ r
 lock
 );
 
-396 
+416 
 	`sched_yõld
 ();
 
-397 
+417 
 ª_acquúe
 ;
 
-401 
+421 
 	`ªÀa£
 (&
 r
@@ -3649,7 +3721,7 @@ r
 lock
 );
 
-402 
+422 
 	`li°_Ælo˚d_dñ
 (
 pc⁄ãxt
@@ -3657,7 +3729,7 @@ pc⁄ãxt
 r
 );
 
-403 
+423 
 	`g¥öt
 (
 DEBUG
@@ -3671,13 +3743,13 @@ swp_addr
 dev_addr
 );
 
-404 if(
+424 if(
 r
 ->
 blocks
 )
 
-405 
+425 
 	`‰ì
 (
 r
@@ -3685,13 +3757,13 @@ r
 blocks
 );
 
-406 if(
+426 if(
 r
 ->
 ±a_addr
 )
 
-407 
+427 
 	`‰ì
 (
 r
@@ -3699,13 +3771,13 @@ r
 blocks
 );
 
-408 if(
+428 if(
 r
 ->
 swp_addr
 )
 
-409 
+429 
 	`‰ì
 (
 r
@@ -3713,13 +3785,13 @@ r
 blocks
 );
 
-410 if(
+430 if(
 r
 ->
 dev_addr
 ){
 
-411 
+431 
 	`o˛_˛Rñó£MemObje˘
 (
 r
@@ -3727,7 +3799,7 @@ r
 dev_addr
 );
 
-412 
+432 
 	`œtomic_sub
 (&
 pc⁄ãxt
@@ -3739,7 +3811,7 @@ r
 size
 );
 
-413 
+433 
 	`upd©e_©èched
 (-
 r
@@ -3747,7 +3819,7 @@ r
 size
 );
 
-414 
+434 
 	`upd©e_dëachabÀ
 (-
 r
@@ -3755,23 +3827,23 @@ r
 size
 );
 
-416 
+436 
 	`‰ì
 (
 r
 );
 
-417 
+437 
 	`g¥öt
 (
 DEBUG
 ,"region freed\n");
 
-420 
+440 
 	}
 }
 
-422 
+442 
 ˛_öt
  
 	$gmm_˛EnqueueFûlBuf„r
@@ -3805,21 +3877,21 @@ evít_waô_li°
 evít
 ){
 
-424 
+444 
 ªgi⁄
  *
 r
 ;
 
-426 if(
+446 if(
 size
 <=0){
 
-427  
+447  
 CL_INVALID_VALUE
 ;
 
-429 
+449 
 r
 =
 	`ªgi⁄_lookup
@@ -3829,21 +3901,21 @@ pc⁄ãxt
 buf„r
 );
 
-430 if(!
+450 if(!
 r
 ){
 
-431 
+451 
 	`g¥öt
 (
 FATAL
 ,"cannot findÅheÑegion\n");
 
-432  
+452  
 CL_INVALID_MEM_OBJECT
 ;
 
-434 if(
+454 if(
 r
 ->
 °©e
@@ -3853,17 +3925,17 @@ STATE_FREEING
 STATE_ZOMBIE
 ){
 
-435 
+455 
 	`g¥öt
 (
 ERROR
 ,"regionálready freedi\n");
 
-436  
+456  
 CL_INVALID_MEM_OBJECT
 ;
 
-438 if(
+458 if(
 r
 ->
 Êags
@@ -3871,53 +3943,53 @@ r
 FLAG_COW
 ){
 
-439 
+459 
 	`g¥öt
 (
 ERROR
 ,"regionÅagged CoW\n");
 
-440  
+460  
 CL_INVALID_MEM_OBJECT
 ;
 
-442 if(
+462 if(()
 buf„r
-+
++()
 size
->&(
+ >()
 r
 ->
 swp_addr
-)+r->size){
++r->size){
 
-443 
+463 
 	`g¥öt
 (
 ERROR
 ,"size overloaded\n");
 
-444  
+464  
 CL_INVALID_VALUE
 ;
 
-446 if(
+466 if(
 r
 ->
 size
 !=size){
 
-447 
+467 
 	`g¥öt
 (
 ERROR
 ,"should setÅhe wholeÑegion");
 
-450 
+470 
 	`°©s_time_begö
 ();
 
-451 if(
+471 if(
 	`gmm_mem£t
 (
 r
@@ -3929,13 +4001,13 @@ vÆue
 size
 )<0){
 
-452 
+472 
 	`g¥öt
 (
 ERROR
 ,"memsettingÉrror unknown\n");
 
-454 
+474 
 	`°©s_time_íd
 (&
 pc⁄ãxt
@@ -3945,7 +4017,7 @@ pc⁄ãxt
 time_mem£t
 );
 
-455 
+475 
 	`°©s_öc
 (&
 pc⁄ãxt
@@ -3957,15 +4029,61 @@ byãs_mem£t
 size
 );
 
-457  
+477  
 CL_SUCCESS
 ;
 
-458 
+478 
 	}
 }
 
-462 
+480 
+	$gmm_mem£t_±a
+(
+ªgi⁄
+ * 
+r
+, 
+˛_mem
+ 
+d°
+, 
+vÆue
+, 
+size_t
+ 
+cou¡
+){
+
+481 
+off
+=()
+d°
+ - ()
+r
+->
+swp_addr
+;
+
+482 
+	`mem£t
+((*)(()
+r
+->
+±a_addr
++
+off
+),
+vÆue
+,
+cou¡
+);
+
+484 
+	}
+}
+
+486 
 	$gmm_mem£t
 (
 ªgi⁄
@@ -3983,15 +4101,15 @@ size_t
 cou¡
 ){
 
-464 
+488 
 off
 ,
 íd
 ,
-cou¡
+size
 ;
 
-465 
+489 
 ifú°
 , 
 ûa°
@@ -3999,25 +4117,25 @@ ifú°
 iblock
 ;
 
-466 *
+490 *
 skù≥d
 ;
 
-467 
+491 
 ªt
 =0;
 
-468 *
+492 *
 s
 ;
 
-470 
+494 
 	`g¥öt
 (
 DEBUG
 ,"memset:Ñ(%p,%p,%ld)dst(%p)value(%d)count(%lu)",\
 
-471 
+495 
 r
 ,r->
 swp_addr
@@ -4031,15 +4149,15 @@ vÆue
 cou¡
 );
 
-472 if(
+496 if(
 r
 ->
 gmm_Êags
- & 
+ && 
 HINT_PTARRAY
 ){
 
-473  
+497  
 	`gmm_mem£t_±a
 (
 r
@@ -4051,7 +4169,7 @@ vÆue
 cou¡
 );
 
-475 if(
+499 if(
 r
 ->
 °©e
@@ -4059,17 +4177,17 @@ r
 STATE_DETACHED
 ){
 
-476 
+500 
 	`g¥öt
 (
 DEBUG
 ,"memset: settingá detachedÑegion\n");
 
-477 #ifde‡
+501 #ifde‡
 GMM_CONFIG_COW
 
 
-478 
+502 
 r
 ->
 gmm_Êags
@@ -4077,7 +4195,7 @@ gmm_Êags
 FLAG_MEMSET
 ;
 
-479 
+503 
 r
 ->
 vÆue_mem£t
@@ -4085,7 +4203,7 @@ vÆue_mem£t
 vÆue
 ;
 
-481 
+505 
 	`mem£t
 (
 buf„r
@@ -4095,25 +4213,25 @@ vÆue
 cou¡
 );
 
-482 
+506 
 	`ªgi⁄_vÆid
 (
 r
 ,1);
 
-484 
+508 
 	`ªgi⁄_övÆ
 (
 r
 ,0);
 
-487 
+511 
 	`g¥öt
 (
 DEBUG
 ,"memset: settingáÇon-detachedÑegion\n");
 
-489 
+513 
 s
 =
 	`mÆloc
@@ -4121,11 +4239,11 @@ s
 BLOCKSIZE
 );
 
-490 if(!
+514 if(!
 s
 ){
 
-491 
+515 
 	`g¥öt
 (
 FATAL
@@ -4135,13 +4253,87 @@ FATAL
 î∫o
 ));
 
-492 
+516 
 	`‰ì
 (
 s
 );
 
-496 
+520 
+	`mem£t
+(
+s
+,
+vÆue
+,
+BLOCKSIZE
+);
+
+521 
+off
+=()
+buf„r
+-()
+r
+->
+swp_addr
+;
+
+522 
+íd
+ = 
+off
++
+cou¡
+;
+
+523 
+ifú°
+=
+	`BLOCKIDX
+(
+off
+);
+
+524 
+ûa°
+=
+	`BLOCKIDX
+(
+íd
+-1);
+
+525 
+skù≥d
+=(*)
+	`mÆloc
+(
+ûa°
+-
+ifú°
++1);
+
+526 if(!
+skù≥d
+){
+
+527 
+	`g¥öt
+(
+FATAL
+,"mÆlo¯Áûed f‹ skù≥d %s\n",
+	`°ªº‹
+(
+î∫o
+));
+
+528 
+	`‰ì
+(
+s
+);
+
+532 
 iblock
 =
 ifú°
@@ -4149,8 +4341,8 @@ ifú°
 ûa°
 ;iblock++){
 
-497 
-cou¡
+533 
+size
 =
 	`MIN
 (
@@ -4161,7 +4353,7 @@ off
 íd
 )-off;
 
-498 
+534 
 ªt
 =
 	`gmm_htod_block
@@ -4181,31 +4373,31 @@ skù≥d
 ifú°
 ));
 
-499 if(
+535 if(
 ªt
 !=0)
 
-500 
+536 
 föish
 ;
 
-501 
+537 
 off
  +=
 size
 ;
 
-504 
+540 
 off
-=()(
+=()
 buf„r
- - 
+ -()
 r
 ->
 swp_addr
-);
+;
 
-506 
+542 
 iblock
 =
 ifú°
@@ -4213,8 +4405,8 @@ ifú°
 ûa°
 ;iblock++){
 
-507 
-cou¡
+543 
+size
 =
 	`MIN
 (
@@ -4225,7 +4417,7 @@ off
 íd
 )-off;
 
-508 if(
+544 if(
 skù≥d
 [
 iblock
@@ -4233,7 +4425,7 @@ iblock
 ifú°
 ]){
 
-509 
+545 
 ªt
 =
 	`gmm_htod_block
@@ -4251,55 +4443,57 @@ iblock
 NULL
 );
 
-510 if(
+546 if(
 ªt
 !=0)
 
-511 
+547 
 föish
 ;
 
-513 
+549 
 off
  +=
 size
 ;
 
-516 
+552 
 föish
 :
 
-517 
+553 
 	`‰ì
 (
 skù≥d
 );
 
-518 
+554 
 	`‰ì
 (
 s
 );
 
-519  
+555  
 ªt
 ;
 
-520 
+556 
 	}
 }
 
-522 
+558 
 	$gmm_mem˝y_dtoh
-(*
+(
+˛_mem
+ 
 d°
-, c⁄° *
+, cl_mem 
 §c
 , 
 size
 )
 
-524 
+560 
 dma_ch™√l
  *
 ch™
@@ -4309,31 +4503,31 @@ pc⁄ãxt
 dma_dtoh
 ;
 
-525 
+561 
 off_dtos
 ,
 
-526 
+562 
 off_°oh
 ,
 
-527 
+563 
 dñè
 ;
 
-528 
+564 
 ªt
  = 0, 
 ibuf_ﬁd
 ;
 
-530 
+566 
 	`begö_dma
 (
 ch™
 );
 
-533 
+569 
 ibuf_ﬁd
  = 
 ch™
@@ -4341,11 +4535,11 @@ ch™
 ibuf
 ;
 
-534 
+570 
 off_dtos
  = 0;
 
-535 
+571 
 off_dtos
  < 
 size
@@ -4355,7 +4549,7 @@ NBUFS
 BUFSIZE
 ) {
 
-536 
+572 
 dñè
  = 
 	`MIN
@@ -4367,77 +4561,81 @@ BUFSIZE
 size
 ) - off_dtos;
 
-537 i‡(
-	`cudaMem˝yAsync
+573 if(
+	`˛EnqueueRódBuf„r
 (
+ch™
+->
+comm™dQueue_ch™
+, (
+˛_mem
+)(()
+§c
++
+off_dtos
+),
+CL_FALSE
+,0,
+
+574 
+dñè
+,
 ch™
 ->
 °age_bufs
 [ch™->
 ibuf
-], 
-§c
- + 
-off_dtos
-,
+],0,
+NULL
+,NULL)!=
+CL_SUCCESS
+){
 
-538 
-dñè
-, 
-cudaMem˝yDevi˚ToHo°
-, 
-ch™
-->
-°ªam
-Ë!
-cudaSuc˚ss
-) {
-
-539 
+575 
 	`g¥öt
 (
 FATAL
-, "cudaMemcpyAsync failed in dtoh\n");
+,"Read Buffer Async failed in dtoh\n");
 
-540 
+576 
 ªt
  = -1;
 
-541 
+577 
 föish
 ;
 
-543 i‡(
-	`cudaEvítRec‹d
+579 i‡(
+	`˛EnqueueM¨kî
 (
 ch™
 ->
+comm™dQueue_ch™
+,&ch™->
 evíts
 [ch™->
 ibuf
-], ch™->
-°ªam
-)
+])
 
-544 !
-cudaSuc˚ss
+580 !
+CL_SUCCESS
 ) {
 
-545 
+581 
 	`g¥öt
 (
 FATAL
-, "cudaEventRecord failed in dtoh\n");
+,"opencl marker failed in dtoh\n");
 
-546 
+582 
 ªt
  = -1;
 
-547 
+583 
 föish
 ;
 
-550 
+586 
 ch™
 ->
 ibuf
@@ -4445,13 +4643,13 @@ ibuf
 NBUFS
 ;
 
-551 
+587 
 off_dtos
  +
 dñè
 ;
 
-556 
+592 
 ch™
 ->
 ibuf
@@ -4459,17 +4657,17 @@ ibuf
 ibuf_ﬁd
 ;
 
-557 
+593 
 off_°oh
  = 0;
 
-558 
+594 
 off_°oh
  < 
 size
 ) {
 
-559 
+595 
 dñè
  = 
 	`MIN
@@ -4481,39 +4679,39 @@ BUFSIZE
 size
 ) - off_stoh;
 
-561 i‡(
-	`cudaEvítSynchr⁄ize
-(
+597 i‡(
+	`˛WaôF‹Evíts
+(1,&
 ch™
 ->
 evíts
 [ch™->
 ibuf
 ]Ë!
-cudaSuc˚ss
+CL_SUCCESS
 ) {
 
-562 
+598 
 	`g¥öt
 (
 FATAL
-, "cudaEventSynchronize failed in dtoh\n");
+,"openCL Event Synchronize failed in dtoh\n");
 
-563 
+599 
 ªt
  = -1;
 
-564 
+600 
 föish
 ;
 
-566 
+602 
 	`mem˝y
-(
+((*)(()
 d°
  + 
 off_°oh
-, 
+), 
 ch™
 ->
 °age_bufs
@@ -4523,19 +4721,19 @@ ibuf
 dñè
 );
 
-567 
+603 
 off_°oh
  +
 dñè
 ;
 
-569 i‡(
+605 i‡(
 off_dtos
  < 
 size
 ) {
 
-570 
+606 
 dñè
  = 
 	`MIN
@@ -4547,85 +4745,85 @@ BUFSIZE
 size
 ) - off_dtos;
 
-571 i‡(
-	`cudaMem˝yAsync
+607 if(
+	`˛EnqueueRódBuf„r
 (
+ch™
+->
+comm™dQueue_ch™
+,
+
+608 (
+˛_mem
+)(()
+§c
++
+off_dtos
+),
+CL_FALSE
+,0,
+dñè
+,
 ch™
 ->
 °age_bufs
 [ch™->
 ibuf
-], 
-§c
- + 
-off_dtos
-,
+],0,
+NULL
+,NULL)!=
+CL_SUCCESS
+){
 
-572 
-dñè
-, 
-cudaMem˝yDevi˚ToHo°
-, 
-ch™
-->
-°ªam
-)
-
-573 !
-cudaSuc˚ss
-) {
-
-574 
+609 
 	`g¥öt
 (
 FATAL
-, "cudaMemcpyAsync failed in dtoh\n");
+, "openCL memcpy Async failed in dtoh\n");
 
-575 
+610 
 ªt
  = -1;
 
-576 
+611 
 föish
 ;
 
-578 i‡(
-	`cudaEvítRec‹d
+613 i‡(
+	`˛EnqueueM¨kî
 (
 ch™
 ->
+comm™dQueue_ch™
+,&ch™->
 evíts
 [ch™->
 ibuf
-], ch™->
-°ªam
-)
+])!
+CL_SUCCESS
+){
 
-579 !
-cudaSuc˚ss
-) {
-
-580 
+614 
 	`g¥öt
 (
 FATAL
-, "cudaEventRecord failed in dtoh\n");
+,"opencl marker failed in dtoh\n");
 
-581 
+615 
 ªt
  = -1;
 
-582 
+616 
 föish
 ;
 
-584 
+618 
 off_dtos
  +
 dñè
 ;
 
-587 
+621 
 ch™
 ->
 ibuf
@@ -4633,61 +4831,61 @@ ibuf
 NBUFS
 ;
 
-590 
+624 
 föish
 :
 
-591 
+625 
 	`íd_dma
 (
 ch™
 );
 
-592  
+626  
 ªt
 ;
 
-593 
+627 
 	}
 }
 
-596 
+630 
 	$gmm_htod_±a
 (
 
-597 
+631 
 ªgi⁄
  *
 r
 ,
 
-598 
+632 
 ˛_mem
  
 d°
 ,
 
-599 c⁄° 
-˛_mem
- 
+633 c⁄° * 
 §c
 ,
 
-600 
+634 
 size_t
  
 cou¡
 ){
 
-602 ()(
+636 
+off
+()
 d°
-- 
+- ()
 r
 ->
 swp_addr
-);
+;
 
-604 
+638 
 	`g¥öt
 (
 DEBUG
@@ -4701,11 +4899,11 @@ size
 off
 );
 
-606 if(
+640 if(
 off
 %(*)){
 
-607 
+641 
 	`g¥öt
 (
 ERROR
@@ -4713,11 +4911,11 @@ ERROR
 off
 );
 
-610 if(
+644 if(
 cou¡
 %(*)){
 
-611 
+645 
 	`g¥öt
 (
 ERROR
@@ -4725,25 +4923,25 @@ ERROR
 cou¡
 );
 
-614 
+648 
 	`°©s_time_begö
 ();
 
-615 
+649 
 	`mem˝y
-(
+((*)(()
 r
 ->
 ±a_addr
 +
 off
-, 
+), 
 §c
 , 
 cou¡
 );
 
-616 
+650 
 	`°©s_time_íd
 (&
 pc⁄ãxt
@@ -4753,7 +4951,7 @@ pc⁄ãxt
 time_u2s
 );
 
-617 
+651 
 	`°©s_öc
 (&
 pc⁄ãxt
@@ -4765,23 +4963,23 @@ byãs_u2s
 cou¡
 );
 
-620 
+654 
 	}
 }
 
-622 
+656 
 	$gmm_mem˝y_htod
 (
 ˛_mem
  
 d°
-, c⁄° cl_mem 
+, c⁄° * 
 §c
 , 
 size
 ){
 
-624 
+658 
 dma_ch™√l
  *
 ch™
@@ -4791,36 +4989,36 @@ pc⁄ãxt
 dma_htod
 ;
 
-625 
+659 
 off
 ,
 dñè
 ;
 
-626 
+660 
 ªt
 =0, 
 ûa°
 ;
 
-628 
+662 
 	`begö_dma
 (
 ch™
 );
 
-629 
+663 
 off
 =0;
 
-630 
+664 
 off
 <
 size
 ){
 
-631 
-dëœ
+665 
+dñè
 =
 	`MIN
 (
@@ -4831,45 +5029,211 @@ BUFSIZE
 size
 )-off;
 
-637 
+666 if(
+	`˛WaôF‹Evíts
+(1,&
+ch™
+->
+evíts
+[ch™->
+ibuf
+])!=
+CL_SUCCESS
+){
+
+667 
+	`g¥öt
+(
+FATAL
+,"sync failed in htod");
+
+668 
+ªt
+=-1;
+
+669 
+föish
+;
+
+671 
+	`mem˝y
+((*)
+ch™
+->
+°age_bufs
+[ch™->
+ibuf
+],
+§c
++
+off
+,
+dñè
+);
+
+672 if(
+	`o˛_˛EnqueueWrôeBuf„r
+(
+ch™
+->
+comm™dQueue_ch™
+,(
+˛_mem
+)(()
+d°
++
+off
+),
+CL_FALSE
+,0,
+dñè
+,ch™->
+°age_bufs
+[ch™->
+ibuf
+],0,
+NULL
+,NULL)){
+
+673 
+	`g¥öt
+(
+FATAL
+,"cl write buffer failed in htod\n");
+
+674 
+ªt
+=-1;
+
+675 
+föish
+;
+
+678 if(
+	`˛EnqueueM¨kî
+(
+ch™
+->
+comm™dQueue_ch™
+,&ch™->
+evíts
+[ch™->
+ibuf
+])!=
+CL_SUCCESS
+){
+
+679 
+	`g¥öt
+(
+FATAL
+,"cl marker failed in htod\n");
+
+680 
+ªt
+=-1;
+
+681 
+föish
+;
+
+683 
+ûa°
+=
+ch™
+->
+ibuf
+;
+
+684 
+ch™
+->
+ibuf
+=(ch™->ibuf+1)%
+NBUFS
+;
+
+685 
+off
++=
+dñè
+;
+
+688 if(
+	`˛WaôF‹Evíts
+(1,&
+ch™
+->
+evíts
+[
+ûa°
+])!=
+CL_SUCCESS
+){
+
+689 
+	`g¥öt
+(
+FATAL
+,"clÉvent sync failed in htod\n");
+
+690 
+ªt
+=-1;
+
+694 
+föish
+:
+
+695 
+	`íd_dma
+(
+ch™
+);
+
+696  
+ªt
+;
+
+697 
 	}
 }
 
-638 
+698 
 	$gmm_htod_block
 (
 
-639 
+699 
 ªgi⁄
  *
 r
 ,
 
-640 
+700 
 off£t
 ,
 
-641 c⁄° *
+701 c⁄° *
 §c
 ,
 
-642 
+702 
 size
 ,
 
-643 
+703 
 block
 ,
 
-644 
+704 
 skù
 ,
 
-645 *
+705 *
 skù≥d
 )
 
-647 
+707 
 block
  *
 b
@@ -4879,7 +5243,7 @@ r
 blocks
  + block;
 
-648 
+708 
 ∑πül
  = (
 off£t
@@ -4887,7 +5251,7 @@ off£t
 BLOCKSIZE
 ) ||
 
-649 (
+709 (
 size
  < 
 BLOCKSIZE
@@ -4897,11 +5261,11 @@ off£t
 r
 ->size);
 
-650 
+710 
 ªt
  = 0;
 
-652 i‡(
+712 i‡(
 	`BLOCKIDX
 (
 off£t
@@ -4909,15 +5273,15 @@ off£t
 block
 )
 
-653 
+713 
 	`∑nic
 ("htod_block");
 
-677 
+737 
 	`°©s_time_begö
 ();
 
-678 !
+738 !
 	`åy_acquúe
 (&
 b
@@ -4925,19 +5289,19 @@ b
 lock
 )) {
 
-679 i‡(
+739 i‡(
 skù
 ) {
 
-680 i‡(
+740 i‡(
 skù≥d
 )
 
-681 *
+741 *
 skù≥d
  = 1;
 
-685 
+745 
 	`°©s_time_íd
 (&
 pc⁄ãxt
@@ -4947,7 +5311,7 @@ pc⁄ãxt
 time_sync
 );
 
-687 i‡(
+747 i‡(
 b
 ->
 swp_vÆid
@@ -4955,31 +5319,31 @@ swp_vÆid
 dev_vÆid
 ) {
 
-688 i‡(!
+748 i‡(!
 b
 ->
 swp_vÆid
 )
 
-689 
+749 
 b
 ->
 swp_vÆid
  = 1;
 
-690 i‡(
+750 i‡(
 b
 ->
 dev_vÆid
 )
 
-691 
+751 
 b
 ->
 dev_vÆid
  = 0;
 
-692 
+752 
 	`ªÀa£
 (&
 b
@@ -4987,25 +5351,25 @@ b
 lock
 );
 
-694 
+754 
 	`°©s_time_begö
 ();
 
-696 
+756 
 	`mem˝y
-(
+((*)(()
 r
 ->
 swp_addr
  + 
 off£t
-, 
+), 
 §c
 , 
 size
 );
 
-697 
+757 
 	`°©s_time_íd
 (&
 pc⁄ãxt
@@ -5015,7 +5379,7 @@ pc⁄ãxt
 time_u2s
 );
 
-698 
+758 
 	`°©s_öc
 (&
 pc⁄ãxt
@@ -5027,11 +5391,11 @@ byãs_u2s
 size
 );
 
-701 i‡(
+761 i‡(
 ∑πül
 ) {
 
-706 
+766 
 ªt
  = 
 	`block_sync
@@ -5041,17 +5405,17 @@ r
 block
 );
 
-707 i‡(
+767 i‡(
 ªt
  == 0)
 
-708 
+768 
 b
 ->
 dev_vÆid
  = 0;
 
-709 
+769 
 	`ªÀa£
 (&
 b
@@ -5059,27 +5423,27 @@ b
 lock
 );
 
-710 i‡(
+770 i‡(
 ªt
  != 0)
 
-711 
+771 
 föish
 ;
 
-714 
+774 
 b
 ->
 swp_vÆid
  = 1;
 
-715 
+775 
 b
 ->
 dev_vÆid
  = 0;
 
-716 
+776 
 	`ªÀa£
 (&
 b
@@ -5087,25 +5451,25 @@ b
 lock
 );
 
-719 
+779 
 	`°©s_time_begö
 ();
 
-720 
+780 
 	`mem˝y
-(
+((*)(()
 r
 ->
 swp_addr
  + 
 off£t
-, 
+), 
 §c
 , 
 size
 );
 
-721 
+781 
 	`°©s_time_íd
 (&
 pc⁄ãxt
@@ -5115,7 +5479,7 @@ pc⁄ãxt
 time_u2s
 );
 
-722 
+782 
 	`°©s_öc
 (&
 pc⁄ãxt
@@ -5127,27 +5491,27 @@ byãs_u2s
 size
 );
 
-727 
+787 
 föish
 :
 
-728 i‡(
+788 i‡(
 skù≥d
 )
 
-729 *
+789 *
 skù≥d
  = 0;
 
-730  
+790  
 ªt
 ;
 
-731 
+791 
 	}
 }
 
-735 
+795 
 	$block_sync
 (
 ªgi⁄
@@ -5157,7 +5521,7 @@ r
 block
 )
 
-737 
+797 
 dvÆid
  = 
 r
@@ -5169,7 +5533,7 @@ block
 dev_vÆid
 ;
 
-738 
+798 
 svÆid
  = 
 r
@@ -5181,23 +5545,23 @@ block
 swp_vÆid
 ;
 
-739 
+799 
 off
 , 
 size
 ;
 
-740 
+800 
 ªt
  = 0;
 
-743 i‡((
+803 i‡((
 dvÆid
  ^ 
 svÆid
 ) == 0) {
 
-749 i‡(!
+809 i‡(!
 r
 ->
 dev_addr
@@ -5205,17 +5569,17 @@ dev_addr
 swp_addr
 )
 
-750 
+810 
 	`∑nic
 ("block_sync");
 
-752 
+812 
 	`g¥öt
 (
 DEBUG
 , \
 
-754 
+814 
 r
 , 
 block
@@ -5225,11 +5589,11 @@ svÆid
 dvÆid
 );
 
-760 
+820 
 	`°©s_time_begö
 ();
 
-761 
+821 
 	`©omic_ªad
 (&
 r
@@ -5237,7 +5601,7 @@ r
 wrôög
 ) > 0) ;
 
-762 
+822 
 	`°©s_time_íd
 (&
 pc⁄ãxt
@@ -5247,7 +5611,7 @@ pc⁄ãxt
 time_sync
 );
 
-764 
+824 
 off
  = 
 block
@@ -5255,7 +5619,7 @@ block
 BLOCKSIZE
 ;
 
-765 
+825 
 size
  = 
 	`MIN
@@ -5267,37 +5631,47 @@ BLOCKSIZE
 r
 ->size) - off;
 
-766 i‡(
+826 i‡(
 dvÆid
  && !
 svÆid
 ) {
 
-767 
+827 
 	`°©s_time_begö
 ();
 
-768 
+828 
 ªt
  = 
 	`gmm_mem˝y_dtoh
-(
+((
+˛_mem
+)(()
 r
 ->
 swp_addr
  + 
 off
-,Ñ->
+),
+
+829 (
+˛_mem
+)(()
+r
+->
 dev_addr
- + off, 
+ + 
+off
+), 
 size
 );
 
-769 i‡(
+830 i‡(
 ªt
  == 0)
 
-770 
+831 
 r
 ->
 blocks
@@ -5307,7 +5681,7 @@ block
 swp_vÆid
  = 1;
 
-771 
+832 
 	`°©s_time_íd
 (&
 pc⁄ãxt
@@ -5317,7 +5691,7 @@ pc⁄ãxt
 time_d2s
 );
 
-772 
+833 
 	`°©s_öc
 (&
 pc⁄ãxt
@@ -5329,17 +5703,17 @@ byãs_d2s
 size
 );
 
-774 i‡(!
+835 i‡(!
 dvÆid
  && 
 svÆid
 ) {
 
-775 
+836 
 	`°©s_time_begö
 ();
 
-776 
+837 
 	`©omic_ªad
 (&
 r
@@ -5347,7 +5721,7 @@ r
 ªadög
 ) > 0) ;
 
-777 
+838 
 	`°©s_time_íd
 (&
 pc⁄ãxt
@@ -5357,31 +5731,41 @@ pc⁄ãxt
 time_sync
 );
 
-779 
+840 
 	`°©s_time_begö
 ();
 
-780 
+841 
 ªt
  = 
 	`gmm_mem˝y_htod
-(
+((
+˛_mem
+)(()
 r
 ->
 dev_addr
  + 
 off
-,Ñ->
+),
+
+842 (
+˛_mem
+)(()
+r
+->
 swp_addr
- + off, 
+ + 
+off
+), 
 size
 );
 
-781 i‡(
+843 i‡(
 ªt
  == 0)
 
-782 
+844 
 r
 ->
 blocks
@@ -5391,7 +5775,7 @@ block
 dev_vÆid
  = 1;
 
-783 
+845 
 	`°©s_time_íd
 (&
 pc⁄ãxt
@@ -5401,7 +5785,7 @@ pc⁄ãxt
 time_s2d
 );
 
-784 
+846 
 	`°©s_öc
 (&
 pc⁄ãxt
@@ -5413,55 +5797,55 @@ byãs_s2d
 size
 );
 
-787 
+849 
 	`∑nic
 ("block_sync");
 
-789 
+851 
 	`g¥öt
 (
 DEBUG
 , "block syncÉnds\n");
 
-790  
+852  
 ªt
 ;
 
-791 
+853 
 	}
 }
 
-876 #i‡
+938 #i‡
 deföed
 (
 GMM_CONFIG_HTOD_RADICAL
 )
 
-878 
+940 
 	$gmm_htod
 (
 
-879 
+941 
 ªgi⁄
  *
 r
 ,
 
-880 *
+942 *
 d°
 ,
 
-881 c⁄° *
+943 c⁄° *
 §c
 ,
 
-882 
+944 
 size_t
  
 cou¡
 )
 
-884 
+946 
 iblock
 , 
 ifú°
@@ -5469,27 +5853,27 @@ ifú°
 ûa°
 ;
 
-885 
+947 
 off
 , 
 íd
 ;
 
-886 *
+948 *
 s
  = (*)
 §c
 ;
 
-887 *
+949 *
 skù≥d
 ;
 
-888 
+950 
 ªt
  = 0;
 
-890 i‡(
+952 i‡(
 r
 ->
 Êags
@@ -5497,7 +5881,7 @@ r
 HINT_PTARRAY
 )
 
-891  
+953  
 	`gmm_htod_±a
 (
 r
@@ -5509,7 +5893,7 @@ d°
 cou¡
 );
 
-893 
+955 
 off
  = ()(
 d°
@@ -5519,7 +5903,7 @@ r
 swp_addr
 );
 
-894 
+956 
 íd
  = 
 off
@@ -5527,7 +5911,7 @@ off
 cou¡
 ;
 
-895 
+957 
 ifú°
  = 
 	`BLOCKIDX
@@ -5535,7 +5919,7 @@ ifú°
 off
 );
 
-896 
+958 
 ûa°
  = 
 	`BLOCKIDX
@@ -5543,7 +5927,7 @@ off
 íd
  - 1);
 
-897 
+959 
 skù≥d
  = (*)
 	`ˇŒoc
@@ -5553,11 +5937,11 @@ skù≥d
 ifú°
  + 1, ());
 
-898 i‡(!
+960 i‡(!
 skù≥d
 ) {
 
-899 
+961 
 	`g¥öt
 (
 FATAL
@@ -5567,7 +5951,7 @@ FATAL
 î∫o
 ));
 
-909 
+971 
 iblock
  = 
 ifú°
@@ -5575,7 +5959,7 @@ ifú°
 ûa°
 ; iblock++) {
 
-910 
+972 
 size
  = 
 	`MIN
@@ -5587,13 +5971,13 @@ off
 íd
 ) - off;
 
-911 i‡((
+973 i‡((
 off£t
  % 
 BLOCKSIZE
 ) == 0 &&
 
-912 (
+974 (
 size
  =
 BLOCKSIZE
@@ -5603,7 +5987,7 @@ off£t
 r
 ->size)) {
 
-913 i‡(
+975 i‡(
 	`åy_acquúe
 (&
 r
@@ -5615,7 +5999,7 @@ iblock
 lock
 )) {
 
-914 
+976 
 r
 ->
 blocks
@@ -5625,7 +6009,7 @@ iblock
 dev_vÆid
  = 0;
 
-915 
+977 
 r
 ->
 blocks
@@ -5635,7 +6019,7 @@ iblock
 swp_vÆid
  = 1;
 
-916 
+978 
 	`ªÀa£
 (&
 r
@@ -5647,13 +6031,13 @@ iblock
 lock
 );
 
-919 
+981 
 off
  +
 size
 ;
 
-925 
+987 
 off
  = ()(
 d°
@@ -5663,7 +6047,7 @@ r
 swp_addr
 );
 
-926 
+988 
 iblock
  = 
 ifú°
@@ -5671,7 +6055,7 @@ ifú°
 ûa°
 ; iblock++) {
 
-927 
+989 
 size
  = 
 	`MIN
@@ -5683,7 +6067,7 @@ off
 íd
 ) - off;
 
-928 
+990 
 ªt
  = 
 	`gmm_htod_block
@@ -5699,7 +6083,7 @@ size
 iblock
 , 1,
 
-929 
+991 
 skù≥d
  + (
 iblock
@@ -5707,27 +6091,27 @@ iblock
 ifú°
 ));
 
-930 i‡(
+992 i‡(
 ªt
  != 0)
 
-931 
+993 
 föish
 ;
 
-932 
+994 
 s
  +
 size
 ;
 
-933 
+995 
 off
  +
 size
 ;
 
-937 
+999 
 off
  = ()(
 d°
@@ -5737,13 +6121,13 @@ r
 swp_addr
 );
 
-938 
+1000 
 s
  = (*)
 §c
 ;
 
-939 
+1001 
 iblock
  = 
 ifú°
@@ -5751,7 +6135,7 @@ ifú°
 ûa°
 ; iblock++) {
 
-940 
+1002 
 size
  = 
 	`MIN
@@ -5763,7 +6147,7 @@ off
 íd
 ) - off;
 
-941 i‡(
+1003 i‡(
 skù≥d
 [
 iblock
@@ -5771,7 +6155,7 @@ iblock
 ifú°
 ]) {
 
-942 
+1004 
 ªt
  = 
 	`gmm_htod_block
@@ -5789,69 +6173,71 @@ iblock
 NULL
 );
 
-943 i‡(
+1005 i‡(
 ªt
  != 0)
 
-944 
+1006 
 föish
 ;
 
-946 
+1008 
 s
  +
 size
 ;
 
-947 
+1009 
 off
  +
 size
 ;
 
-950 
+1012 
 föish
 :
 
-951 
+1013 
 	`‰ì
 (
 skù≥d
 );
 
-952  
+1014  
 ªt
 ;
 
-953 
+1015 
 	}
 }
 
-956 
+1018 
 	$gmm_htod
 (
 
-957 
+1019 
 ªgi⁄
  *
 r
 ,
 
-958 *
+1020 
+˛_mem
+ 
 d°
 ,
 
-959 c⁄° *
+1021 c⁄° *
 §c
 ,
 
-960 
+1022 
 size_t
  
 cou¡
 )
 
-962 
+1024 
 off
 , 
 íd
@@ -5859,7 +6245,7 @@ off
 size
 ;
 
-963 
+1025 
 ifú°
 , 
 ûa°
@@ -5867,27 +6253,27 @@ ifú°
 iblock
 ;
 
-964 *
+1026 *
 s
  = (*)
 §c
 ;
 
-965 *
+1027 *
 skù≥d
 ;
 
-966 
+1028 
 ªt
  = 0;
 
-968 
+1030 
 	`g¥öt
 (
 DEBUG
 , "htod:Ñ(%p %p %ld %d %d) dst(%p) src(%p) count(%lu)\n", \
 
-969 
+1031 
 r
 ,Ñ->
 swp_addr
@@ -5905,7 +6291,7 @@ d°
 cou¡
 );
 
-971 i‡(
+1033 i‡(
 r
 ->
 Êags
@@ -5913,29 +6299,29 @@ r
 HINT_PTARRAY
 )
 
-972  
+1034  
 	`gmm_htod_±a
 (
 r
 , 
 d°
-, 
+, (*)
 §c
 , 
 cou¡
 );
 
-974 
+1036 
 off
- = ()(
+ = ()
 d°
- - 
+ -()
 r
 ->
 swp_addr
-);
+;
 
-975 
+1037 
 íd
  = 
 off
@@ -5943,7 +6329,7 @@ off
 cou¡
 ;
 
-976 
+1038 
 ifú°
  = 
 	`BLOCKIDX
@@ -5951,7 +6337,7 @@ ifú°
 off
 );
 
-977 
+1039 
 ûa°
  = 
 	`BLOCKIDX
@@ -5959,7 +6345,7 @@ off
 íd
  - 1);
 
-978 
+1040 
 skù≥d
  = (*)
 	`ˇŒoc
@@ -5969,11 +6355,11 @@ skù≥d
 ifú°
  + 1, ());
 
-979 i‡(!
+1041 i‡(!
 skù≥d
 ) {
 
-980 
+1042 
 	`g¥öt
 (
 FATAL
@@ -5983,7 +6369,7 @@ FATAL
 î∫o
 ));
 
-987 
+1049 
 iblock
  = 
 ifú°
@@ -5991,7 +6377,7 @@ ifú°
 ûa°
 ; iblock++) {
 
-988 
+1050 
 size
  = 
 	`MIN
@@ -6003,7 +6389,7 @@ off
 íd
 ) - off;
 
-989 
+1051 
 ªt
  = 
 	`gmm_htod_block
@@ -6019,7 +6405,7 @@ size
 iblock
 , 1,
 
-990 
+1052 
 skù≥d
  + (
 iblock
@@ -6027,43 +6413,43 @@ iblock
 ifú°
 ));
 
-991 i‡(
+1053 i‡(
 ªt
  != 0)
 
-992 
+1054 
 föish
 ;
 
-993 
+1055 
 s
  +
 size
 ;
 
-994 
+1056 
 off
  +
 size
 ;
 
-998 
+1060 
 off
- = ()(
+ = ()
 d°
- - 
+ -()
 r
 ->
 swp_addr
-);
+;
 
-999 
+1061 
 s
  = (*)
 §c
 ;
 
-1000 
+1062 
 iblock
  = 
 ifú°
@@ -6071,7 +6457,7 @@ ifú°
 ûa°
 ; iblock++) {
 
-1001 
+1063 
 size
  = 
 	`MIN
@@ -6083,7 +6469,7 @@ off
 íd
 ) - off;
 
-1002 i‡(
+1064 i‡(
 skù≥d
 [
 iblock
@@ -6091,7 +6477,7 @@ iblock
 ifú°
 ]) {
 
-1003 
+1065 
 ªt
  = 
 	`gmm_htod_block
@@ -6109,45 +6495,45 @@ iblock
 NULL
 );
 
-1004 i‡(
+1066 i‡(
 ªt
  != 0)
 
-1005 
+1067 
 föish
 ;
 
-1007 
+1069 
 s
  +
 size
 ;
 
-1008 
+1070 
 off
  +
 size
 ;
 
-1011 
+1073 
 föish
 :
 
-1012 
+1074 
 	`‰ì
 (
 skù≥d
 );
 
-1013  
+1075  
 ªt
 ;
 
-1014 
+1076 
 	}
 }
 
-1020 
+1082 
 	$gmm_˛EnqueueWrôeBuf„r
 (
 ˛_comm™d_queue
@@ -6156,7 +6542,7 @@ comm™d_queue
 , 
 ˛_mem
  
-buf„r
+d°
 , 
 ˛_boﬁ
  
@@ -6168,7 +6554,7 @@ off£t
 , size_à
 cou¡
 , c⁄° *
-±r
+§c
 , 
 ˛_uöt
  
@@ -6181,43 +6567,21 @@ evít_waô_li°
 evít
 ){
 
-1022 
-dma_ch™√l
- *
-ch™
- = &
-pc⁄ãxt
-->
-dma_htod
-;
-
-1023 
-off
-, 
-dñè
-;
-
-1024 
-ªt
-=0, 
-ûa°
-;
-
-1026 
+1085 
 ªgi⁄
  * 
 r
 ;
 
-1027 i‡(
+1086 i‡(
 cou¡
 <=0){
 
-1028  
+1087  
 CL_INVALID_VALUE
 ;
 
-1031 
+1090 
 r
  = 
 	`ªgi⁄_lookup
@@ -6227,11 +6591,11 @@ pc⁄ãxt
 d°
 );
 
-1032 if(!
+1091 if(!
 r
 ){
 
-1033 
+1092 
 	`g¥öt
 (
 ERROR
@@ -6239,33 +6603,31 @@ ERROR
 d°
 );
 
-1034  
+1093  
 CL_INVALID_MEM_OBJECT
 ;
 
-1037 if(
+1096 if(
 r
 ->
 °©e
 =
 STATE_FREEING
-||r->
-STATE
-==
-ZOMBIE
+||r->°©e==
+STATE_ZOMBIE
 ){
 
-1038 
+1097 
 	`g¥öt
 (
 WARN
 ,"regionálready freed\n");
 
-1039  
+1098  
 CL_INVALID_VALUE
 ;
 
-1041 i‡(
+1100 i‡(
 r
 ->
 Êags
@@ -6273,21 +6635,21 @@ r
 FLAG_COW
 ){
 
-1042 
+1101 
 	`g¥öt
 (
 ERROR
 ,"HtoD,theÑegion isÅagged on COW\n");
 
-1043  
+1102  
 CL_INVALID_MEM_OBJECT
 ;
 
-1045 if(
+1104 if(()
 d°
 +
 cou¡
- > 
+ > ()
 r
 ->
 swp_addr
@@ -6295,37 +6657,37 @@ swp_addr
 size
 ){
 
-1046 
+1105 
 	`g¥öt
 (
 ERROR
 ,"htod out ofÑegion boundary\n");
 
-1047  
+1106  
 CL_INVALID_VALUE
 ;
 
-1050 
+1109 
 	`°©s_time_begö
 ();
 
-1058 if(
+1117 if(
 	`gmm_htod
 (
 r
 ,
 d°
-,
+,(*)
 §c
 ,
 cou¡
 )<0)
 
-1059  
+1118  
 CL_INVALID_MEM_OBJECT
 ;
 
-1061 
+1120 
 	`°©s_time_íd
 (&
 pc⁄ãxt
@@ -6335,7 +6697,7 @@ pc⁄ãxt
 time_htod
 );
 
-1062 
+1121 
 	`°©s_öc
 (&
 pc⁄ãxt
@@ -6347,11 +6709,11 @@ byãs_htod
 cou¡
 );
 
-1064  
+1123  
 CL_SUCCESS
 ;
 
-1065 
+1124 
 	}
 }
 
@@ -6453,7 +6815,7 @@ _GMM_CORE_H_
 	sªgi⁄
  {
 
-44 
+44 
 	msize
 ;
 
@@ -7833,7 +8195,7 @@ size_t
 NULL
 ;
 
-22 
+23 
 	$˛_c⁄ãxt
  (*
 o˛_˛Cª©eC⁄ãxt
@@ -7849,7 +8211,7 @@ o˛_˛Cª©eC⁄ãxt
 NULL
 ;
 
-23 
+24 
 	$˛_comm™d_queue
  (*
 o˛_˛Cª©eComm™dQueue
@@ -7865,137 +8227,137 @@ o˛_˛Cª©eComm™dQueue
 NULL
 ;
 
-24 
+25 
 öôülized
  = 0;
 
-35 
+36 
 	`__©åibuã__
 ((
 c⁄°ru˘‹
 ))
 
-36 
+37 
 	$gmm_öô
 ()
 
-38 
+39 
 	`INTERCEPT_CL
 ("˛Cª©eBuf„r", 
 o˛_˛Cª©eBuf„r
 );
 
-39 
+40 
 	`INTERCEPT_CL
 ("˛Rñó£MemObje˘",
 o˛_˛Rñó£MemObje˘
 );
 
-40 
+41 
 	`INTERCEPT_CL
 ("˛Cª©eC⁄ãxt",
 o˛_˛Cª©eC⁄ãxt
 );
 
-41 
+42 
 	`INTERCEPT_CL
 ("˛Cª©eComm™dQueue",
 o˛_˛Cª©eComm™dQueue
 );
 
-42 
+43 
 	`INTERCEPT_CL
 ("˛EnqueueFûlBuf„r",
 o˛_˛EnqueueFûlBuf„r
 );
 
-43 
+44 
 	`INTERCEPT_CL
 ("˛EnqueueWrôeBuf„r",
 o˛_˛EnqueueWrôeBuf„r
 );
 
-45 
+47 
 	`g¥öt_öô
 ();
 
-48 i‡(
+50 i‡(
 	`gmm_c⁄ãxt_öô
 () == -1) {
 
-49 
+51 
 	`g¥öt
 (
 FATAL
 , "failedÅo initialize GMMÜocal context\n");
 
-53 i‡(
+55 i‡(
 	`˛õ¡_©èch
 () == -1) {
 
-54 
+56 
 	`g¥öt
 (
 FATAL
 , "failedÅoáttachÅoÅhe GMM globalárena\n");
 
-55 
+57 
 	`gmm_c⁄ãxt_föi
 ();
 
-59 
+61 
 öôülized
  = 1;
 
-60 
+62 
 	`g¥öt
 (
 DEBUG
 , "gmm initialized\n");
 
-61 
+63 
 	}
 }
 
-64 
+66 
 __©åibuã__
 ((
 de°ru˘‹
 ))
 
-65 
+67 
 	$gmm_föi
 ()
 
-67 i‡(
+69 i‡(
 öôülized
 ) {
 
-72 
+74 
 	`gmm_c⁄ãxt_föi
 ();
 
-73 
+75 
 	`˛õ¡_dëach
 ();
 
-74 
+76 
 öôülized
  = 0;
 
-77 
+79 
 	`g¥öt_föi
 ();
 
-78 
+80 
 	}
 }
 
-80 
+82 
 GMM_EXPORT
 
 
-81 
+83 
 ˛_c⁄ãxt
  
 ˛Cª©eC⁄ãxt
@@ -8031,17 +8393,17 @@ u£r_d©a
 îrcode_ªt
 ){
 
-82 
+84 
 ˛_c⁄ãxt
  
 ªt
 ;
 
-83 i‡(
+85 i‡(
 öôülized
 ){
 
-84  
+86  
 	`gmm_˛Cª©eC⁄ãxt
 (
 ¥›îtõs
@@ -8057,13 +8419,13 @@ u£r_d©a
 îrcode_ªt
 );
 
-87 
+89 
 	`g¥öt
 (
 WARN
 ,"clCreateContext outsideÅhe gmm\n");
 
-88  
+90  
 	`o˛_˛Cª©eC⁄ãxt
 (
 ¥›îtõs
@@ -8079,19 +8441,19 @@ u£r_d©a
 îrcode_ªt
 );
 
-90  
+92  
 ªt
 ;
 
-91 
+93 
 	}
 }
 
-94 
+96 
 GMM_EXPORT
 
 
-95 
+97 
 ˛_öt
  
 	$˛EnqueueFûlBuf„r
@@ -8125,17 +8487,17 @@ evít_waô_li°
 evít
 ){
 
-96 if(
+98 if(
 öôülized
 ){
 
-97 
+99 
 vÆue
  = ()(
 ∑âîn
 );
 
-99  
+101  
 	`gmm_˛EnqueueFûlBuf„r
 (
 comm™d_queue
@@ -8157,7 +8519,7 @@ evít_waô_li°
 evít
 );
 
-102  
+104  
 	`o˛_˛EnqueueFûlBuf„r
 (
 comm™d_queue
@@ -8179,15 +8541,15 @@ evít_waô_li°
 evít
 );
 
-104 
+106 
 	}
 }
 
-106 
+108 
 GMM_EXPORT
 
 
-107 
+109 
 ˛_mem
  
 	$˛Cª©eBuf„r
@@ -8211,7 +8573,7 @@ ho°_±r
 îrcode
 ){
 
-108 
+110 
 ˛_mem
  
 ªt
@@ -8219,11 +8581,11 @@ ho°_±r
 NULL
 ;
 
-109 if(
+111 if(
 öôülized
 ){
 
-110 
+112 
 ªt
 =
 	`gmm_˛Cª©eBuf„r
@@ -8239,13 +8601,13 @@ ho°_±r
 îrcode
 ,0);
 
-113 
+115 
 	`g¥öt
 (
 WARN
 ,"clCreateBuffer called outsideÅhe GMM\n");
 
-114  
+116  
 	`o˛_˛Cª©eBuf„r
 (
 c⁄ãxt
@@ -8259,19 +8621,19 @@ ho°_±r
 îrcode
 );
 
-116  
+118  
 ªt
 ;
 
-117 
+119 
 	}
 }
 
-119 
+121 
 GMM_EXPORT
 
 
-120 
+122 
 ˛_öt
  
 	$˛Rñó£MemObje˘
@@ -8281,53 +8643,53 @@ GMM_EXPORT
 memObj
 ){
 
-122 
+124 
 ˛_öt
  
 ªt
 ;
 
-123 if(
+125 if(
 öôülized
 ){
 
-124 
+126 
 	`¥ötf
 ("ösidêthêINTERCEPT,Åhê±∏o‡memObj i† %p\n",
 memObj
 );
 
-125  
+127  
 	`gmm_˛Rñó£MemObje˘
 (
 memObj
 );
 
-128 
+130 
 	`g¥öt
 (
 WARN
 ,"clReleaseMemObj Call out sideÅhe gmm");
 
-129  
+131  
 	`o˛_˛Rñó£MemObje˘
 (
 memObj
 );
 
-132  
+134  
 ªt
 ;
 
-133 
+135 
 	}
 }
 
-135 
+137 
 GMM_EXPORT
 
 
-136 
+138 
 ˛_comm™d_queue
  
 	$˛Cª©eComm™dQueue
@@ -8349,17 +8711,17 @@ devi˚
 îrcode_CQ
 ){
 
-138 
+140 
 ˛_comm™d_queue
  
 ªt
 ;
 
-139 if(
+141 if(
 öôülized
 ){
 
-140  
+142  
 	`o˛_˛Cª©eComm™dQueue
 (
 c⁄ãxt
@@ -8371,7 +8733,7 @@ devi˚
 îrcode_CQ
 );
 
-143  
+145  
 	`o˛_˛Cª©eComm™dQueue
 (
 c⁄ãxt
@@ -8383,19 +8745,19 @@ devi˚
 îrcode_CQ
 );
 
-147  
+149  
 ªt
 ;
 
-149 
+151 
 	}
 }
 
-151 
+153 
 GMM_EXPORT
 
 
-152 
+154 
 ˛_öt
  
 	$˛EnqueueWrôeBuf„r
@@ -8413,7 +8775,7 @@ buf„r
 blockög_wrôe
 ,
 
-153 
+155 
 size_t
  
 off£t
@@ -8427,7 +8789,7 @@ cb
 num_evíts_ö_waô_li°
 ,
 
-154 c⁄° 
+156 c⁄° 
 ˛_evít
  *
 evíts_waô_li°
@@ -8435,11 +8797,11 @@ evíts_waô_li°
 evít
 ){
 
-156 if(
+158 if(
 öôülized
 ){
 
-157  
+159  
 	`gmm_˛EnqueueWrôeBuf„r
 (
 comm™d_queue
@@ -8461,7 +8823,7 @@ evíts_waô_li°
 evít
 );
 
-160  
+162  
 	`o˛_˛EnqueueWrôeBuf„r
 (
 comm™d_queue
@@ -8483,7 +8845,7 @@ evíts_waô_li°
 evít
 );
 
-162 
+164 
 	}
 }
 

@@ -1,0 +1,252 @@
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.0/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_REPLACEMENT_LRU -MM client.c common.c core.c interfaces.c msq.c replacement.c stats.c debug.c > .depend
+gcc -c -l OpenCL -Wall -g\
+		-I/usr/local/cuda-6.0/include  server.c -o server.o -lpthread -lrt
+In file included from /usr/local/cuda-6.0/include/CL/opencl.h:44:0,
+                 from server.c:15:
+/usr/local/cuda-6.0/include/CL/cl_gl_ext.h:44:4: warning: "/*" within comment [-Wcomment]
+  * /* cl_VEN_extname extension  */
+ ^
+server.c: In function ‘start’:
+server.c:35:3: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 3 has type ‘size_t’ [-Wformat=]
+   fprintf(stderr, "Total GPU memory: %lu bytes.\n", total);
+   ^
+server.c:36:3: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 3 has type ‘size_t’ [-Wformat=]
+   fprintf(stderr, "Free GPU memory: %lu bytes.\n", sfree);
+   ^
+server.c:43:3: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 3 has type ‘size_t’ [-Wformat=]
+   fprintf(stderr, "Use GPU memory: %lu bytes.\n", total);
+   ^
+server.c:21:9: warning: unused variable ‘ret’ [-Wunused-variable]
+  cl_int ret;
+         ^
+server.c:36:10: warning: ‘sfree’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+   fprintf(stderr, "Free GPU memory: %lu bytes.\n", sfree);
+          ^
+gcc -L/usr/local/cuda-6.0/lib64 server.o -o  gmmctl -lpthread -lrt
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.0/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_REPLACEMENT_LRU   -c -o client.o client.c
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.0/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_REPLACEMENT_LRU   -c -o common.o common.c
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.0/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_REPLACEMENT_LRU   -c -o core.o core.c
+In file included from /usr/local/cuda-6.0/include/CL/opencl.h:44:0,
+                 from core.c:8:
+/usr/local/cuda-6.0/include/CL/cl_gl_ext.h:44:4: warning: "/*" within comment [-Wcomment]
+  * /* cl_VEN_extname extension  */
+ ^
+core.c: In function ‘gmm_clCreateContext’:
+core.c:185:21: warning: assignment discards ‘const’ qualifier from pointer target type [enabled by default]
+     pcontext->device=devices;
+                     ^
+core.c:196:9: warning: ‘return’ with no value, in function returning non-void [-Wreturn-type]
+         return ;
+         ^
+core.c:204:9: warning: ‘return’ with no value, in function returning non-void [-Wreturn-type]
+         return ;
+         ^
+core.c: In function ‘gmm_clCreateBuffer’:
+core.c:213:5: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 4 has type ‘size_t’ [-Wformat=]
+     gprint(DEBUG,"clCreateBuffer begins, size(%lu), flags(%x)\n",size,flags);
+     ^
+core.c:213:5: warning: format ‘%x’ expects argument of type ‘unsigned int’, but argument 5 has type ‘cl_mem_flags’ [-Wformat=]
+core.c:218:9: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 4 has type ‘size_t’ [-Wformat=]
+         gprint(ERROR,"clCreateBuffer size(%lu) too large(max %ld)\n", size, memsize_total());
+         ^
+core.c:219:19: warning: assignment makes pointer from integer without a cast [enabled by default]
+         errcode_CB=CL_INVALID_VALUE;
+                   ^
+core.c:223:9: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 4 has type ‘size_t’ [-Wformat=]
+         gprint(ERROR,"clCreateBuffer size (%lu) too small\n", size);
+         ^
+core.c:224:19: warning: assignment makes pointer from integer without a cast [enabled by default]
+         errcode_CB=CL_INVALID_VALUE;
+                   ^
+core.c:230:19: warning: assignment makes pointer from integer without a cast [enabled by default]
+         errcode_CB=CL_MEM_OBJECT_ALLOCATION_FAILURE;
+                   ^
+core.c:239:19: warning: assignment makes pointer from integer without a cast [enabled by default]
+         errcode_CB=CL_MEM_OBJECT_ALLOCATION_FAILURE;
+                   ^
+core.c:245:13: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 4 has type ‘size_t’ [-Wformat=]
+             gprint (ERROR, "dptr array size (%lu) not aligned \n",size);
+             ^
+core.c:248:23: warning: assignment makes pointer from integer without a cast [enabled by default]
+             errcode_CB=CL_INVALID_VALUE;
+                       ^
+core.c:257:23: warning: assignment makes pointer from integer without a cast [enabled by default]
+             errcode_CB=CL_MEM_OBJECT_ALLOCATION_FAILURE;
+                       ^
+core.c:212:9: warning: unused variable ‘nblocks’ [-Wunused-variable]
+     int nblocks;
+         ^
+core.c: In function ‘gmm_clReleaseMemObject’:
+core.c:334:9: warning: unused variable ‘found’ [-Wunused-variable]
+     int found=0;
+         ^
+core.c:333:23: warning: unused variable ‘pos’ [-Wunused-variable]
+     struct list_head *pos;
+                       ^
+core.c: In function ‘gmm_free’:
+core.c:375:5: warning: format ‘%d’ expects argument of type ‘int’, but argument 7 has type ‘cl_mem_flags’ [-Wformat=]
+     gprint(DEBUG,"freeing r (r %p|| swp_addr%p|| size %ld||flags %d||r-state %d)\n",r,r->swp_addr,r->size,r->flags,r->state);
+     ^
+core.c: In function ‘gmm_memset’:
+core.c:469:5: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 9 has type ‘size_t’ [-Wformat=]
+     gprint(DEBUG,"memset: r(%p,%p,%ld)dst(%p)value(%d)count(%lu)",\
+     ^
+core.c:472:9: warning: implicit declaration of function ‘gmm_memset_pta’ [-Wimplicit-function-declaration]
+         return gmm_memset_pta(r,buffer,value,count);
+         ^
+core.c: In function ‘gmm_memcpy_dtoh’:
+core.c:600:2: warning: implicit declaration of function ‘end_dma’ [-Wimplicit-function-declaration]
+  end_dma(chan);
+  ^
+core.c: In function ‘gmm_htod_pta’:
+core.c:620:9: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 4 has type ‘size_t’ [-Wformat=]
+         gprint(ERROR,"count (%lu)not aligned for htod_pta",count);
+         ^
+core.c: In function ‘gmm_memcpy_htod’:
+core.c:635:16: warning: unused variable ‘ilast’ [-Wunused-variable]
+     int ret=0, ilast;
+                ^
+core.c:635:9: warning: unused variable ‘ret’ [-Wunused-variable]
+     int ret=0, ilast;
+         ^
+core.c:634:23: warning: variable ‘delta’ set but not used [-Wunused-but-set-variable]
+     unsigned long off,delta;
+                       ^
+core.c:646:1: warning: no return statement in function returning non-void [-Wreturn-type]
+ }
+ ^
+core.c: At top level:
+core.c:970:28: warning: type defaults to ‘int’ in declaration of ‘src’ [-Wimplicit-int]
+                     const  src,
+                            ^
+core.c: In function ‘gmm_htod’:
+core.c:979:2: warning: format ‘%d’ expects argument of type ‘int’, but argument 7 has type ‘cl_mem_flags’ [-Wformat=]
+  gprint(DEBUG, "htod: r(%p %p %ld %d %d) dst(%p) src(%p) count(%lu)\n", \
+  ^
+core.c:979:2: warning: format ‘%p’ expects argument of type ‘void *’, but argument 10 has type ‘int’ [-Wformat=]
+core.c:979:2: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 11 has type ‘size_t’ [-Wformat=]
+core.c:983:3: warning: passing argument 3 of ‘gmm_htod_pta’ makes pointer from integer without a cast [enabled by default]
+   return gmm_htod_pta(r, dst, src, count);
+   ^
+core.c:605:12: note: expected ‘const void *’ but argument is of type ‘int’
+ static int gmm_htod_pta(
+            ^
+core.c: In function ‘gmm_clEnqueueWriteBuffer’:
+core.c:1069:9: warning: passing argument 3 of ‘gmm_htod’ makes integer from pointer without a cast [enabled by default]
+         if(gmm_htod(r,dst,src,count)<0)
+         ^
+core.c:967:12: note: expected ‘int’ but argument is of type ‘const void *’
+ static int gmm_htod(
+            ^
+core.c:1035:16: warning: unused variable ‘ilast’ [-Wunused-variable]
+     int ret=0, ilast;
+                ^
+core.c:1035:9: warning: unused variable ‘ret’ [-Wunused-variable]
+     int ret=0, ilast;
+         ^
+core.c:1034:24: warning: unused variable ‘delta’ [-Wunused-variable]
+     unsigned long off, delta;
+                        ^
+core.c:1034:19: warning: unused variable ‘off’ [-Wunused-variable]
+     unsigned long off, delta;
+                   ^
+core.c:1033:25: warning: unused variable ‘chan’ [-Wunused-variable]
+     struct dma_channel *chan = &pcontext->dma_htod;
+                         ^
+core.c: At top level:
+core.c:58:13: warning: ‘list_attached_add’ defined but not used [-Wunused-function]
+ static void list_attached_add(struct gmm_context *ctx, struct region *r)
+             ^
+core.c:75:13: warning: ‘list_attached_mov’ defined but not used [-Wunused-function]
+ static void list_attached_mov(struct gmm_context *ctx, struct region *r)
+             ^
+core.c:1031:12: warning: ‘gmm_clEnqueueWriteBuffer’ defined but not used [-Wunused-function]
+ static int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_bool blocking_write, size_t offset, size_t count, const void *src, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){
+            ^
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.0/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_REPLACEMENT_LRU   -c -o interfaces.o interfaces.c
+In file included from /usr/local/cuda-6.0/include/CL/opencl.h:44:0,
+                 from core.h:7,
+                 from interfaces.c:9:
+/usr/local/cuda-6.0/include/CL/cl_gl_ext.h:44:4: warning: "/*" within comment [-Wcomment]
+  * /* cl_VEN_extname extension  */
+ ^
+interfaces.c: In function ‘clCreateContext’:
+interfaces.c:86:9: warning: implicit declaration of function ‘gmm_clCreateContext’ [-Wimplicit-function-declaration]
+         return gmm_clCreateContext(properties,num_devices,devices,pfn_notify, user_data,errcode_ret);
+         ^
+interfaces.c:86:9: warning: return makes pointer from integer without a cast [enabled by default]
+interfaces.c:90:9: warning: passing argument 1 of ‘ocl_clCreateContext’ discards ‘const’ qualifier from pointer target type [enabled by default]
+         return ocl_clCreateContext(properties,num_devices,devices,pfn_notify,user_data,errcode_ret);
+         ^
+interfaces.c:90:9: note: expected ‘cl_context_properties *’ but argument is of type ‘const cl_context_properties *’
+interfaces.c: In function ‘clEnqueueFillBuffer’:
+interfaces.c:101:9: warning: implicit declaration of function ‘gmm_clEnqueueFillBuffer’ [-Wimplicit-function-declaration]
+         return gmm_clEnqueueFillBuffer(command_queue, buffer, value, pattern_size, offset, size, num_events_in_wait_list, event_wait_list, event);
+         ^
+interfaces.c:104:9: warning: passing argument 8 of ‘ocl_clEnqueueFillBuffer’ from incompatible pointer type [enabled by default]
+         return ocl_clEnqueueFillBuffer(command_queue, buffer, pattern, pattern_size, offset, size, num_events_in_wait_list, event_wait_list, event);
+         ^
+interfaces.c:104:9: note: expected ‘cl_event’ but argument is of type ‘struct _cl_event * const*’
+interfaces.c:104:9: warning: passing argument 9 of ‘ocl_clEnqueueFillBuffer’ from incompatible pointer type [enabled by default]
+interfaces.c:104:9: note: expected ‘cl_event’ but argument is of type ‘struct _cl_event **’
+interfaces.c: In function ‘clCreateBuffer’:
+interfaces.c:112:8: warning: implicit declaration of function ‘gmm_clCreateBuffer’ [-Wimplicit-function-declaration]
+        ret=gmm_clCreateBuffer(context,flags,size,host_ptr,errcode,0);
+        ^
+interfaces.c:112:11: warning: assignment makes pointer from integer without a cast [enabled by default]
+        ret=gmm_clCreateBuffer(context,flags,size,host_ptr,errcode,0);
+           ^
+interfaces.c:116:8: warning: passing argument 5 of ‘ocl_clCreateBuffer’ makes integer from pointer without a cast [enabled by default]
+        return ocl_clCreateBuffer(context,flags,size,host_ptr,errcode); 
+        ^
+interfaces.c:116:8: note: expected ‘cl_int’ but argument is of type ‘cl_int *’
+interfaces.c: In function ‘clReleaseMemObject’:
+interfaces.c:127:9: warning: implicit declaration of function ‘gmm_clReleaseMemObject’ [-Wimplicit-function-declaration]
+         return gmm_clReleaseMemObject(memObj);
+         ^
+interfaces.c: In function ‘clEnqueueWriteBuffer’:
+interfaces.c:159:9: warning: implicit declaration of function ‘gmm_clEnqueueWriteBuffer’ [-Wimplicit-function-declaration]
+         return gmm_clEnqueueWriteBuffer(command_queue, buffer, blocking_write, offset, cb, ptr, num_events_in_wait_list, events_wait_list,event);
+         ^
+interfaces.c:162:9: warning: passing argument 9 of ‘ocl_clEnqueueWriteBuffer’ from incompatible pointer type [enabled by default]
+         return ocl_clEnqueueWriteBuffer(command_queue, buffer, blocking_write, offset, cb, ptr, num_events_in_wait_list, events_wait_list, event);
+         ^
+interfaces.c:162:9: note: expected ‘cl_event’ but argument is of type ‘struct _cl_event **’
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.0/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_REPLACEMENT_LRU   -c -o msq.o msq.c
+In file included from msq.c:10:0:
+msq.c: In function ‘thread_msq_listener’:
+msq.c:165:22: warning: format ‘%ld’ expects argument of type ‘long int’, but argument 4 has type ‘ssize_t’ [-Wformat=]
+      msgsz, ((struct msg *)msgbuf)->size);
+                      ^
+common.h:51:60: note: in definition of macro ‘gprint’
+     printf("[%d %s] " fmt, getpid(), GMM_PRINT_MSG[lvl], ##arg); \
+                                                            ^
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.0/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_REPLACEMENT_LRU   -c -o replacement.o replacement.c
+In file included from /usr/local/cuda-6.0/include/CL/opencl.h:44:0,
+                 from core.h:7,
+                 from replacement.h:5,
+                 from replacement.c:5:
+/usr/local/cuda-6.0/include/CL/cl_gl_ext.h:44:4: warning: "/*" within comment [-Wcomment]
+  * /* cl_VEN_extname extension  */
+ ^
+replacement.c: In function ‘victim_select_lru_local’:
+replacement.c:56:2: warning: format ‘%d’ expects argument of type ‘int’, but argument 7 has type ‘cl_mem_flags’ [-Wformat=]
+  gprint(DEBUG, "victim selected r(%p %p %ld %d %d)\n", \
+  ^
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.0/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_REPLACEMENT_LRU   -c -o stats.o stats.c
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.0/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_REPLACEMENT_LRU   -c -o debug.o debug.c
+In file included from /usr/local/cuda-6.0/include/CL/opencl.h:44:0,
+                 from core.h:7,
+                 from debug.c:11:
+/usr/local/cuda-6.0/include/CL/cl_gl_ext.h:44:4: warning: "/*" within comment [-Wcomment]
+  * /* cl_VEN_extname extension  */
+ ^
+debug.c: In function ‘gmm_print_region’:
+debug.c:24:2: warning: format ‘%d’ expects argument of type ‘int’, but argument 6 has type ‘cl_mem_flags’ [-Wformat=]
+  gprint(DEBUG, "\tsize: %ld\t\tstate: %d\t\tflags: %d\n", \
+  ^
+debug.c: In function ‘gmm_dump_dptr’:
+debug.c:105:18: warning: comparison of distinct pointer types lacks a cast [enabled by default]
+  if (dptr + size > &(r->swp_addr) + r->size) {//potential bug
+                  ^
+gcc -shared -pthread -ldl -fPIC -OpenCL client.o common.o core.o interfaces.o msq.o replacement.o stats.o debug.o -o libgmm.so
