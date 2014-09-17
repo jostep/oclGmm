@@ -534,14 +534,14 @@ static int gmm_memcpy_dtoh(void *dst, const void *src, unsigned long size)
 	off_dtos = 0;
 	while (off_dtos < size && off_dtos < NBUFS * BUFSIZE) {
 		delta = MIN(off_dtos + BUFSIZE, size) - off_dtos;
-		if (cudaMemcpyAsync(chan->stage_bufs[chan->ibuf], src + off_dtos,
-                            delta, cudaMemcpyDeviceToHost, chan->stream) != cudaSuccess) {
-			gprint(FATAL, "cudaMemcpyAsync failed in dtoh\n");
+		if((ocl_clEnqueueReadBuffer(chan->commandQueue_chan, src+off_dtos,CL_FALSE,0,
+                        delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
+			gprint(FATAL, "Read Buffer Async failed in dtoh\n");
 			ret = -1;
 			goto finish;
 		}
-		if (cudaEventRecord(chan->events[chan->ibuf], chan->stream)
-            != cudaSuccess) {
+		if (clEnqueueMarker(chan->commandQueue_chan,&chan->events[chan->ibuf])//marker
+            != CL_SUCCESS) {
 			gprint(FATAL, "cudaEventRecord failed in dtoh\n");
 			ret = -1;
 			goto finish;
