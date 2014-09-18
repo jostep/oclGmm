@@ -4,8 +4,13 @@
 #include <inttypes.h>
 #include <string.h>
 
+
+
 #define FALSE 1
 #define TRUE 0
+#define MEM_SIZE (128)
+#define MAX_SOURCE_SIZE (0X100000)
+
 
 int main(){
 
@@ -22,16 +27,38 @@ int main(){
     cl_ulong localMem;
     char devName[1024];
     int i=0; 
+    int data[100]={5};
+    int value=44;
     char *nvidia="NVIDIA Corporation";
     int flag=FALSE;
     cl_device_id device;
     cl_device_info param_name;
     cl_int *errcode_CC=NULL;
-    cl_mem buffer;
+    cl_int *errcode_CQ=NULL;
+    cl_int *errcode_CP=NULL;
+    cl_mem buffer,buffer2;
+
+    FILE*fp;
+    char fileName[]="./hello.cl";
+    char *source_str;
+    size_t source_size;
+    fp=fopen(fileName,"r");
+    if(!fp){
+        printf("fialed to the open the openCL file");
+        exit(1);
+    }
+
+    source_str=(char *)malloc(MAX_SOURCE_SIZE);
+    source_size=fread(source_str,1,MAX_SOURCE_SIZE,fp);
+    fclose(fp);
+
+
+
+
     cl_int *errcode_CB=NULL;
     clGetPlatformIDs(NULL,0,&num_platform);
     printf("Currently, we have %d platforms;\n",num_platform);
-    
+
     cl_platform_id * platform=(cl_platform_id*) malloc(num_platform*sizeof(cl_platform_id));
     clGetPlatformIDs(num_platform,platform,NULL); 
     
@@ -45,9 +72,6 @@ int main(){
         }
         
 
-
-
-
         clGetDeviceIDs(platform[i],CL_DEVICE_TYPE_ALL,sizeof(devId),devId,&num_Dev);
         printf("number of devices %u\n",num_Dev); 
    
@@ -59,23 +83,32 @@ int main(){
             if(errcode_CC==CL_SUCCESS){
                 printf("Context Creating Success!\n");
             }
-          
+           cqueue=clCreateCommandQueue(context,devId[0],CL_QUEUE_PROFILING_ENABLE,errcode_CQ); 
            buffer=clCreateBuffer(context,CL_MEM_READ_WRITE,100*sizeof(cl_int),NULL,errcode_CB);
             if(errcode_CB!=CL_SUCCESS){
                 printf("Buffer Creating failed!  %p\n",errcode_CB);
             }
 
-            printf("right before releasing?\n");
+            program=clCreateProgramWithSource(context,1,(const char**)&source_str,(const size_t*)&source_size, errcode_CP);
+            if(errcode_CP!=CL_SUCCESS){
+                printf("unable to the load the program  %p\n",errcode_CP);
+            }
+            if(clBuildProgram(program,1,devId,NULL,NULL,NULL)!=CL_SUCCESS){
+                printf("uanble to build the program\n");
+            }
 
-            /*if(CL_SUCCESS!=clReleaseMemObject(buffer)){
+
+            if(clEnqueueFillBuffer(cqueue,buffer,&value,sizeof(int),0,100*sizeof(cl_int),0,NULL,NULL)!=CL_SUCCESS){
+                printf("Memseting failed\n");
+            }
+            if(clEnqueueWriteBuffer(cqueue,buffer,CL_TRUE,0,sizeof(int)*100,data,0,NULL,NULL)!=CL_SUCCESS){
+                printf("write buffer failed\n");
+            }
+            if(CL_SUCCESS!=clReleaseMemObject(buffer)){
                 printf("Buffer Deleting unsuccessful");
-            }*/
-            
-
-            printf("right after Releasing?\n");
+            }
         }
         
-         
         clGetDeviceInfo(devId[0],CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem),&mem,NULL);
         printf("The global size is %d \n",mem);
         flag=FALSE;    

@@ -31,6 +31,9 @@ void gmm_context_initEX();
 static int gmm_memset(struct region *r, cl_mem buffer, int value, size_t count);
 extern cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t, const void* , cl_uint, const cl_event *, cl_event *);
 //extern cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t, const void* , cl_uint, const cl_event *, cl_event *);
+extern cl_int (*ocl_clBuildProgram)(cl_program program,cl_uint num_devices, const cl_device_id *devices_list,const char *options,void(*pfn_notify)(cl_program, void* user_data),void * user_data);
+extern cl_program (*ocl_clCreateProgramWithSource)(cl_context context, cl_uint count, const char**strings, const size_t * lengths, cl_int *errcode_ret);
+extern cl_kernel(*ocl_clCreateKernel)(cl_program, const char *, cl_int*);
 
 
 struct region * region_lookup(struct gmm_context *ctx, const cl_mem ptr);
@@ -169,6 +172,7 @@ void gmm_context_initEX(){
 
 void gmm_context_fini(){
 
+    gprint(DEBUG,"Check for the double empty\n");
     struct list_head *p;
     struct region *r;
     while(!list_empty(&pcontext->list_alloced)){
@@ -357,9 +361,8 @@ cl_int gmm_clReleaseMemObject(cl_mem memObjPtr){
     struct region *r;
     if (!(r= region_lookup(pcontext, memObjPtr))){
         free(r->blocks);
-        gprint(ERROR,"cannot find region containg %p in clReleaseMemObject",memObjPtr);
+        gprint(ERROR,"cannot find region containg %p in clReleaseMemObject\n",memObjPtr);
     }
-    gprint(DEBUG,"after freeing the blocks and region lookup");
     stats_inc_freed(&pcontext->stats,r->size);
     if(gmm_free(r)<0)
         return CL_INVALID_MEM_OBJECT;
@@ -421,13 +424,13 @@ re_acquire:
     }
     release(&r->lock);
     list_alloced_del(pcontext,r);
-    gprint(DEBUG,"Before releasing content in r, the ptr are here %p,%p,%p\n",r->pta_addr,r->swp_addr,r->dev_addr);
+    //gprint(DEBUG,"Before releasing content in r, the ptr are here %p,%p,%p\n",r->pta_addr,r->swp_addr,r->dev_addr);
     if(r->blocks)
         free(r->blocks);
     if(r->pta_addr)
-        free(r->blocks);
+        free(r->pta_addr);
     if(r->swp_addr)
-        free(r->blocks);
+        free(r->swp_addr);
     if(r->dev_addr){
         ocl_clReleaseMemObject(r->dev_addr);
         latomic_sub(&pcontext->size_attached,r->size);
@@ -456,7 +459,7 @@ cl_int gmm_clEnqueueFillBuffer(cl_command_queue command_queue, cl_mem  buffer, i
         gprint(ERROR,"region already freedi\n");
         return CL_INVALID_MEM_OBJECT;
     }
-    if(r->flags & FLAG_COW){
+    if(r->gmm_flags &&FLAG_COW){
         gprint(ERROR,"region tagged CoW\n");
         return CL_INVALID_MEM_OBJECT;
     }
@@ -465,7 +468,7 @@ cl_int gmm_clEnqueueFillBuffer(cl_command_queue command_queue, cl_mem  buffer, i
         return CL_INVALID_VALUE;
     }
     if(r->size!=size){
-        gprint(ERROR,"should set the whole region");
+        gprint(ERROR,"should set the whole region\n");
         return -1;
     }
     stats_time_begin();
@@ -1098,7 +1101,7 @@ cl_int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_b
         gprint(WARN,"region already freed\n");
         return CL_INVALID_VALUE;
     }
-    if (r->flags&& FLAG_COW){
+    if (r->gmm_flags&& FLAG_COW){
         gprint(ERROR,"HtoD,the region is tagged on COW\n");
         return CL_INVALID_MEM_OBJECT;
     }
@@ -1124,8 +1127,56 @@ cl_int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_b
     return CL_SUCCESS;
 }
 
+cl_program gmm_clCreateProgramWithSource(cl_context context, cl_uint count, const char**strings, const size_t * lengths, cl_int *errcode_ret){
 
+        if(context!=pcontext->context_kernel){
+            gprint(WARN,"different context\n");
+            return NULL;
+        }
+        pcontext->program_kernel=ocl_clCreateProgramWithSource(context,count,strings,lengths,errcode_ret);
+        if(errcode_ret!=CL_SUCCESS){
+            gprint(FATAL,"unable to create program\n");        
+        }
+        return pcontext->program_kernel;
+}
 
+cl_int gmm_clBuildProgram(cl_program program,cl_uint num_devices, const cl_device_id *devices_list,const char *options,void(*pfn_notify)(cl_program, void* user_data),void * user_data){
+    
+    if(program!=pcontext->program_kernel){
+        gprint(FATAL,"unmatched program\n");
+        return CL_INVALID_PROGRAM;
+    }
+    if(num_devices!=1){
+        gprint(FATAL,"only support 1 device at the moment\n");
+        return CL_INVALID_DEVICE;
+    }
+    if(pcontext->device!=devices_list){
+        gprint(FATAL,"unmatched devices\n");
+        return CL_INVALID_DEVICE;
+    }
+    if(ocl_clBuildProgram(program,num_devices,devices_list,options,pfn_notify,user_data)!=CL_SUCCESS){
+        gprint(FATAL,"unable to build program\n");
+        return CL_BUILD_PROGRAM_FAILURE;
+    }
+    return CL_SUCCESS;
+}
+
+cl_kernel gmm_clCreateKernel(cl_program program, const char* kernel_name, cl_int* errcode_ret){
+        
+        cl_int * errcode_CK=NULL;
+        if(program!=pcontext->program_kernel){
+            gprint(FATAL,"unmatched kernel\n");
+            errcode_ret=CL_INVALID_PROGRAM;
+            return NULL;
+        }
+        pcontext->kernel=ocl_clCreateKernel(program,kernel_name,errcode_CK);
+        if(errcode_CK!=CL_SUCCESS){
+            errcode_ret=errcode_CK;
+            return NULL;
+        }
+        return pcontext->kernel;
+
+}
 
 
 
