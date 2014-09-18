@@ -232,7 +232,25 @@ cl_kernel clCreateKernel(cl_program program, const char *kernel_name,cl_int *err
 
 }
 
-cl_int (*ocl_clSetKernelArg)(cl_kernel, cl_uint,size_t, const void* arg_value)=NULL;
+GMM_EXPORT
+cl_int oclReference(int which_arg, int flags){
+
+
+}
+
+
+cl_int clSetKernelArg(cl_kernel kernel, cl_uint arg_index,size_t arg_size, const void* arg_value){
+
+    if(initialized){
+        return gmm_clSetKernelArg(kernel, arg_index, arg_size,arg_value);
+    }
+    else{
+        return ocl_clSetKernelArg(kernel, arg_index, arg_size,arg_value);
+    }
+    
+
+
+}
 
 /*
  *
