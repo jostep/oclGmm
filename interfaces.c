@@ -234,6 +234,41 @@ cl_kernel clCreateKernel(cl_program program, const char *kernel_name,cl_int *err
 
 GMM_EXPORT
 cl_int oclReference(int which_arg, int flags){
+    
+	int i;
+    
+	gprint(DEBUG, "cudaReference: %d %x\n", which_arg, flags);
+    
+	if (!initialized)
+		return cudaErrorInitializationError;
+    
+	if (which_arg < NREFS) {
+		for (i = 0; i < nrefs; i++) {
+			if (refs[i] == which_arg)
+				break;
+		}
+		if (i == nrefs) {
+			refs[nrefs] = which_arg;
+#ifdef GMM_CONFIG_RW
+			rwflags[nrefs++] = flags | HINT_READ;	// let's be conservative with HINT_WRITE now
+#else
+			rwflags[nrefs++] = HINT_DEFAULT |
+            (flags & HINT_PTARRAY) | HINT_PTADEFAULT;
+#endif
+		}
+		else {
+#ifdef GMM_CONFIG_RW
+			rwflags[i] |= flags;
+#endif
+		}
+	}
+	else {
+		gprint(ERROR, "bad cudaReference argument %d (max %d)\n", \
+               which_arg, NREFS-1);
+		return cudaErrorInvalidValue;
+	}
+    
+	return cudaSuccess;
 
 
 }

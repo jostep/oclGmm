@@ -3,7 +3,7 @@
 !_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
-!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+!_TAG_PROGRAM_VERSION	5.8	//
 .DEFAULT_GOAL	Makefile	/^.DEFAULT_GOAL := all$/;"	m
 ALIGNUP	core.h	152;"	d
 BLOCKIDX	core.h	149;"	d
@@ -185,7 +185,7 @@ gettid	common.h	/^static inline pid_t gettid()$/;"	f
 gmm_clCreateBuffer	core.c	/^cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int* errcode_CB, int gmm_flags){$/;"	f
 gmm_clCreateContext	core.c	/^cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){$/;"	f
 gmm_clEnqueueFillBuffer	core.c	/^cl_int gmm_clEnqueueFillBuffer(cl_command_queue command_queue, cl_mem  buffer, int value, size_t pattern_size, size_t offset,size_t size, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){$/;"	f
-gmm_clEnqueueWriteBuffer	core.c	/^static int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_bool blocking_write, size_t offset, size_t count, const void *src, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){$/;"	f	file:
+gmm_clEnqueueWriteBuffer	core.c	/^cl_int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_bool blocking_write, size_t offset, size_t count, const void *src, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){$/;"	f
 gmm_clReleaseMemObject	core.c	/^cl_int gmm_clReleaseMemObject(cl_mem memObjPtr){$/;"	f
 gmm_client	protocol.h	/^struct gmm_client {$/;"	s
 gmm_context	core.h	/^struct gmm_context {$/;"	s
