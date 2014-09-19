@@ -134,7 +134,6 @@ cl_int clReleaseMemObject(cl_mem memObj){
     
     cl_int ret;
     if(initialized){
-        printf("inside the INTERCEPT, the ptr of memObj is  %p\n",memObj);
         return gmm_clReleaseMemObject(memObj);
     }
     else{
@@ -232,7 +231,7 @@ cl_kernel clCreateKernel(cl_program program, const char *kernel_name,cl_int *err
 
 }
 
-int ref[NREFS];
+int refs[NREFS];
 int rwflags[NREFS];
 int nrefs=0;
 
@@ -241,7 +240,7 @@ cl_int oclReference(int which_arg, int flags){
     
 	int i;
     
-	gprint(DEBUG, "cudaReference: %d %x\n", which_arg, flags);
+	gprint(DEBUG, "gmm ocl Reference: %d %x\n", which_arg, flags);
     
 	if (!initialized)
 		return CL_INVALID_OPERATION;//we put invalid operation here, cuz there is no suitable err.
@@ -277,7 +276,7 @@ cl_int oclReference(int which_arg, int flags){
 
 }
 
-
+GMM_EXPORT
 cl_int clSetKernelArg(cl_kernel kernel, cl_uint arg_index,size_t arg_size, const void* arg_value){
 
     if(initialized){

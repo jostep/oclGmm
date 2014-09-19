@@ -144,15 +144,14 @@ int gmm_context_init(){
 void gmm_context_initEX(){
     gprint(DEBUG,"check the ptrs for pcontext %p, and dma: %p ",pcontext,&pcontext->dma_htod);  
     cl_int * errcode_CQ=NULL; 
-    /*
-     * //failed to show the diff between htod and dtoh 
+    
+    /* //failed to show the diff between htod and dtoh 
     if(dma_channel_init(pcontext,&pcontext->dma_htod,1)!=0){
         gprint(FATAL,"failed to create HtoD DMA channel\n");
         free(pcontext);
         pcontext=NULL;
         return ;
     }    
-    printf("we've finished the first dma_init\n");
     if(dma_channel_init(pcontext,&pcontext->dma_dtoh,0)!=0){
         gprint(FATAL,"failed to create DtoH DMA channel\n");
         dma_channel_fini(&pcontext->dma_htod);
@@ -160,7 +159,6 @@ void gmm_context_initEX(){
         pcontext=NULL;
         return ;
     }
-    printf("we've finished the second dma_init\n");
     */
     pcontext->commandQueue_kernel=ocl_clCreateCommandQueue(pcontext->context_kernel,pcontext->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_CQ);// add error handler;ERCI
     if (errcode_CQ!=CL_SUCCESS){
@@ -196,7 +194,6 @@ void gmm_context_fini(){
 cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){
     pcontext->device=devices;
     pcontext->context_kernel=ocl_clCreateContext(properties,num_devices,devices,pfn_notify,user_data,errcode_ret);
-    gprint(DEBUG,"ocl has not finished?");
     if(errcode_ret!=CL_SUCCESS){
         printf("Cannot create the Context for the PC\n");
     }
@@ -207,7 +204,6 @@ cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_dev
         pcontext=NULL;
         return ;
     }    
-    printf("we've finished the first dma_init\n");
     if(dma_channel_init(pcontext,&pcontext->dma_dtoh,0)!=0){
         gprint(FATAL,"failed to create DtoH DMA channel\n");
         dma_channel_fini(&pcontext->dma_htod);
@@ -215,7 +211,6 @@ cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_dev
         pcontext=NULL;
         return ;
     }
-    printf("we've finished the second dma_init\n");
     return pcontext->context_kernel;
 }
 
@@ -495,7 +490,7 @@ static int gmm_memset(struct region *r, cl_mem buffer,int value, size_t count){
     int ret=0;
     void *s;
 
-    gprint(DEBUG,"memset: r(%p,%p,%ld)dst(%p)value(%d)count(%lu)",\
+    gprint(DEBUG,"memset: r(%p,%p,%ld)dst(%p)value(%d)count(%lu)\n",\
            r,r->swp_addr,r->size,buffer,value,count);
     if(r->gmm_flags && HINT_PTARRAY){
         return gmm_memset_pta(r,buffer,value,count);
@@ -953,7 +948,7 @@ static int gmm_htod(
 	char *skipped;
 	int ret = 0;
     
-	if (r->flags & HINT_PTARRAY)
+	if (r->gmm_flags & HINT_PTARRAY)
 		return gmm_htod_pta(r, dst, src, count);
     
 	off = (unsigned long)(dst - r->swp_addr);
@@ -1034,7 +1029,7 @@ static int gmm_htod(
 	gprint(DEBUG, "htod: r(%p %p %ld %d %d) dst(%p) src(%p) count(%lu)\n", \
            r, r->swp_addr, r->size, r->flags, r->state, dst, src, count);
     
-	if (r->flags & HINT_PTARRAY)
+	if (r->gmm_flags & HINT_PTARRAY)
 		return gmm_htod_pta(r, dst, (void *)src, count);
     
 	off = (unsigned long)dst -(unsigned long)r->swp_addr;
@@ -1178,6 +1173,8 @@ cl_kernel gmm_clCreateKernel(cl_program program, const char* kernel_name, cl_int
 
 }
 
+
+/*
 cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint arg_index,size_t arg_size, const void* arg_value){
 
         struct region *r;
@@ -1191,6 +1188,7 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint arg_index,size_t arg_size, co
 
 
 }
+*/
 
 extern int refs[NREFS];
 extern int rwflags[NREFS];
@@ -1198,14 +1196,16 @@ extern int nrefs;
 
 static unsigned char kstack[512];
 static void *ktop=(void *)kstack;
-static struct karg karg[NREFS];
+static struct karg kargs[NREFS];
 static int nargs=0;
 
-cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint arg_index,size_t arg_size, const void* arg_value){
+cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint offset,size_t size, const void* arg){
 	
     struct region *r;
 	int is_dptr = 0;
 	int iref = 0;
+
+    gprint(DEBUG,"not here? what the fuck\n");
 
     if(kernel!=pcontext->kernel){
             gprint(FATAL,"invalid kernel\n");
@@ -1233,11 +1233,11 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint arg_index,size_t arg_size, co
 				return CL_INVALID_ARG_SIZE;
 				//panic("cudaSetupArgument does not match cudaReference");
 			}
-			r = region_lookup(pcontext, *(void **)arg);
+			r = region_lookup(pcontext, *(cl_mem*)arg);
 			if (!r) {
 				gprint(ERROR, "cannot find region containing %p (%d) in " \
-                       "cudaSetupArgument\n", *(void **)arg, nargs);
-				return cudaErrorUnknown;
+                       "cudaSetupArgument\n", *(cl_mem*)arg, nargs);
+				return CL_INVALID_ARG_SIZE;
 				//panic("region_lookup in cudaSetupArgument");
 			}
 			is_dptr = 1;
@@ -1247,7 +1247,7 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint arg_index,size_t arg_size, co
 	// if no reference hints are given.
 	else if (size == sizeof(void *)) {
 		gprint(WARN, "trying to parse dptr argument automatically\n");
-		r = region_lookup(pcontext, *(void **)arg);
+		r = region_lookup(pcontext, *(cl_mem*)arg);
 		if (r)
 			is_dptr = 1;
 	}
@@ -1255,7 +1255,7 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint arg_index,size_t arg_size, co
 	if (is_dptr) {
 		kargs[nargs].arg.arg1.r = r;
 		kargs[nargs].arg.arg1.off =
-        (unsigned long)(*(void **)arg - r->swp_addr);
+        (unsigned long)(*(cl_mem*)arg) - (unsigned long)r->swp_addr;
 		if (nrefs > 0)
 			kargs[nargs].arg.arg1.flags = rwflags[iref];
 		else

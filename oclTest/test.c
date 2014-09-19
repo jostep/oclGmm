@@ -36,6 +36,7 @@ int main(){
     cl_int *errcode_CC=NULL;
     cl_int *errcode_CQ=NULL;
     cl_int *errcode_CP=NULL;
+    cl_int *errcode_CK=NULL;
     cl_mem buffer,buffer2;
 
     FILE*fp;
@@ -96,7 +97,18 @@ int main(){
             if(clBuildProgram(program,1,devId,NULL,NULL,NULL)!=CL_SUCCESS){
                 printf("uanble to build the program\n");
             }
+            
+            kernel=clCreateKernel(program,"hello",errcode_CK);
+            if(errcode_CK!=CL_SUCCESS){
+                printf("kernel creating failure\n");
+            }
 
+            if(oclReference(0,2)!=CL_SUCCESS){
+                printf("unable to set the arg ref\n");
+            }
+            if(clSetKernelArg(kernel,0,sizeof(cl_mem),&buffer)!=CL_SUCCESS){
+                printf("unable to set the arg\n");
+            }
 
             if(clEnqueueFillBuffer(cqueue,buffer,&value,sizeof(int),0,100*sizeof(cl_int),0,NULL,NULL)!=CL_SUCCESS){
                 printf("Memseting failed\n");
