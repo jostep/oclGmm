@@ -1286,30 +1286,606 @@ cl_int gmm_clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel,cl_uin
 
 }
 
+static long regions_referenced(struct region ***prgns, int *pnrgns)
+{
+	struct region **rgns, *r;
+	long total = 0;
+	int nrgns = 0;
+	int i;
+    
+	if (nrefs > NREFS || nrefs <= 0)
+		panic("nrefs");
+	if (nargs <= 0 || nargs > NREFS)
+		panic("nargs");
+    
+	// Get the upper bound of the number of unique regions.
+	for (i = 0; i < nargs; i++) {
+		if (kargs[i].is_dptr) {
+			nrgns++;
+			r = kargs[i].arg.arg1.r;
+			// Here we assume at most one level of dptr arrays
+			if (r->flags & HINT_PTARRAY)
+				nrgns += r->size / sizeof(void *);
+		}
+	}
+	if (nrgns <= 0)
+		panic("nrgns");
+    
+	rgns = (struct region **)malloc(sizeof(*rgns) * nrgns);
+	if (!rgns) {
+		gprint(FATAL, "malloc failed for region array: %s\n", strerror(errno));
+		return -1;
+	}
+	nrgns = 0;
+    
+	// Now set the regions to be referenced.
+	for (i = 0; i < nargs; i++) {
+		if (kargs[i].is_dptr) {
+			r = kargs[i].arg.arg1.r;
+			if (!is_included((void **)rgns, nrgns, (void*)r)) {
+				gprint(DEBUG, "new referenced region(%p %p %ld %d %d) " \
+                       "off(%lu)\n", r, r->swp_addr, r->size, r->flags, \
+                       r->state, kargs[i].arg.arg1.off);
+				rgns[nrgns++] = r;
+				r->rwhint.flags = kargs[i].arg.arg1.flags & HINT_MASK;
+				total += r->size;
+                
+#ifdef GMM_CONFIG_RW
+				// Make sure cow region is read-only
+				if (r->flags & FLAG_COW)
+					r->rwhint.flags = HINT_READ;
+#endif
+                
+				if (r->flags & HINT_PTARRAY) {
+					void **pdptr = (void **)(r->pta_addr);
+					void **pend = (void **)(r->pta_addr + r->size);
+					r->rwhint.flags = HINT_READ;	// dptr array is read-only
+					// For each device memory pointer contained in this region
+					while (pdptr < pend) {
+						r = region_lookup(pcontext, *pdptr);
+						if (!r) {
+							gprint(WARN, "cannot find region for dptr " \
+                                   "%p (%d)\n", *pdptr, i);
+							pdptr++;
+							continue;
+						}
+						if (!is_included((void **)rgns, nrgns, (void*)r)) {
+							gprint(DEBUG, "\tnew referenced region" \
+                                   "(%p %p %ld %d %d) off(%lu)\n", \
+                                   r, r->swp_addr, r->size, r->flags, \
+                                   r->state, kargs[i].arg.arg1.off);
+							rgns[nrgns++] = r;
+							r->rwhint.flags =
+                            ((kargs[i].arg.arg1.flags & HINT_PTAREAD) ?
+                             HINT_READ : 0) |
+                            ((kargs[i].arg.arg1.flags & HINT_PTAWRITE) ?
+                             HINT_WRITE : 0);
+							total += r->size;
+						}
+						else {
+							gprint(DEBUG, "\told referenced region" \
+                                   "(%p %p %ld %d %d) off(%lu)\n", r, \
+                                   r->swp_addr, r->size, r->flags, \
+                                   r->state, kargs[i].arg.arg1.off);
+							r->rwhint.flags |=
+                            ((kargs[i].arg.arg1.flags & HINT_PTAREAD) ?
+                             HINT_READ : 0) |
+                            ((kargs[i].arg.arg1.flags & HINT_PTAWRITE) ?
+                             HINT_WRITE : 0);
+						}
+						// Make sure cow region is read-only
+						if (r->flags & FLAG_COW)
+							r->rwhint.flags = HINT_READ;
+						pdptr++;
+					}
+				}
+			}
+			else {
+				gprint(DEBUG, "old referenced region" \
+                       "(%p %p %ld %d %d) off(%lu)\n", r, r->swp_addr, \
+                       r->size, r->flags, r->state, kargs[i].arg.arg1.off);
+				r->rwhint.flags |= kargs[i].arg.arg1.flags & HINT_MASK;
+#ifdef GMM_CONFIG_RW
+				// Make sure cow region is read-only
+				if (r->flags & FLAG_COW)
+					r->rwhint.flags = HINT_READ;
+#endif
+			}
+		}
+	}
+    
+	*pnrgns = nrgns;
+	if (nrgns > 0)
+		*prgns = rgns;
+	else {
+		free(rgns);
+		*prgns = NULL;
+	}
+    
+	return total;
+}
 
 
-/*
+cudaError_t gmm_cudaLaunch(const char *entry)
+{
+	cudaError_t ret = cudaSuccess;
+	struct region **rgns = NULL;
+	int nrgns = 0;
+	long total = 0;
+	int i, ldret;
+    
+	gprint(DEBUG, "cudaLaunch\n");
+    
+	// NOTE: it is possible that nrgns == 0 when regions_referenced
+	// returns. Consider a kernel that only uses registers, for
+	// example.
+	total = regions_referenced(&rgns, &nrgns);
+	if (total < 0) {
+		gprint(ERROR, "failed to get the regions to be referenced\n");
+		ret = cudaErrorUnknown;
+		goto finish;
+	}
+	else if (total > memsize_total()) {
+		gprint(ERROR, "kernel requires too much space (%ld)\n", total);
+		ret = cudaErrorInvalidConfiguration;
+		goto finish;
+	}
+    
+reload:
+	stats_time_begin();
+	launch_wait();
+	stats_time_end(&pcontext->stats, time_sync);
+	stats_time_begin();
+	ldret = gmm_attach(rgns, nrgns);
+	stats_time_end(&pcontext->stats, time_attach);
+	launch_signal();
+	if (ldret > 0) {	// attach unsuccessful, retry later
+		//stats_inc(&pcontext->stats, num_attach_fail, 1);
+		sched_yield();
+		goto reload;
+	}
+	else if (ldret < 0) {	// fatal load error, quit launching
+		gprint(ERROR, "attach failed; quitting kernel launch\n");
+		ret = cudaErrorUnknown;
+		goto finish;
+	}
+    
+	// Transfer data to device memory if they are to be read, and
+	// handle WRITE hints. Note that, by this moment, all regions
+	// pointed by each dptr array has been attached and pinned to
+	// device memory.
+	// XXX: What if the launch below failed? Partial modification?
+	stats_time_begin();
+	ldret = gmm_load(rgns, nrgns);
+	stats_time_end(&pcontext->stats, time_load);
+	if (ldret < 0) {
+		gprint(ERROR, "gmm_load failed\n");
+		for (i = 0; i < nrgns; i++)
+			region_unpin(rgns[i]);
+		ret = cudaErrorUnknown;
+		goto finish;
+	}
+    
+	// Configure and push all kernel arguments.
+	if (nv_cudaConfigureCall(grid, block, shared, stream_issue)
+        != cudaSuccess) {
+		gprint(ERROR, "cudaConfigureCall failed\n");
+		for (i = 0; i < nrgns; i++)
+			region_unpin(rgns[i]);
+		ret = cudaErrorUnknown;
+		goto finish;
+	}
+    
+	for (i = 0; i < nargs; i++) {
+		if (kargs[i].is_dptr) {
+			kargs[i].arg.arg1.dptr =
+            kargs[i].arg.arg1.r->dev_addr + kargs[i].arg.arg1.off;
+			nv_cudaSetupArgument(&kargs[i].arg.arg1.dptr,
+                                 kargs[i].size, kargs[i].argoff);
+			/*gprint(DEBUG, "setup %p %lu %lu\n", \
+             &kargs[i].arg.arg1.dptr, \
+             sizeof(void *), \
+             kargs[i].arg.arg1.argoff);*/
+		}
+		else {
+			nv_cudaSetupArgument(kargs[i].arg.arg2.arg,
+                                 kargs[i].size, kargs[i].argoff);
+			/*gprint(DEBUG, "setup %p %lu %lu\n", \
+             kargs[i].arg.arg2.arg, \
+             kargs[i].arg.arg2.size, \
+             kargs[i].arg.arg2.offset);*/
+		}
+	}
+    
+	// Now we can launch the kernel.
+	if (gmm_launch(entry, rgns, nrgns) < 0) {
+		for (i = 0; i < nrgns; i++)
+			region_unpin(rgns[i]);
+		ret = cudaErrorUnknown;
+	}
+    
+finish:
+	if (rgns)
+		free(rgns);
+	nrefs = 0;
+	nargs = 0;
+	ktop = (void *)kstack;
+	return ret;
+}
+
+
+static int gmm_load(struct region **rgns, int nrgns)
+{
+	int i, ret;
+    
+	for (i = 0; i < nrgns; i++) {
+		if (rgns[i]->rwhint.flags & HINT_READ) {
+			ret = region_load(rgns[i]);
+			if (ret != 0)
+				return -1;
+		}
+		if (rgns[i]->rwhint.flags & HINT_WRITE) {
+			region_inval(rgns[i], 1);
+			region_valid(rgns[i], 0);
+		}
+	}
+    
+	return 0;
+}
+
+
+static int gmm_attach(struct region **rgns, int n)
+{
+	char *pinned;
+	int i, ret;
+    
+	if (n == 0)
+		return 0;
+	if (n < 0 || (n > 0 && !rgns))
+		return -1;
+    
+	gprint(DEBUG, "gmm_attach begins: %d regions to attach\n", n);
+    
+	pinned = (char *)calloc(n, sizeof(char));
+	if (!pinned) {
+		gprint(FATAL, "malloc failed for pinned array: %s\n", strerror(errno));
+		return -1;
+	}
+    
+	for (i = 0; i < n; i++) {
+		if (rgns[i]->state == STATE_FREEING ||
+            rgns[i]->state == STATE_ZOMBIE) {
+			gprint(ERROR, "cannot attach a freed region " \
+                   "r(%p %p %ld %d %d)\n", \
+                   rgns[i], rgns[i]->swp_addr, rgns[i]->size, \
+                   rgns[i]->flags, rgns[i]->state);
+			ret = -1;
+			goto fail;
+		}
+		// NOTE: In current design, this locking is redundant
+		acquire(&rgns[i]->lock);
+		ret = region_attach(rgns[i], 1, rgns, n);
+		release(&rgns[i]->lock);
+		if (ret != 0)
+			goto fail;
+		pinned[i] = 1;
+	}
+    
+	gprint(DEBUG, "gmm_attach succeeded\n");
+	free(pinned);
+	return 0;
+    
+fail:
+	stats_inc(&pcontext->stats, count_attach_fail, 1);
+	for (i = 0; i < n; i++)
+		if (pinned[i])
+			region_unpin(rgns[i]);
+	free(pinned);
+	gprint(DEBUG, "gmm_attach failed\n");
+	return ret;
+}
+
+
+static int gmm_launch(const char *entry, struct region **rgns, int nrgns)
+{
+	cudaError_t cret;
+	struct kcb *pcb;
+	int i;
+    
+	if (nrgns > NREFS) {
+		gprint(ERROR, "too many regions\n");
+		return -1;
+	}
+    
+	pcb = (struct kcb *)malloc(sizeof(*pcb));
+	if (!pcb) {
+		gprint(FATAL, "malloc failed for kcb: %s\n", strerror(errno));
+		return -1;
+	}
+	if (nrgns > 0)
+		memcpy(pcb->rgns, rgns, sizeof(void *) * nrgns);
+	for (i = 0; i < nrgns; i++) {
+		pcb->flags[i] = rgns[i]->rwhint.flags;
+		if (pcb->flags[i] & HINT_WRITE)
+			atomic_inc(&rgns[i]->writing);
+		if (pcb->flags[i] & HINT_READ)
+			atomic_inc(&rgns[i]->reading);
+	}
+	pcb->nrgns = nrgns;
+    
+	//stats_time_begin();
+	if ((cret = nv_cudaLaunch(entry)) != cudaSuccess) {
+		for (i = 0; i < nrgns; i++) {
+			if (pcb->flags[i] & HINT_WRITE)
+				atomic_dec(&pcb->rgns[i]->writing);
+			if (pcb->flags[i] & HINT_READ)
+				atomic_dec(&pcb->rgns[i]->reading);
+		}
+		free(pcb);
+		gprint(ERROR, "nv_cudaLaunch failed: %s (%d)\n", \
+               cudaGetErrorString(cret), cret);
+		return -1;
+	}
+	nv_cudaStreamAddCallback(stream_issue, gmm_kernel_callback, (void *)pcb, 0);
+	// Uncomment the following expression if kernel time is to be measured
+	//if (nv_cudaStreamSynchronize(pcontext->stream_kernel) != cudaSuccess) {
+	//	gprint(ERROR, "stream synchronization failed in gmm_launch\n");
+	//}
+	//stats_time_end(&pcontext->stats, time_kernel);
+    
+	// TODO: update this client's position in global LRU client list
+    
+	gprint(DEBUG, "kernel launched\n");
+	return 0;
+}
+
+
+static int region_load(struct region *r)
+{
+	int i, ret = 0;
+    
+	if (r->flags & FLAG_COW)
+		ret = region_load_cow(r);
+	else if (r->flags & FLAG_MEMSET)
+		ret = region_load_memset(r);
+	else if (r->flags & HINT_PTARRAY)
+		ret = region_load_pta(r);
+	else {
+		gprint(DEBUG, "loading region %p\n", r);
+		for (i = 0; i < NRBLOCKS(r->size); i++) {
+			acquire(&r->blocks[i].lock);	// Though this is useless
+			if (!r->blocks[i].dev_valid)
+				ret = block_sync(r, i);
+			release(&r->blocks[i].lock);
+			if (ret != 0) {
+				gprint(ERROR, "load failed\n");
+				goto finish;
+			}
+		}
+		gprint(DEBUG, "region loaded\n");
+	}
+    
+finish:
+	return ret;
+}
+
+static int region_load_pta(struct region *r)
+{
+	void **pdptr = (void **)(r->pta_addr);
+	void **pend = (void **)(r->pta_addr + r->size);
+	unsigned long off = 0;
+	int i, ret;
+    
+	gprint(DEBUG, "loading pta region %p\n", r);
+    
+	while (pdptr < pend) {
+		struct region *tmp = region_lookup(pcontext, *pdptr);
+		if (!tmp) {
+			gprint(WARN, "cannot find region for dptr %p\n", *pdptr);
+			off += sizeof(void *);
+			pdptr++;
+			continue;
+		}
+		*(void **)(r->swp_addr + off) = tmp->dev_addr +
+        (unsigned long)(*pdptr - tmp->swp_addr);
+		off += sizeof(void *);
+		pdptr++;
+	}
+    
+	region_valid(r, 1);
+	region_inval(r, 0);
+	for (i = 0; i < NRBLOCKS(r->size); i++) {
+		ret = block_sync(r, i);
+		if (ret != 0) {
+			gprint(ERROR, "load failed\n");
+			return -1;
+		}
+	}
+    
+	gprint(DEBUG, "region loaded\n");
+	return 0;
+}
+
+
+static int region_load_memset(struct region *r)
+{
+	gprint(DEBUG, "loading region %p with memset flag\n", r);
+    
+	// Memset in kernel stream ensures correct ordering with the kernel
+	// referencing the region. So no explicit sync required.
+	if (nv_cudaMemsetAsync(r->dev_addr, r->value_memset, r->size,
+                           pcontext->stream_kernel) != cudaSuccess) {
+		gprint(ERROR, "load failed\n");
+		return -1;
+	}
+	region_valid(r, 0);
+    
+    r->flags &= ~FLAG_MEMSET;
+    r->value_memset = 0;
+    
+    gprint(DEBUG, "region loaded\n");
+    return 0;
+}
+
+
+static int region_load_cow(struct region *r)
+{
+	int ret;
+	gprint(DEBUG, "loading region %p from cow buffer\n", r);
+    
+	if (!r->usr_addr) {
+		gprint(ERROR, "region(%p) cow buffer is null", r);
+		return -1;
+	}
+    
+	if (!r->blocks[0].dev_valid) {
+		stats_time_begin();
+		ret = gmm_memcpy_htod(r->dev_addr, r->usr_addr, r->size);
+		if (ret < 0) {
+			gprint(ERROR, "load failed\n");
+			return -1;
+		}
+		stats_time_end(&pcontext->stats, time_u2d);
+		stats_inc(&pcontext->stats, bytes_u2d, r->size);
+        
+		region_valid(r, 0);
+	}
+    
+#ifndef GMM_CONFIG_RW
+    r->flags &= ~FLAG_COW;
+    r->usr_addr = NULL;
+#endif
+    
+    gprint(DEBUG, "region loaded\n");
+    return 0;
+}
+
+
+// Allocate device memory to a region (i.e., attach).
+static int region_attach(
+                         struct region *r,
+                         int pin,
+                         struct region **excls,
+                         int nexcl)
+{
+	cudaError_t cret;
+	int ret;
+    
+	gprint(DEBUG, "attaching%s region %p\n", \
+           (r->flags & FLAG_COW) ? " cow" : "", r);
+    
+	if (r->state == STATE_EVICTING) {
+		gprint(ERROR, "should not see an evicting region\n");
+		return -1;
+	}
+	if (r->state == STATE_ATTACHED) {
+		gprint(DEBUG, "region already attached\n");
+		if (pin)
+			region_pin(r);
+		// Update the region's position in the LRU list.
+		list_attached_mov(pcontext, r);
+		return 0;
+	}
+	if (r->state != STATE_DETACHED) {
+		gprint(ERROR, "attaching a non-detached region\n");
+		return -1;
+	}
+    
+	// Attach if current free memory space is larger than region size.
+	if (r->size <= memsize_free()) {
+		if ((cret = nv_cudaMalloc(&r->dev_addr, r->size)) == cudaSuccess)
+			goto attach_success;
+		else {
+			gprint(DEBUG, "nv_cudaMalloc failed: %s (%d)\n", \
+                   cudaGetErrorString(cret), cret);
+			if (cret == cudaErrorLaunchFailure)
+				return -1;
+		}
+	}
+    
+	// Evict some device memory.
+	stats_time_begin();
+	ret = gmm_evict(r->size, excls, nexcl);
+	stats_time_end(&pcontext->stats, time_evict);
+	if (ret < 0 || (ret > 0 && memsize_free() < r->size))
+		return ret;
+    
+	// Try to attach again.
+	if ((cret = nv_cudaMalloc(&r->dev_addr, r->size)) != cudaSuccess) {
+		r->dev_addr = NULL;
+		gprint(DEBUG, "nv_cudaMalloc failed: %s (%d)\n", \
+               cudaGetErrorString(cret), cret);
+		if (cret == cudaErrorLaunchFailure)
+			return -1;
+		else
+			return 1;
+	}
+    
+attach_success:
+	latomic_add(&pcontext->size_attached, r->size);
+	update_attached(r->size);
+	update_detachable(r->size);
+	if (pin)
+		region_pin(r);
+	// Reassure that the dev copies of all blocks are set to invalid.
+	region_inval(r, 0);
+	r->state = STATE_ATTACHED;
+	list_attached_add(pcontext, r);
+    
+	gprint(DEBUG, "region attached\n");
+	return 0;
+}
+
+
+int victim_select(
+                  long size_needed,
+                  struct region **excls,
+                  int nexcl,
+                  int local_only,
+                  struct list_head *victims)
+{
+	int ret = 0;
+    
+#if defined(GMM_REPLACEMENT_LRU)
+	ret = victim_select_lru(size_needed, excls, nexcl, local_only, victims);
+#elif defined(GMM_REPLACEMENT_LFU)
+	ret = victim_select_lfu(size_needed, excls, nexcl, local_only, victims);
+#else
+	panic("replacement policy not specified");
+	ret = -1;
+#endif
+    
+	return ret;
+}
+
+// NOTE: When a local region is evicted, no other parties are
+// supposed to be accessing the region at the same time.
+// This is not true if multiple loadings happen simultaneously,
+// but this region has been locked in region_load() anyway.
+// A dptr array region's data never needs to be transferred back
+// from device to host because swp_valid=0,dev_valid=1 will never
+// happen.
 long region_evict(struct region *r)
 {
 	int nblocks = NRBLOCKS(r->size);
 	long size_spared = 0;
 	char *skipped;
 	int i, ret = 0;
-
+    
 	gprint(INFO, "evicting region %p\n", r);
 	//gmm_print_region(r);
-
+    
 	if (!r->dev_addr)
 		panic("dev_addr is null");
 	if (region_pinned(r))
 		panic("evicting a pinned region");
-
+    
 	skipped = (char *)calloc(nblocks, sizeof(char));
 	if (!skipped) {
 		gprint(FATAL, "malloc failed for skipped[]: %s\n", strerror(errno));
 		return -1;
 	}
-
+    
 	// First round
 	for (i = 0; i < nblocks; i++) {
 		if (r->state == STATE_FREEING)
@@ -1326,7 +1902,7 @@ long region_evict(struct region *r)
 		else
 			skipped[i] = 1;
 	}
-
+    
 	// Second round
 	for (i = 0; i < nblocks; i++) {
 		if (r->state == STATE_FREEING)
@@ -1341,7 +1917,7 @@ long region_evict(struct region *r)
 				goto finish;	// this is problematic if r is freeing
 		}
 	}
-
+    
 success:
 	list_attached_del(pcontext, r);
 	if (r->dev_addr) {
@@ -1367,34 +1943,134 @@ success:
 	else
 		r->state = STATE_DETACHED;
 	release(&r->lock);
-
+    
 	gprint(INFO, "region evicted\n");
 	//gmm_print_region(r);
-
+    
 finish:
 	free(skipped);
 	return (ret == 0) ? size_spared : (-1);
 }
 
+// NOTE: Client %client should have been pinned when this function
+// is called.
+long remote_victim_evict(int client, long size_needed)
+{
+	long size_spared;
+    
+	gprint(DEBUG, "remote eviction in client %d\n", client);
+	size_spared = msq_send_req_evict(client, size_needed, 1);
+	gprint(DEBUG, "remote eviction returned: %ld\n", size_spared);
+	client_unpin(client);
+    
+	return size_spared;
+}
 
+// Similar to gmm_evict, but only select at most one victim from local
+// region list, even if it is smaller than required, evict it, and return.
 long local_victim_evict(long size_needed)
 {
 	struct list_head victims;
 	struct victim *v;
 	struct region *r;
-
+    
 	gprint(DEBUG, "local eviction: %ld bytes\n", size_needed);
 	INIT_LIST_HEAD(&victims);
-
+    
 	if (victim_select(size_needed, NULL, 0, 1, &victims) != 0)
 		return -1;
-
+    
 	if (list_empty(&victims))
 		return 0;
-
+    
 	v = list_entry(victims.next, struct victim, entry);
 	r = v->r;
 	free(v);
 	return region_evict(r);
 }
-*/
+
+// Evict the victim %victim.
+// %victim may point to a local region or a remote client that
+// may own some evictable region.
+// The return value is the size of free space spared during
+// this eviction. -1 means error.
+long victim_evict(struct victim *victim, long size_needed)
+{
+	if (victim->r)
+		return region_evict(victim->r);
+	else if (victim->client != -1)
+		return remote_victim_evict(victim->client, size_needed);
+	else {
+		panic("victim is neither local nor remote");
+		return -1;
+	}
+}
+
+// Evict some device memory so that the size of free space can
+// satisfy %size_needed. Regions in %excls[0:%nexcl) should not
+// be selected for eviction.
+static int gmm_evict(long size_needed, struct region **excls, int nexcl)
+{
+	struct list_head victims, *e;
+	struct victim *v;
+	long size_spared;
+	int ret = 0;
+    
+	gprint(DEBUG, "evicting for %ld bytes\n", size_needed);
+	INIT_LIST_HEAD(&victims);
+	stats_inc(&pcontext->stats, bytes_evict_needed,
+              LMAX(size_needed - memsize_free(), 0));
+    
+	do {
+		ret = victim_select(size_needed, excls, nexcl, 0, &victims);
+		if (ret != 0)
+			return ret;
+        
+		for (e = victims.next; e != (&victims); ) {
+			v = list_entry(e, struct victim, entry);
+			if (memsize_free() < size_needed) {
+				if ((size_spared = victim_evict(v, size_needed)) < 0) {
+					ret = -1;
+					goto fail_evict;
+				}
+				stats_inc(&pcontext->stats, bytes_evict_space, size_spared);
+				stats_inc(&pcontext->stats, count_evict_victims, 1);
+			}
+			else if (v->r) {
+				acquire(&v->r->lock);
+				if (v->r->state != STATE_FREEING)
+					v->r->state = STATE_ATTACHED;
+				release(&v->r->lock);
+			}
+			else if (v->client != -1)
+				client_unpin(v->client);
+			list_del(e);
+			e = e->next;
+			free(v);
+		}
+	} while (memsize_free() < size_needed);
+    
+	gprint(DEBUG, "eviction finished\n");
+	return 0;
+    
+fail_evict:
+	stats_inc(&pcontext->stats, count_evict_fail, 1);
+	for (e = victims.next; e != (&victims); ) {
+		v = list_entry(e, struct victim, entry);
+		if (v->r) {
+			acquire(&v->r->lock);
+			if (v->r->state != STATE_FREEING)
+				v->r->state = STATE_ATTACHED;
+			release(&v->r->lock);
+		}
+		else if (v->client != -1)
+			client_unpin(v->client);
+		list_del(e);
+		e = e->next;
+		free(v);
+	}
+    
+	gprint(DEBUG, "eviction failed\n");
+	return ret;
+}
+
