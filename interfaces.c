@@ -233,7 +233,7 @@ cl_kernel clCreateKernel(cl_program program, const char *kernel_name,cl_int *err
 }
 
 int ref[NREFS];
-int fwflags[NREFS];
+int rwflags[NREFS];
 int nrefs=0;
 
 GMM_EXPORT

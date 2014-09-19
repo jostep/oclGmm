@@ -1101,7 +1101,7 @@ cl_int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_b
         gprint(WARN,"region already freed\n");
         return CL_INVALID_VALUE;
     }
-    if (r->gmm_flags&& FLAG_COW){
+    if (r->gmm_flags & FLAG_COW){
         gprint(ERROR,"HtoD,the region is tagged on COW\n");
         return CL_INVALID_MEM_OBJECT;
     }
@@ -1192,16 +1192,27 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint arg_index,size_t arg_size, co
 
 }
 
-cudaError_t gmm_cudaSetupArgument(
-                                  const void *arg,
-                                  size_t size,
-                                  size_t offset)
-{
-	struct region *r;
+extern int refs[NREFS];
+extern int rwflags[NREFS];
+extern int nrefs;
+
+static unsigned char kstack[512];
+static void *ktop=(void *)kstack;
+static struct karg karg[NREFS];
+static int nargs=0;
+
+cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint arg_index,size_t arg_size, const void* arg_value){
+	
+    struct region *r;
 	int is_dptr = 0;
 	int iref = 0;
+
+    if(kernel!=pcontext->kernel){
+            gprint(FATAL,"invalid kernel\n");
+            return CL_INVALID_KERNEL;
+    }
     
-	gprint(DEBUG, "cudaSetupArgument: nargs(%d) size(%lu) offset(%lu)\n", \
+	gprint(DEBUG, "opencl Setup Argument: nargs(%d) size(%lu) offset(%lu)\n", \
            nargs, size, offset);
     
 	// Test whether this argument is a device memory pointer.
@@ -1218,8 +1229,8 @@ cudaError_t gmm_cudaSetupArgument(
 		if (iref < nrefs) {
 			if (size != sizeof(void *)) {
 				gprint(ERROR, "argument size (%lu) does not match dptr " \
-                       "cudaReference (%d)\n", size, nargs);
-				return cudaErrorUnknown;
+                       "ocl Reference (%d)\n", size, nargs);
+				return CL_INVALID_ARG_SIZE;
 				//panic("cudaSetupArgument does not match cudaReference");
 			}
 			r = region_lookup(pcontext, *(void **)arg);
@@ -1250,7 +1261,7 @@ cudaError_t gmm_cudaSetupArgument(
 		else
 			kargs[nargs].arg.arg1.flags = HINT_DEFAULT | HINT_PTADEFAULT;
 		gprint(DEBUG, "argument is dptr: r(%p %p %ld %d %d)\n", \
-               r, r->swp_addr, r->size, r->flags, r->state);
+               r, r->swp_addr, r->size, r->gmm_flags, r->state);
 	}
 	else {
 		// This argument is not a device memory pointer.
@@ -1265,7 +1276,7 @@ cudaError_t gmm_cudaSetupArgument(
 	kargs[nargs].argoff = offset;
     
 	nargs++;
-	return cudaSuccess;
+	return CL_SUCCESS;
 }
 
 
