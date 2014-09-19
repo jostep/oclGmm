@@ -1192,6 +1192,81 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint arg_index,size_t arg_size, co
 
 }
 
+cudaError_t gmm_cudaSetupArgument(
+                                  const void *arg,
+                                  size_t size,
+                                  size_t offset)
+{
+	struct region *r;
+	int is_dptr = 0;
+	int iref = 0;
+    
+	gprint(DEBUG, "cudaSetupArgument: nargs(%d) size(%lu) offset(%lu)\n", \
+           nargs, size, offset);
+    
+	// Test whether this argument is a device memory pointer.
+	// If it is, record it and postpone its pushing until cudaLaunch.
+	// Use reference hints if given. Otherwise, parse automatically
+	// (but parsing errors are possible, e.g., when the user passes a
+	// long argument that happen to lay within some region's host swap
+	// buffer area).
+	if (nrefs > 0) {
+		for (iref = 0; iref < nrefs; iref++) {
+			if (refs[iref] == nargs)
+				break;
+		}
+		if (iref < nrefs) {
+			if (size != sizeof(void *)) {
+				gprint(ERROR, "argument size (%lu) does not match dptr " \
+                       "cudaReference (%d)\n", size, nargs);
+				return cudaErrorUnknown;
+				//panic("cudaSetupArgument does not match cudaReference");
+			}
+			r = region_lookup(pcontext, *(void **)arg);
+			if (!r) {
+				gprint(ERROR, "cannot find region containing %p (%d) in " \
+                       "cudaSetupArgument\n", *(void **)arg, nargs);
+				return cudaErrorUnknown;
+				//panic("region_lookup in cudaSetupArgument");
+			}
+			is_dptr = 1;
+		}
+	}
+	// TODO: we should assume all memory regions are to be referenced
+	// if no reference hints are given.
+	else if (size == sizeof(void *)) {
+		gprint(WARN, "trying to parse dptr argument automatically\n");
+		r = region_lookup(pcontext, *(void **)arg);
+		if (r)
+			is_dptr = 1;
+	}
+    
+	if (is_dptr) {
+		kargs[nargs].arg.arg1.r = r;
+		kargs[nargs].arg.arg1.off =
+        (unsigned long)(*(void **)arg - r->swp_addr);
+		if (nrefs > 0)
+			kargs[nargs].arg.arg1.flags = rwflags[iref];
+		else
+			kargs[nargs].arg.arg1.flags = HINT_DEFAULT | HINT_PTADEFAULT;
+		gprint(DEBUG, "argument is dptr: r(%p %p %ld %d %d)\n", \
+               r, r->swp_addr, r->size, r->flags, r->state);
+	}
+	else {
+		// This argument is not a device memory pointer.
+		// XXX: Currently we ignore the case that nv_cudaSetupArgument
+		// returns error and CUDA runtime might stop pushing arguments.
+		memcpy(ktop, arg, size);
+		kargs[nargs].arg.arg2.arg = ktop;
+		ktop += size;
+	}
+	kargs[nargs].is_dptr = is_dptr;
+	kargs[nargs].size = size;
+	kargs[nargs].argoff = offset;
+    
+	nargs++;
+	return cudaSuccess;
+}
 
 
 /*
