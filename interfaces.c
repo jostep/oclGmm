@@ -26,7 +26,7 @@ cl_program (*ocl_clCreateProgramWithSource)(cl_context, cl_uint, const char**, c
 cl_int (*ocl_clBuildProgram)(cl_program, cl_uint, const cl_device_id*, const char *, void *,void*)=NULL;
 cl_kernel (*ocl_clCreateKernel)(cl_program ,const char *,cl_int*)=NULL;
 cl_int (*ocl_clSetKernelArg)(cl_kernel, cl_uint,size_t, const void* arg_value)=NULL;
-
+cl_int (*ocl_clEnqueueTask)(cl_command_queue, cl_kernel, cl_uint, cl_uint, const cl_event*, cl_event *)=NULL;
 cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id,cl_command_queue_properties, cl_int *)=NULL;
 static int initialized = 0;
 
@@ -52,8 +52,8 @@ void gmm_init(void)
     INTERCEPT_CL("clBuildProgram",ocl_clBuildProgram);//2
     INTERCEPT_CL("clCreateKernel",ocl_clCreateKernel);//3
     INTERCEPT_CL("clSetKernelArg",ocl_clSetKernelArg);//4
-    /*INTERCEPT_CL("clEnqueueTask",ocl_clEnqueueTask);//5
-    INTERCEPT_CL("clEnqueueReadBuffer",ocl_clEnqueueReadBuffer);
+    /INTERCEPT_CL("clEnqueueTask",ocl_clEnqueueTask);//5
+    /*INTERCEPT_CL("clEnqueueReadBuffer",ocl_clEnqueueReadBuffer);
     */
     gprint_init();
     
@@ -285,10 +285,21 @@ cl_int clSetKernelArg(cl_kernel kernel, cl_uint arg_index,size_t arg_size, const
     else{
         return ocl_clSetKernelArg(kernel, arg_index, arg_size,arg_value);
     }
-    
+}
 
+
+GMM_EXPORT
+cl_int clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel, cl_uint num_events, const cl_event * events_wait_list, cl_event* event){
+
+    if(initialized){
+        return gmm_clEnqueueTask(command_queue, kernel, num_events, events_wait_list,event);
+    }
+    else {
+        return ocl_clEnqueueTask(command_queue, kernel, num_events, events_wait_list,event);
+    }
 
 }
+
 
 /*
  *

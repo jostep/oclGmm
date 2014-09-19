@@ -1279,6 +1279,14 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint offset,size_t size, const voi
 	return CL_SUCCESS;
 }
 
+cl_int gmm_clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel,cl_uint num_events_wait_list, const cl_event* event_wait_list, cl_event *event ){
+
+    
+
+
+}
+
+
 
 /*
 long region_evict(struct region *r)
