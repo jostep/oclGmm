@@ -232,6 +232,10 @@ cl_kernel clCreateKernel(cl_program program, const char *kernel_name,cl_int *err
 
 }
 
+int ref[NREFS];
+int fwflags[NREFS];
+int nrefs=0;
+
 GMM_EXPORT
 cl_int oclReference(int which_arg, int flags){
     
@@ -240,7 +244,7 @@ cl_int oclReference(int which_arg, int flags){
 	gprint(DEBUG, "cudaReference: %d %x\n", which_arg, flags);
     
 	if (!initialized)
-		return cudaErrorInitializationError;
+		return CL_INVALID_OPERATION;//we put invalid operation here, cuz there is no suitable err.
     
 	if (which_arg < NREFS) {
 		for (i = 0; i < nrefs; i++) {
@@ -263,12 +267,12 @@ cl_int oclReference(int which_arg, int flags){
 		}
 	}
 	else {
-		gprint(ERROR, "bad cudaReference argument %d (max %d)\n", \
+		gprint(ERROR, "bad oclReference argument %d (max %d)\n", \
                which_arg, NREFS-1);
-		return cudaErrorInvalidValue;
+		return CL_INVALID_ARG_SIZE;
 	}
     
-	return cudaSuccess;
+	return CL_SUCCESS;
 
 
 }

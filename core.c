@@ -1178,7 +1178,7 @@ cl_kernel gmm_clCreateKernel(cl_program program, const char* kernel_name, cl_int
 
 }
 
-cl_int gmm_clSetKernel(cl_kernel kernel,cl_uint arg_index,size_t arg_size, const void* arg_value){
+cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint arg_index,size_t arg_size, const void* arg_value){
 
         struct region *r;
         int is_dptr=0;
@@ -1187,6 +1187,8 @@ cl_int gmm_clSetKernel(cl_kernel kernel,cl_uint arg_index,size_t arg_size, const
             gprint(FATAL,"invalid kernel\n");
             return CL_INVALID_KERNEL;
         }
+        gprint(DEBUG,"openCL setup argument nargs(%d), size(%lu) offset(%lu)\n",nargs,arg_size,arg_index);
+
 
 }
 
