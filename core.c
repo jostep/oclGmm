@@ -34,7 +34,7 @@ extern cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, siz
 extern cl_int (*ocl_clBuildProgram)(cl_program program,cl_uint num_devices, const cl_device_id *devices_list,const char *options,void(*pfn_notify)(cl_program, void* user_data),void * user_data);
 extern cl_program (*ocl_clCreateProgramWithSource)(cl_context context, cl_uint count, const char**strings, const size_t * lengths, cl_int *errcode_ret);
 extern cl_kernel(*ocl_clCreateKernel)(cl_program, const char *, cl_int*);
-
+extern cl_int (*ocl_clEnqueueTask)(cl_command_queue, cl_kernel, cl_uint, const cl_event *,cl_event*);
 
 struct region * region_lookup(struct gmm_context *ctx, const cl_mem ptr);
 static int dma_channel_init(struct gmm_context *,struct dma_channel *, int);
@@ -1279,12 +1279,6 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint offset,size_t size, const voi
 	return CL_SUCCESS;
 }
 
-cl_int gmm_clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel,cl_uint num_events_wait_list, const cl_event* event_wait_list, cl_event *event ){
-
-    
-
-
-}
 
 static long regions_referenced(struct region ***prgns, int *pnrgns)
 {
@@ -1304,7 +1298,7 @@ static long regions_referenced(struct region ***prgns, int *pnrgns)
 			nrgns++;
 			r = kargs[i].arg.arg1.r;
 			// Here we assume at most one level of dptr arrays
-			if (r->flags & HINT_PTARRAY)
+			if (r->gmm_flags & HINT_PTARRAY)
 				nrgns += r->size / sizeof(void *);
 		}
 	}
@@ -1324,7 +1318,7 @@ static long regions_referenced(struct region ***prgns, int *pnrgns)
 			r = kargs[i].arg.arg1.r;
 			if (!is_included((void **)rgns, nrgns, (void*)r)) {
 				gprint(DEBUG, "new referenced region(%p %p %ld %d %d) " \
-                       "off(%lu)\n", r, r->swp_addr, r->size, r->flags, \
+                       "off(%lu)\n", r, r->swp_addr, r->size, r->gmm_flags, \
                        r->state, kargs[i].arg.arg1.off);
 				rgns[nrgns++] = r;
 				r->rwhint.flags = kargs[i].arg.arg1.flags & HINT_MASK;
@@ -1332,17 +1326,17 @@ static long regions_referenced(struct region ***prgns, int *pnrgns)
                 
 #ifdef GMM_CONFIG_RW
 				// Make sure cow region is read-only
-				if (r->flags & FLAG_COW)
+				if (r->gmm_flags & FLAG_COW)
 					r->rwhint.flags = HINT_READ;
 #endif
                 
-				if (r->flags & HINT_PTARRAY) {
+				if (r->gmm_flags & HINT_PTARRAY) {
 					void **pdptr = (void **)(r->pta_addr);
-					void **pend = (void **)(r->pta_addr + r->size);
+					void **pend = (void **)((unsigned long)r->pta_addr + r->size);
 					r->rwhint.flags = HINT_READ;	// dptr array is read-only
 					// For each device memory pointer contained in this region
 					while (pdptr < pend) {
-						r = region_lookup(pcontext, *pdptr);
+						r = region_lookup(pcontext, (cl_mem)*pdptr);
 						if (!r) {
 							gprint(WARN, "cannot find region for dptr " \
                                    "%p (%d)\n", *pdptr, i);
@@ -1352,7 +1346,7 @@ static long regions_referenced(struct region ***prgns, int *pnrgns)
 						if (!is_included((void **)rgns, nrgns, (void*)r)) {
 							gprint(DEBUG, "\tnew referenced region" \
                                    "(%p %p %ld %d %d) off(%lu)\n", \
-                                   r, r->swp_addr, r->size, r->flags, \
+                                   r, r->swp_addr, r->size, r->gmm_flags, \
                                    r->state, kargs[i].arg.arg1.off);
 							rgns[nrgns++] = r;
 							r->rwhint.flags =
@@ -1365,7 +1359,7 @@ static long regions_referenced(struct region ***prgns, int *pnrgns)
 						else {
 							gprint(DEBUG, "\told referenced region" \
                                    "(%p %p %ld %d %d) off(%lu)\n", r, \
-                                   r->swp_addr, r->size, r->flags, \
+                                   r->swp_addr, r->size, r->gmm_flags, \
                                    r->state, kargs[i].arg.arg1.off);
 							r->rwhint.flags |=
                             ((kargs[i].arg.arg1.flags & HINT_PTAREAD) ?
@@ -1374,7 +1368,7 @@ static long regions_referenced(struct region ***prgns, int *pnrgns)
                              HINT_WRITE : 0);
 						}
 						// Make sure cow region is read-only
-						if (r->flags & FLAG_COW)
+						if (r->gmm_flags & FLAG_COW)
 							r->rwhint.flags = HINT_READ;
 						pdptr++;
 					}
@@ -1383,11 +1377,11 @@ static long regions_referenced(struct region ***prgns, int *pnrgns)
 			else {
 				gprint(DEBUG, "old referenced region" \
                        "(%p %p %ld %d %d) off(%lu)\n", r, r->swp_addr, \
-                       r->size, r->flags, r->state, kargs[i].arg.arg1.off);
+                       r->size, r->gmm_flags, r->state, kargs[i].arg.arg1.off);
 				r->rwhint.flags |= kargs[i].arg.arg1.flags & HINT_MASK;
 #ifdef GMM_CONFIG_RW
 				// Make sure cow region is read-only
-				if (r->flags & FLAG_COW)
+				if (r->gmm_flags & FLAG_COW)
 					r->rwhint.flags = HINT_READ;
 #endif
 			}
@@ -1406,15 +1400,15 @@ static long regions_referenced(struct region ***prgns, int *pnrgns)
 }
 
 
-cudaError_t gmm_cudaLaunch(const char *entry)
+cl_int gmm_clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel, cl_uint num_events_in_wait_list, const cl_event * event_in_wait_list, cl_event *event)
 {
-	cudaError_t ret = cudaSuccess;
+	cl_int ret = CL_SUCCESS;
 	struct region **rgns = NULL;
 	int nrgns = 0;
 	long total = 0;
 	int i, ldret;
     
-	gprint(DEBUG, "cudaLaunch\n");
+	gprint(DEBUG, "openCL is about to launch\n");
     
 	// NOTE: it is possible that nrgns == 0 when regions_referenced
 	// returns. Consider a kernel that only uses registers, for
@@ -1440,7 +1434,7 @@ reload:
 	stats_time_end(&pcontext->stats, time_attach);
 	launch_signal();
 	if (ldret > 0) {	// attach unsuccessful, retry later
-		//stats_inc(&pcontext->stats, num_attach_fail, 1);
+		stats_inc(&pcontext->stats, num_attach_fail, 1);
 		sched_yield();
 		goto reload;
 	}
@@ -1462,11 +1456,12 @@ reload:
 		gprint(ERROR, "gmm_load failed\n");
 		for (i = 0; i < nrgns; i++)
 			region_unpin(rgns[i]);
-		ret = cudaErrorUnknown;
+		ret = CL_INVALID_VALUE;
 		goto finish;
 	}
     
 	// Configure and push all kernel arguments.
+    /*
 	if (nv_cudaConfigureCall(grid, block, shared, stream_issue)
         != cudaSuccess) {
 		gprint(ERROR, "cudaConfigureCall failed\n");
@@ -1475,21 +1470,21 @@ reload:
 		ret = cudaErrorUnknown;
 		goto finish;
 	}
-    
+    */
 	for (i = 0; i < nargs; i++) {
 		if (kargs[i].is_dptr) {
 			kargs[i].arg.arg1.dptr =
             kargs[i].arg.arg1.r->dev_addr + kargs[i].arg.arg1.off;
-			nv_cudaSetupArgument(&kargs[i].arg.arg1.dptr,
-                                 kargs[i].size, kargs[i].argoff);
+
+            ocl_clSetKernelArg(r->kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
 			/*gprint(DEBUG, "setup %p %lu %lu\n", \
              &kargs[i].arg.arg1.dptr, \
              sizeof(void *), \
              kargs[i].arg.arg1.argoff);*/
 		}
 		else {
-			nv_cudaSetupArgument(kargs[i].arg.arg2.arg,
-                                 kargs[i].size, kargs[i].argoff);
+            ocl_clSetKernelArg(r->kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg2.dptr);
+            
 			/*gprint(DEBUG, "setup %p %lu %lu\n", \
              kargs[i].arg.arg2.arg, \
              kargs[i].arg.arg2.size, \
@@ -1588,7 +1583,7 @@ fail:
 
 static int gmm_launch(const char *entry, struct region **rgns, int nrgns)
 {
-	cudaError_t cret;
+	cl_int ret=CL_SUCCESS;
 	struct kcb *pcb;
 	int i;
     
@@ -1614,7 +1609,7 @@ static int gmm_launch(const char *entry, struct region **rgns, int nrgns)
 	pcb->nrgns = nrgns;
     
 	//stats_time_begin();
-	if ((cret = nv_cudaLaunch(entry)) != cudaSuccess) {
+	if ((cret = ocl_EnqueueTask(pcontext->commandQueue_kernel, )) != cudaSuccess) {
 		for (i = 0; i < nrgns; i++) {
 			if (pcb->flags[i] & HINT_WRITE)
 				atomic_dec(&pcb->rgns[i]->writing);
@@ -1644,11 +1639,11 @@ static int region_load(struct region *r)
 {
 	int i, ret = 0;
     
-	if (r->flags & FLAG_COW)
+	if (r->gmm_flags & FLAG_COW)
 		ret = region_load_cow(r);
-	else if (r->flags & FLAG_MEMSET)
+	else if (r->gmm_flags & FLAG_MEMSET)
 		ret = region_load_memset(r);
-	else if (r->flags & HINT_PTARRAY)
+	else if (r->gmm_flags & HINT_PTARRAY)
 		ret = region_load_pta(r);
 	else {
 		gprint(DEBUG, "loading region %p\n", r);
@@ -1768,7 +1763,7 @@ static int region_attach(
                          struct region **excls,
                          int nexcl)
 {
-	cudaError_t cret;
+	cl_int cret;
 	int ret;
     
 	gprint(DEBUG, "attaching%s region %p\n", \
@@ -1793,13 +1788,13 @@ static int region_attach(
     
 	// Attach if current free memory space is larger than region size.
 	if (r->size <= memsize_free()) {
-		if ((cret = nv_cudaMalloc(&r->dev_addr, r->size)) == cudaSuccess)
+		r->dev_addr = ocl_clCreateBuffer(r->context, CL_MEM_READ_WRITE,r->size,NULL,errcode_CB)
+        if(errcode_CB!=CL_SUCCESS){
 			goto attach_success;
+        }
 		else {
-			gprint(DEBUG, "nv_cudaMalloc failed: %s (%d)\n", \
-                   cudaGetErrorString(cret), cret);
-			if (cret == cudaErrorLaunchFailure)
-				return -1;
+			gprint(DEBUG, "nv_cudaMalloc failed inside the gmm_attach");
+            return -1;
 		}
 	}
     
@@ -1921,7 +1916,7 @@ long region_evict(struct region *r)
 success:
 	list_attached_del(pcontext, r);
 	if (r->dev_addr) {
-		nv_cudaFree(r->dev_addr);
+		ocl_clReleaseMemObject(r->dev_addr);
 		r->dev_addr = NULL;
 		size_spared = r->size;
 	}

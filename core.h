@@ -70,7 +70,7 @@ struct dptr_arg {
 	struct region *r;		// the region this argument points to
 	unsigned long off;		// device pointer offset in the region
 	int flags;				// RW hints
-	void *dptr;				// the actual device memory address
+	cl_mem  dptr;				// the actual device memory address
 };
 
 // A kernel argument that is not a device memory pointer

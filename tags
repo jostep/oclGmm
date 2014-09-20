@@ -3,21 +3,21 @@
 !_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
-!_TAG_PROGRAM_VERSION	5.8	//
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 .DEFAULT_GOAL	Makefile	/^.DEFAULT_GOAL := all$/;"	m
-ALIGNUP	core.h	152;"	d
-BLOCKIDX	core.h	149;"	d
-BLOCKMASK	core.h	145;"	d
-BLOCKSHIFT	core.h	144;"	d
-BLOCKSIZE	core.h	143;"	d
-BLOCKUP	core.h	150;"	d
+ALIGNUP	core.h	154;"	d
+BLOCKIDX	core.h	151;"	d
+BLOCKMASK	core.h	147;"	d
+BLOCKSHIFT	core.h	146;"	d
+BLOCKSIZE	core.h	145;"	d
+BLOCKUP	core.h	152;"	d
 BUFSIZE	core.h	102;"	d
 CC	Makefile	/^CC := gcc$/;"	m
 CFLAGS	Makefile	/^CFLAGS := -g -Wall -pthread -fPIC -fvisibility=hidden \\$/;"	m
 CUDAPATH	Makefile	/^CUDAPATH = \/usr\/local\/cuda-6.0$/;"	m
 DEBUG	common.h	14;"	d
 ERROR	common.h	11;"	d
-FALSE	oclTest/test.c	7;"	d	file:
+FALSE	oclTest/test.c	9;"	d	file:
 FATAL	common.h	10;"	d
 FLAG_COW	hint.h	20;"	d
 FLAG_MEMSET	hint.h	24;"	d
@@ -51,18 +51,20 @@ INTERCEPT_CL	interfaces.h	33;"	d
 LDFLAGS	Makefile	/^LDFLAGS := -shared -pthread -ldl -fPIC -OpenCL$/;"	m
 LIBGMM	Makefile	/^LIBGMM = libgmm.so$/;"	m
 LMAX	core.c	/^long LMAX(long a, long b)$/;"	f
-LOWER_PAGE	core.h	139;"	d
-MIN	core.h	141;"	d
+LOWER_PAGE	core.h	141;"	d
+MAX_SOURCE_SIZE	oclTest/test.c	12;"	d	file:
+MEM_SIZE	oclTest/test.c	11;"	d	file:
+MIN	core.h	143;"	d
 MSG_REP_ACK	protocol.h	/^	MSG_REP_ACK,$/;"	e	enum:msgtype
 MSG_REQ_EVICT	protocol.h	/^	MSG_REQ_EVICT,$/;"	e	enum:msgtype
 NBUFS	core.h	101;"	d
 NCLIENTS	protocol.h	12;"	d
-NRBLOCKS	core.h	148;"	d
+NRBLOCKS	core.h	150;"	d
 NREFS	core.h	66;"	d
 OBJS	Makefile	/^OBJS = $(SRCS:.c=.o)$/;"	m
 OFFSETOF	list.h	91;"	d
 OPENCL_PATH	interfaces.h	16;"	d
-PAGEMASK	core.h	137;"	d
+PAGEMASK	core.h	139;"	d
 PRINT_LEVEL	gmm.mk	/^PRINT_LEVEL = 6$/;"	m
 PRINT_LEVELS	common.h	15;"	d
 PRIO_DEFAULT	hint.h	28;"	d
@@ -76,10 +78,10 @@ STATE_FREEING	core.h	/^	STATE_FREEING,			\/\/ object being freed$/;"	e	enum:regi
 STATE_ZOMBIE	core.h	/^	STATE_ZOMBIE			\/\/ object waiting to be GC'ed$/;"	e	enum:region_state
 TDIFF	stats.h	53;"	d
 TREAT_ERROR	interfaces.h	18;"	d
-TRUE	oclTest/test.c	8;"	d	file:
+TRUE	oclTest/test.c	10;"	d	file:
 TRY_ACQUIRE_TIMES	spinlock.h	42;"	d
 TVAL	stats.h	52;"	d
-UPPER_PAGE	core.h	138;"	d
+UPPER_PAGE	core.h	140;"	d
 USE_PRINT_BUFFER	gmm.mk	/^USE_PRINT_BUFFER = 0$/;"	m
 WARN	common.h	12;"	d
 _GMM_ATOMIC_H_	atomic.h	2;"	d
@@ -137,12 +139,17 @@ bytes_u2d	stats.h	/^	long bytes_u2d;				\/\/ user buffer to device, i.e. cow loa
 bytes_u2s	stats.h	/^	long bytes_u2s;				\/\/ user buffer to swap buffer$/;"	m	struct:statistics
 cid	client.c	/^int cid = -1;						\/\/ Id of this client$/;"	v
 cidtopid	client.c	/^pid_t cidtopid(int cid)$/;"	f
+clBuildProgram	interfaces.c	/^cl_int clBuildProgram(cl_program program, cl_uint num_devices, const cl_device_id* devices, const char *options, void (*pfn_notify)(cl_program,void*user_data),void*user_data){$/;"	f
 clCreateBuffer	interfaces.c	/^cl_mem clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int *errcode){$/;"	f
 clCreateCommandQueue	interfaces.c	/^cl_command_queue clCreateCommandQueue(cl_context context,cl_device_id device,cl_command_queue_properties properties, cl_int *errcode_CQ){$/;"	f
 clCreateContext	interfaces.c	/^cl_context clCreateContext(const cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void (CL_CALLBACK* pfn_notify)(const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){$/;"	f
+clCreateKernel	interfaces.c	/^cl_kernel clCreateKernel(cl_program program, const char *kernel_name,cl_int *errcode_ret){$/;"	f
+clCreateProgramWithSource	interfaces.c	/^cl_program clCreateProgramWithSource(cl_context context, cl_uint count, const char** strings, const size_t *lengths, cl_int *errcode_ret){$/;"	f
 clEnqueueFillBuffer	interfaces.c	/^cl_int clEnqueueFillBuffer(cl_command_queue command_queue, cl_mem buffer, const void *pattern, size_t pattern_size, size_t offset,size_t size, cl_uint num_events_in_wait_list,const cl_event *event_wait_list, cl_event * event){$/;"	f
+clEnqueueTask	interfaces.c	/^cl_int clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel, cl_uint num_events, const cl_event * events_wait_list, cl_event* event){$/;"	f
 clEnqueueWriteBuffer	interfaces.c	/^cl_int clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, $/;"	f
 clReleaseMemObject	interfaces.c	/^cl_int clReleaseMemObject(cl_mem memObj){$/;"	f
+clSetKernelArg	interfaces.c	/^cl_int clSetKernelArg(cl_kernel kernel, cl_uint arg_index,size_t arg_size, const void* arg_value){$/;"	f
 client	core.h	/^	int client;				\/\/ for a remote victim$/;"	m	struct:victim
 client_alloc	client.c	/^static int client_alloc()$/;"	f	file:
 client_attach	client.c	/^int client_attach()$/;"	f
@@ -182,18 +189,26 @@ from	protocol.h	/^	int from;$/;"	m	struct:msg_rep
 from	protocol.h	/^	int from;$/;"	m	struct:msg_req
 getcid	client.c	/^int getcid()$/;"	f
 gettid	common.h	/^static inline pid_t gettid()$/;"	f
+gmm_attach	core.c	/^static int gmm_attach(struct region **rgns, int n)$/;"	f	file:
+gmm_clBuildProgram	core.c	/^cl_int gmm_clBuildProgram(cl_program program,cl_uint num_devices, const cl_device_id *devices_list,const char *options,void(*pfn_notify)(cl_program, void* user_data),void * user_data){$/;"	f
 gmm_clCreateBuffer	core.c	/^cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int* errcode_CB, int gmm_flags){$/;"	f
 gmm_clCreateContext	core.c	/^cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){$/;"	f
+gmm_clCreateKernel	core.c	/^cl_kernel gmm_clCreateKernel(cl_program program, const char* kernel_name, cl_int* errcode_ret){$/;"	f
+gmm_clCreateProgramWithSource	core.c	/^cl_program gmm_clCreateProgramWithSource(cl_context context, cl_uint count, const char**strings, const size_t * lengths, cl_int *errcode_ret){$/;"	f
 gmm_clEnqueueFillBuffer	core.c	/^cl_int gmm_clEnqueueFillBuffer(cl_command_queue command_queue, cl_mem  buffer, int value, size_t pattern_size, size_t offset,size_t size, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){$/;"	f
+gmm_clEnqueueTask	core.c	/^cl_int gmm_clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel,cl_uint num_events_wait_list, const cl_event* event_wait_list, cl_event *event ){$/;"	f
 gmm_clEnqueueWriteBuffer	core.c	/^cl_int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_bool blocking_write, size_t offset, size_t count, const void *src, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){$/;"	f
 gmm_clReleaseMemObject	core.c	/^cl_int gmm_clReleaseMemObject(cl_mem memObjPtr){$/;"	f
+gmm_clSetKernelArg	core.c	/^cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint offset,size_t size, const void* arg){$/;"	f
 gmm_client	protocol.h	/^struct gmm_client {$/;"	s
 gmm_context	core.h	/^struct gmm_context {$/;"	s
 gmm_context_fini	core.c	/^void gmm_context_fini(){$/;"	f
 gmm_context_init	core.c	/^int gmm_context_init(){$/;"	f
 gmm_context_initEX	core.c	/^void gmm_context_initEX(){$/;"	f
+gmm_cudaLaunch	core.c	/^cudaError_t gmm_cudaLaunch(const char *entry)$/;"	f
 gmm_dump_dptr	debug.c	/^void gmm_dump_dptr(const char *filepath, const void *dptr, const size_t size)$/;"	f
 gmm_dump_region	debug.c	/^void gmm_dump_region($/;"	f
+gmm_evict	core.c	/^static int gmm_evict(long size_needed, struct region **excls, int nexcl)$/;"	f	file:
 gmm_fini	interfaces.c	/^void gmm_fini(void)$/;"	f
 gmm_flags	core.h	/^	int gmm_flags;$/;"	m	struct:region
 gmm_free	core.c	/^static int gmm_free(struct region *r){$/;"	f	file:
@@ -202,6 +217,8 @@ gmm_htod	core.c	/^static int gmm_htod($/;"	f	file:
 gmm_htod_block	core.c	/^static int gmm_htod_block($/;"	f	file:
 gmm_htod_pta	core.c	/^static int gmm_htod_pta($/;"	f	file:
 gmm_init	interfaces.c	/^void gmm_init(void)$/;"	f
+gmm_launch	core.c	/^static int gmm_launch(const char *entry, struct region **rgns, int nrgns)$/;"	f	file:
+gmm_load	core.c	/^static int gmm_load(struct region **rgns, int nrgns)$/;"	f	file:
 gmm_memcpy_dtoh	core.c	/^static int gmm_memcpy_dtoh(cl_mem dst, cl_mem src, unsigned long size)$/;"	f	file:
 gmm_memcpy_htod	core.c	/^static int gmm_memcpy_htod(cl_mem dst, const void * src, unsigned long size){$/;"	f	file:
 gmm_memset	core.c	/^static int gmm_memset(struct region *r, cl_mem buffer,int value, size_t count){$/;"	f	file:
@@ -231,7 +248,11 @@ is_client_local	client.c	/^int is_client_local(int client)$/;"	f
 is_dptr	core.h	/^	char is_dptr;$/;"	m	struct:karg
 is_included	core.h	/^static inline int is_included(void **a, int n, void *p)$/;"	f
 karg	core.h	/^struct karg {$/;"	s
+kargs	core.c	/^static struct karg kargs[NREFS];$/;"	v	typeref:struct:karg	file:
 kcb	core.h	/^struct kcb {$/;"	s
+kernel	core.h	/^    cl_kernel kernel;$/;"	m	struct:gmm_context
+kstack	core.c	/^static unsigned char kstack[512];$/;"	v	file:
+ktop	core.c	/^static void *ktop=(void *)kstack;$/;"	v	file:
 latomic_add	atomic.h	/^static inline long latomic_add(latomic_t *ptr, long val)$/;"	f
 latomic_dec	atomic.h	/^static inline long latomic_dec(latomic_t *ptr)$/;"	f
 latomic_inc	atomic.h	/^static inline long latomic_inc(latomic_t *ptr)$/;"	f
@@ -258,6 +279,7 @@ list_for_each_prev	list.h	82;"	d
 list_head	list.h	/^struct list_head {$/;"	s
 list_move	list.h	/^static inline void list_move(struct list_head *list, struct list_head *head)$/;"	f
 list_move_tail	list.h	/^static inline void list_move_tail($/;"	f
+local_victim_evict	core.c	/^long local_victim_evict(long size_needed)$/;"	f
 lock	core.h	/^	struct spinlock lock;				\/\/ TODO: what's the use of this lock??$/;"	m	struct:gmm_context	typeref:struct:gmm_context::spinlock
 lock	core.h	/^	struct spinlock lock;	\/\/ r\/w lock$/;"	m	struct:block	typeref:struct:block::spinlock
 lock	core.h	/^	struct spinlock lock;	\/\/ the lock that protects memory object state$/;"	m	struct:region	typeref:struct:region::spinlock
@@ -285,16 +307,24 @@ msq_send	msq.c	/^int msq_send(int client, const struct msg *msg)$/;"	f
 msq_send_rep_ack	msq.c	/^int msq_send_rep_ack(int client, long ack)$/;"	f
 msq_send_req_evict	msq.c	/^long msq_send_req_evict(int client, long size_needed, int block)$/;"	f
 mutx_ack	msq.c	/^pthread_mutex_t mutx_ack;$/;"	v
+nargs	core.c	/^static int nargs=0;$/;"	v	file:
 nclients	protocol.h	/^	int nclients;$/;"	m	struct:gmm_global
 ndptr_arg	core.h	/^struct ndptr_arg {$/;"	s
 next	list.h	/^	struct list_head *next;$/;"	m	struct:list_head	typeref:struct:list_head::list_head
+nrefs	interfaces.c	/^int nrefs=0;$/;"	v
 nrgns	core.h	/^	int nrgns;					\/\/ Number of regions referenced$/;"	m	struct:kcb
+oclReference	interfaces.c	/^cl_int oclReference(int which_arg, int flags){$/;"	f
+ocl_clBuildProgram	interfaces.c	/^cl_int (*ocl_clBuildProgram)(cl_program, cl_uint, const cl_device_id*, const char *, void *,void*)=NULL;$/;"	v
 ocl_clCreateBuffer	interfaces.c	/^cl_mem (*ocl_clCreateBuffer)(cl_context, cl_mem_flags, size_t, void*, cl_int)= NULL;$/;"	v
 ocl_clCreateCommandQueue	interfaces.c	/^cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id,cl_command_queue_properties, cl_int *)=NULL;$/;"	v
 ocl_clCreateContext	interfaces.c	/^cl_context (*ocl_clCreateContext)(cl_context_properties *,cl_uint ,const cl_device_id *,void*, void *,cl_int *)=NULL;$/;"	v
+ocl_clCreateKernel	interfaces.c	/^cl_kernel (*ocl_clCreateKernel)(cl_program ,const char *,cl_int*)=NULL;$/;"	v
+ocl_clCreateProgramWithSource	interfaces.c	/^cl_program (*ocl_clCreateProgramWithSource)(cl_context, cl_uint, const char**, const size_t *, cl_int *errcode_ret)=NULL;$/;"	v
 ocl_clEnqueueFillBuffer	interfaces.c	/^cl_int (*ocl_clEnqueueFillBuffer)(cl_command_queue, cl_mem, const void *, size_t, size_t,size_t, cl_uint, const cl_event, cl_event)=NULL;$/;"	v
+ocl_clEnqueueTask	interfaces.c	/^cl_int (*ocl_clEnqueueTask)(cl_command_queue, cl_kernel, cl_uint, cl_uint, const cl_event*, cl_event *)=NULL;$/;"	v
 ocl_clEnqueueWriteBuffer	interfaces.c	/^cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event)=NULL;$/;"	v
 ocl_clReleaseMemObject	interfaces.c	/^cl_int (*ocl_clReleaseMemObject)(cl_mem)= NULL;$/;"	v
+ocl_clSetKernelArg	interfaces.c	/^cl_int (*ocl_clSetKernelArg)(cl_kernel, cl_uint,size_t, const void* arg_value)=NULL;$/;"	v
 off	core.h	/^	unsigned long off;		\/\/ device pointer offset in the region$/;"	m	struct:dptr_arg
 panic	common.c	/^void panic(char *msg)$/;"	f
 pcontext	core.c	/^struct gmm_context *pcontext=NULL;$/;"	v	typeref:struct:gmm_context
@@ -304,23 +334,34 @@ pinned	core.h	/^	atomic_t pinned;		\/\/ atomic pin counter$/;"	m	struct:region
 pinned	protocol.h	/^	int pinned;$/;"	m	struct:gmm_client
 platform	core.h	/^    cl_platform_id *platform;$/;"	m	struct:gmm_context
 prev	list.h	/^	struct list_head *prev;$/;"	m	struct:list_head	typeref:struct:list_head::list_head
+program_kernel	core.h	/^    cl_program program_kernel;$/;"	m	struct:gmm_context
 pta_addr	core.h	/^	cl_mem pta_addr;			\/\/ dptr array address$/;"	m	struct:region
 r	core.h	/^	struct region *r;		\/\/ for a local victim$/;"	m	struct:victim	typeref:struct:victim::region
 r	core.h	/^	struct region *r;		\/\/ the region this argument points to$/;"	m	struct:dptr_arg	typeref:struct:dptr_arg::region
 reading	core.h	/^	atomic_t reading;		\/\/ being read by how many kernels$/;"	m	struct:region
+refs	interfaces.c	/^int refs[NREFS];$/;"	v
 region	core.h	/^struct region {$/;"	s
+region_attach	core.c	/^static int region_attach($/;"	f	file:
+region_evict	core.c	/^long region_evict(struct region *r)$/;"	f
 region_inval	core.h	/^static inline void region_inval(struct region *r, int swp)$/;"	f
+region_load	core.c	/^static int region_load(struct region *r)$/;"	f	file:
+region_load_cow	core.c	/^static int region_load_cow(struct region *r)$/;"	f	file:
+region_load_memset	core.c	/^static int region_load_memset(struct region *r)$/;"	f	file:
+region_load_pta	core.c	/^static int region_load_pta(struct region *r)$/;"	f	file:
 region_lookup	core.c	/^struct region * region_lookup(struct gmm_context *ctx, const cl_mem ptr){$/;"	f
 region_pin	core.c	/^static inline void region_pin(struct region *r)$/;"	f	file:
-region_pinned	core.h	156;"	d
+region_pinned	core.h	158;"	d
 region_state	core.h	/^typedef enum region_state {$/;"	g
 region_state_t	core.h	/^} region_state_t;$/;"	t	typeref:enum:region_state
 region_unpin	core.c	/^static inline void region_unpin(struct region *r)$/;"	f	file:
 region_valid	core.h	/^static inline void region_valid(struct region *r, int swp)$/;"	f
+regions_referenced	core.c	/^static long regions_referenced(struct region ***prgns, int *pnrgns)$/;"	f	file:
 release	spinlock.h	/^static inline void release(struct spinlock *lk)$/;"	f
+remote_victim_evict	core.c	/^long remote_victim_evict(int client, long size_needed)$/;"	f
 restart	server.c	/^int restart(size_t mem_total)$/;"	f
 ret	protocol.h	/^	long ret;$/;"	m	struct:msg_rep
 rgns	core.h	/^	struct region *rgns[NREFS];	\/\/ Regions referenced by the kernel$/;"	m	struct:kcb	typeref:struct:kcb::region
+rwflags	interfaces.c	/^int rwflags[NREFS];$/;"	v
 rwhint	core.h	/^	struct rwhint rwhint;	\/\/ rw hint$/;"	m	struct:region	typeref:struct:region::rwhint
 rwhint	core.h	/^struct rwhint {$/;"	s
 sem_launch	client.c	/^sem_t *sem_launch = SEM_FAILED;		\/\/ Guarding kernel launches$/;"	v
@@ -387,6 +428,8 @@ usr_addr	core.h	/^	cl_mem usr_addr;			\/\/ copy-on-write user address$/;"	m	stru
 value_memset	core.h	/^	int value_memset;		\/\/ value of cudaMemset$/;"	m	struct:region
 verbose	server.c	/^int verbose = 0;$/;"	v
 victim	core.h	/^struct victim {$/;"	s
+victim_evict	core.c	/^long victim_evict(struct victim *victim, long size_needed)$/;"	f
+victim_select	core.c	/^int victim_select($/;"	f
 victim_select_lfu	replacement.c	/^int victim_select_lfu($/;"	f
 victim_select_lru	replacement.c	/^int victim_select_lru($/;"	f
 victim_select_lru_local	replacement.c	/^int victim_select_lru_local($/;"	f
