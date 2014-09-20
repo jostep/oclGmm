@@ -329,7 +329,7 @@ static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, in
    chan->ibuf=0;
    
    for (i=0;i<NBUFS;i++){
-        ocl_clCreateBuffer(pcontext->context_kernel,CL_MEM_ALLOC_HOST_PTR,BUFSIZE,chan->stage_bufs[i],errcode_DMA);
+        chan->stage_bufs[i]=ocl_clCreateBuffer(pcontext->context_kernel,CL_MEM_ALLOC_HOST_PTR,BUFSIZE,NULL,errcode_DMA);
         if(errcode_DMA!=CL_SUCCESS){
             gprint(FATAL,"failed for staging buffer\n");
             break;
@@ -412,6 +412,7 @@ re_acquire:
     acquire(&r->lock);
     switch (r->state){
     case STATE_ATTACHED:
+        gprint(DEBUG,"Attached right?\n");
         if(!region_pinned(r))
             list_attached_del(pcontext,r);
         else{
@@ -672,31 +673,38 @@ static int gmm_memcpy_htod(cl_mem dst, const void * src, unsigned long size){
     struct dma_channel *chan = &pcontext->dma_htod;
     unsigned long off,delta;
     int ret=0, ilast;
-    cl_int * debug;
+    int first=0;
+    cl_int *debug=NULL;
     
     begin_dma(chan);
     off=0;
-    gprint(DEBUG,"how about here\n");
     while(off<size){
         delta=MIN(off+BUFSIZE, size)-off;
         /*if(clWaitForEvents(1,&chan->events[chan->ibuf])!=CL_SUCCESS){*/
-        debug=clWaitForEvents(1,&chan->events[chan->ibuf]);
-        if(debug!=CL_SUCCESS){
-            gprint(FATAL,"sync failed in htod and the err is%d\n",debug);
-            if(debug==CL_INVALID_VALUE){
-                gprint(DEBUG,"because of invalid value\n");
-            }
-            if(debug==CL_INVALID_CONTEXT){
-                gprint(DEBUG,"because of invalid context\n");
-            }
-            if(debug==CL_INVALID_EVENT){
-                gprint(DEBUG,"because of invalid event\n");
-            }
-            ret=-1;
-            goto finish;
+        //if(first>0){
+            debug=clWaitForEvents(1,&chan->events[chan->ibuf]);
+            if(debug!=CL_SUCCESS){
+                gprint(FATAL,"sync failed in htod and the err is%d\n",debug);
+                if(debug==CL_INVALID_VALUE){
+                    gprint(DEBUG,"because of invalid value\n");
+                }
+                if(debug==CL_INVALID_CONTEXT){
+                    gprint(DEBUG,"because of invalid context\n");
+                }
+                if(debug==CL_INVALID_EVENT){
+                    gprint(DEBUG,"because of invalid event\n");
+                }
+                ret=-1;
+                goto finish;
+        //    }
         }
+        gprint(DEBUG,"you failed here, aren't you?\n");
+
         memcpy((void *)chan->stage_bufs[chan->ibuf],src+off,delta);
-        if(ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,(cl_mem)((unsigned long)dst+off),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)){
+
+        
+
+        if(ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,(cl_mem)((unsigned long)dst+off),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
             gprint(FATAL,"cl write buffer failed in htod\n");
             ret=-1;
             goto finish;
@@ -710,8 +718,9 @@ static int gmm_memcpy_htod(cl_mem dst, const void * src, unsigned long size){
         ilast=chan->ibuf;
         chan->ibuf=(chan->ibuf+1)%NBUFS;
         off+=delta;
+        first++;
     }
-
+    
     if(clWaitForEvents(1,&chan->events[ilast])!=CL_SUCCESS){
         gprint(FATAL,"cl event sync failed in htod\n");
         ret=-1;
