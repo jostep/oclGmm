@@ -195,8 +195,8 @@ void gmm_context_fini(){
             list_move_tail(p,&pcontext->list_alloced);
         }
     }
-
     dma_channel_fini(&pcontext->dma_dtoh);
+    gprint(DEBUG,"clean up for dtoh has finished\n");
     dma_channel_fini(&pcontext->dma_htod);
 
     clReleaseCommandQueue(pcontext->commandQueue_kernel);
@@ -356,14 +356,21 @@ static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, in
 static void dma_channel_fini(struct dma_channel *chan){
 #ifdef GMM_CONFIG_DMA_ASYNC
     int i;
-
     for (i=0;i<NBUFS;i++){
-        clReleaseEvent(chan->events[i]);
-        ocl_clReleaseMemObject(chan->stage_bufs[i]);
+        
+        gprint(DEBUG,"show me the event %p \n",chan->events[i]);
+        if(CL_SUCCESS!=clReleaseEvent(chan->events[i])){
+            gprint(FATAL,"unable to release event of DMA Channal\n");
+        }
+        gprint(DEBUG,"show me the buf %p \n",chan->stage_bufs[i]);
+        if(CL_SUCCESS!=ocl_clReleaseMemObject(chan->stage_bufs[i])){
+            gprint(FATAL,"unable to release memObj of DMA channal\n");
+        }
     }
 #endif 
 
     clReleaseCommandQueue(chan->commandQueue_chan);
+
 }
 
 cl_int gmm_clReleaseMemObject(cl_mem memObjPtr){
@@ -412,7 +419,6 @@ re_acquire:
     acquire(&r->lock);
     switch (r->state){
     case STATE_ATTACHED:
-        gprint(DEBUG,"Attached right?\n");
         if(!region_pinned(r))
             list_attached_del(pcontext,r);
         else{
@@ -675,32 +681,25 @@ static int gmm_memcpy_htod(cl_mem dst, const void * src, unsigned long size){
     int ret=0, ilast;
     int first=0;
     cl_int *debug=NULL;
-    
+    cl_int status;
+
     begin_dma(chan);
     off=0;
     while(off<size){
         delta=MIN(off+BUFSIZE, size)-off;
-        /*if(clWaitForEvents(1,&chan->events[chan->ibuf])!=CL_SUCCESS){*/
-        //if(first>0){
-            debug=clWaitForEvents(1,&chan->events[chan->ibuf]);
+        if(CL_SUCCESS!=clGetEventInfo(chan->events[chan->ibuf],CL_EVENT_COMMAND_EXECUTION_STATUS,sizeof(cl_int),&status, NULL)){
+            gprint(DEBUG,"unable to get the event status for htod\n");
+        }
+         if(status!=CL_SUBMITTED||status!=CL_COMPLETE){
             if(debug!=CL_SUCCESS){
                 gprint(FATAL,"sync failed in htod and the err is%d\n",debug);
-                if(debug==CL_INVALID_VALUE){
-                    gprint(DEBUG,"because of invalid value\n");
-                }
-                if(debug==CL_INVALID_CONTEXT){
-                    gprint(DEBUG,"because of invalid context\n");
-                }
-                if(debug==CL_INVALID_EVENT){
-                    gprint(DEBUG,"because of invalid event\n");
-                }
                 ret=-1;
                 goto finish;
-        //    }
+            }
         }
-        gprint(DEBUG,"you failed here, aren't you?\n");
 
         memcpy((void *)chan->stage_bufs[chan->ibuf],src+off,delta);
+        gprint(DEBUG,"the buf here is bufs[%d] with pointer as %p",chan->ibuf,chan->stage_bufs[chan->ibuf]);
 
         
 
@@ -1620,6 +1619,7 @@ fail:
 void CL_CALLBACK gmm_kernel_callback(cl_event event, cl_int status, void *data){
 
 
+    
     struct kcb *pcb=(struct kcbi*)data;
     int i;
     if(status!=CL_COMPLETE){
@@ -1670,7 +1670,7 @@ static int gmm_launch(struct region **rgns, int nrgns)
 	pcb->nrgns = nrgns;
     
 	//stats_time_begin();
-	if (ocl_clEnqueueTask(pcontext->commandQueue_kernel,pcontext->kernel,0,NULL,pcontext->event_kernel) != CL_SUCCESS) {
+	if (ocl_clEnqueueTask(pcontext->commandQueue_kernel,pcontext->kernel,0,NULL,&pcontext->event_kernel) != CL_SUCCESS) {
 		for (i = 0; i < nrgns; i++) {
 			if (pcb->flags[i] & HINT_WRITE)
 				atomic_dec(&pcb->rgns[i]->writing);
@@ -1680,8 +1680,7 @@ static int gmm_launch(struct region **rgns, int nrgns)
 		free(pcb);
 		gprint(ERROR, "nv_cudaLaunch failed\n");
 		return -1;
-	}
-    
+	} 
 	//nv_cudaStreamAddCallback(stream_issue, gmm_kernel_callback, (void *)pcb, 0);
     clSetEventCallback(pcontext->event_kernel, CL_COMPLETE,gmm_kernel_callback,(void*)pcb); 
 
