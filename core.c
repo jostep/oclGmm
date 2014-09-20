@@ -21,6 +21,10 @@
 
 
 static int gmm_free(struct region *m);
+static int gmm_launch(struct region **rgns, int nrgns);
+static int gmm_attach(struct region **rgns, int n);
+static int gmm_load(struct region **rgns, int nrgns);
+static int gmm_evict(long size_needed, struct region **excls, int nexcl);
 extern cl_mem (*ocl_clCreateBuffer)(cl_context , cl_mem_flags, size_t, void *, cl_int*);
 extern cl_int (*ocl_clReleaseMemObject)(cl_mem);
 //extern cl_int (*ocl_clReleaseCommandQueue)(cl_command_queue);
@@ -35,6 +39,17 @@ extern cl_int (*ocl_clBuildProgram)(cl_program program,cl_uint num_devices, cons
 extern cl_program (*ocl_clCreateProgramWithSource)(cl_context context, cl_uint count, const char**strings, const size_t * lengths, cl_int *errcode_ret);
 extern cl_kernel(*ocl_clCreateKernel)(cl_program, const char *, cl_int*);
 extern cl_int (*ocl_clEnqueueTask)(cl_command_queue, cl_kernel, cl_uint, const cl_event *,cl_event*);
+extern cl_int (*ocl_clSetKernelArg)(cl_kernel, cl_uint, size_t, const void*);
+
+
+
+static int region_load_memset(struct region *r);
+static int region_load(struct region *r);
+static int region_load_cow(struct region *r);
+static int region_load_pta(struct region *r);
+static int region_attach(struct region *r,int pin,struct region **excls,int nexcl);
+
+
 
 struct region * region_lookup(struct gmm_context *ctx, const cl_mem ptr);
 static int dma_channel_init(struct gmm_context *,struct dma_channel *, int);
@@ -320,7 +335,7 @@ static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, in
             break;
         }
         errcode_DMA=NULL;
-        chan->stage_bufs[i]=clCreateUserEvent(pcontext->context_kernel,errcode_DMA);
+        chan->events[i]=clCreateUserEvent(pcontext->context_kernel,errcode_DMA);
         if(errcode_DMA!=CL_SUCCESS){
             gprint(FATAL,"failed to create for staging buffer\n");
             ocl_clReleaseMemObject(chan->stage_bufs[i]);
@@ -657,13 +672,26 @@ static int gmm_memcpy_htod(cl_mem dst, const void * src, unsigned long size){
     struct dma_channel *chan = &pcontext->dma_htod;
     unsigned long off,delta;
     int ret=0, ilast;
+    cl_int * debug;
     
     begin_dma(chan);
     off=0;
+    gprint(DEBUG,"how about here\n");
     while(off<size){
         delta=MIN(off+BUFSIZE, size)-off;
-        if(clWaitForEvents(1,&chan->events[chan->ibuf])!=CL_SUCCESS){
-            gprint(FATAL,"sync failed in htod");
+        /*if(clWaitForEvents(1,&chan->events[chan->ibuf])!=CL_SUCCESS){*/
+        debug=clWaitForEvents(1,&chan->events[chan->ibuf]);
+        if(debug!=CL_SUCCESS){
+            gprint(FATAL,"sync failed in htod and the err is%d\n",debug);
+            if(debug==CL_INVALID_VALUE){
+                gprint(DEBUG,"because of invalid value\n");
+            }
+            if(debug==CL_INVALID_CONTEXT){
+                gprint(DEBUG,"because of invalid context\n");
+            }
+            if(debug==CL_INVALID_EVENT){
+                gprint(DEBUG,"because of invalid event\n");
+            }
             ret=-1;
             goto finish;
         }
@@ -1027,7 +1055,7 @@ static int gmm_htod(
 	int ret = 0;
     
 	gprint(DEBUG, "htod: r(%p %p %ld %d %d) dst(%p) src(%p) count(%lu)\n", \
-           r, r->swp_addr, r->size, r->flags, r->state, dst, src, count);
+           r, r->swp_addr, r->size, r->gmm_flags, r->state, dst, src, count);
     
 	if (r->gmm_flags & HINT_PTARRAY)
 		return gmm_htod_pta(r, dst, (void *)src, count);
@@ -1416,12 +1444,12 @@ cl_int gmm_clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel, cl_ui
 	total = regions_referenced(&rgns, &nrgns);
 	if (total < 0) {
 		gprint(ERROR, "failed to get the regions to be referenced\n");
-		ret = cudaErrorUnknown;
+		ret = CL_INVALID_ARG_SIZE;
 		goto finish;
 	}
 	else if (total > memsize_total()) {
 		gprint(ERROR, "kernel requires too much space (%ld)\n", total);
-		ret = cudaErrorInvalidConfiguration;
+		ret = CL_INVALID_ARG_SIZE;
 		goto finish;
 	}
     
@@ -1434,13 +1462,13 @@ reload:
 	stats_time_end(&pcontext->stats, time_attach);
 	launch_signal();
 	if (ldret > 0) {	// attach unsuccessful, retry later
-		stats_inc(&pcontext->stats, num_attach_fail, 1);
+		//stats_inc(&pcontext->stats, num_attach_fail, 1);
 		sched_yield();
 		goto reload;
 	}
 	else if (ldret < 0) {	// fatal load error, quit launching
 		gprint(ERROR, "attach failed; quitting kernel launch\n");
-		ret = cudaErrorUnknown;
+		ret = CL_INVALID_ARG_SIZE;
 		goto finish;
 	}
     
@@ -1473,17 +1501,16 @@ reload:
     */
 	for (i = 0; i < nargs; i++) {
 		if (kargs[i].is_dptr) {
-			kargs[i].arg.arg1.dptr =
-            kargs[i].arg.arg1.r->dev_addr + kargs[i].arg.arg1.off;
+			kargs[i].arg.arg1.dptr =(cl_mem)((unsigned long)kargs[i].arg.arg1.r->dev_addr + kargs[i].arg.arg1.off);
 
-            ocl_clSetKernelArg(r->kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
+            ocl_clSetKernelArg(pcontext->kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
 			/*gprint(DEBUG, "setup %p %lu %lu\n", \
              &kargs[i].arg.arg1.dptr, \
              sizeof(void *), \
              kargs[i].arg.arg1.argoff);*/
 		}
 		else {
-            ocl_clSetKernelArg(r->kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg2.dptr);
+            ocl_clSetKernelArg(pcontext->kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg2.arg);
             
 			/*gprint(DEBUG, "setup %p %lu %lu\n", \
              kargs[i].arg.arg2.arg, \
@@ -1493,10 +1520,10 @@ reload:
 	}
     
 	// Now we can launch the kernel.
-	if (gmm_launch(entry, rgns, nrgns) < 0) {
+	if (gmm_launch(rgns, nrgns) < 0) {
 		for (i = 0; i < nrgns; i++)
 			region_unpin(rgns[i]);
-		ret = cudaErrorUnknown;
+		ret = CL_INVALID_KERNEL;
 	}
     
 finish:
@@ -1581,7 +1608,32 @@ fail:
 }
 
 
-static int gmm_launch(const char *entry, struct region **rgns, int nrgns)
+void CL_CALLBACK gmm_kernel_callback(cl_event event, cl_int status, void *data){
+
+
+    struct kcb *pcb=(struct kcbi*)data;
+    int i;
+    if(status!=CL_COMPLETE){
+        gprint(DEBUG,"kernel failed\n");
+    }
+    else{
+        gprint(DEBUG,"kernel succeed\n");
+    }
+
+    for(i=0;i<pcb->nrgns;i++){
+    
+        if(pcb->flags[i]&HINT_WRITE){
+            atomic_dec(&pcb->rgns[i]->writing);
+        }
+        if(pcb->flags[i]&HINT_READ){
+            atomic_dec(&pcb->rgns[i]->reading);
+        }
+        region_unpin(pcb->rgns[i]);
+    }
+    free(pcb);
+}
+
+static int gmm_launch(struct region **rgns, int nrgns)
 {
 	cl_int ret=CL_SUCCESS;
 	struct kcb *pcb;
@@ -1609,7 +1661,7 @@ static int gmm_launch(const char *entry, struct region **rgns, int nrgns)
 	pcb->nrgns = nrgns;
     
 	//stats_time_begin();
-	if ((cret = ocl_clEnqueueTask(pcontext->commandQueue_kernel,pcontext->kernel )) != cudaSuccess) {
+	if (ocl_clEnqueueTask(pcontext->commandQueue_kernel,pcontext->kernel,0,NULL,pcontext->event_kernel) != CL_SUCCESS) {
 		for (i = 0; i < nrgns; i++) {
 			if (pcb->flags[i] & HINT_WRITE)
 				atomic_dec(&pcb->rgns[i]->writing);
@@ -1617,12 +1669,15 @@ static int gmm_launch(const char *entry, struct region **rgns, int nrgns)
 				atomic_dec(&pcb->rgns[i]->reading);
 		}
 		free(pcb);
-		gprint(ERROR, "nv_cudaLaunch failed: %s (%d)\n", \
-               cudaGetErrorString(cret), cret);
+		gprint(ERROR, "nv_cudaLaunch failed\n");
 		return -1;
 	}
-	nv_cudaStreamAddCallback(stream_issue, gmm_kernel_callback, (void *)pcb, 0);
-	// Uncomment the following expression if kernel time is to be measured
+    
+	//nv_cudaStreamAddCallback(stream_issue, gmm_kernel_callback, (void *)pcb, 0);
+    clSetEventCallback(pcontext->event_kernel, CL_COMPLETE,gmm_kernel_callback,(void*)pcb); 
+
+
+    // Uncomment the following expression if kernel time is to be measured
 	//if (nv_cudaStreamSynchronize(pcontext->stream_kernel) != cudaSuccess) {
 	//	gprint(ERROR, "stream synchronization failed in gmm_launch\n");
 	//}
@@ -1666,23 +1721,23 @@ finish:
 
 static int region_load_pta(struct region *r)
 {
-	void **pdptr = (void **)(r->pta_addr);
-	void **pend = (void **)(r->pta_addr + r->size);
+	cl_mem *pdptr = (cl_mem *)(r->pta_addr);
+	cl_mem *pend = (cl_mem*)((unsigned long)r->pta_addr + r->size);
 	unsigned long off = 0;
 	int i, ret;
     
 	gprint(DEBUG, "loading pta region %p\n", r);
     
 	while (pdptr < pend) {
-		struct region *tmp = region_lookup(pcontext, *pdptr);
+		struct region *tmp = region_lookup(pcontext, (cl_mem)*pdptr);
 		if (!tmp) {
 			gprint(WARN, "cannot find region for dptr %p\n", *pdptr);
 			off += sizeof(void *);
 			pdptr++;
 			continue;
 		}
-		*(void **)(r->swp_addr + off) = tmp->dev_addr +
-        (unsigned long)(*pdptr - tmp->swp_addr);
+		*(cl_mem*)((unsigned long)r->swp_addr + off) = (unsigned long)tmp->dev_addr +
+        (unsigned long)*pdptr - (unsigned long)tmp->swp_addr;
 		off += sizeof(void *);
 		pdptr++;
 	}
@@ -1708,14 +1763,13 @@ static int region_load_memset(struct region *r)
     
 	// Memset in kernel stream ensures correct ordering with the kernel
 	// referencing the region. So no explicit sync required.
-	if (nv_cudaMemsetAsync(r->dev_addr, r->value_memset, r->size,
-                           pcontext->stream_kernel) != cudaSuccess) {
-		gprint(ERROR, "load failed\n");
-		return -1;
-	}
+    if(ocl_clEnqueueFillBuffer(pcontext->commandQueue_kernel, r->dev_addr, &r->value_memset,sizeof(int),0,r->size,0,NULL,NULL)){
+        gprint(ERROR,"load failed\n");
+        return -1 ;
+    }
 	region_valid(r, 0);
     
-    r->flags &= ~FLAG_MEMSET;
+    r->gmm_flags &= ~FLAG_MEMSET;
     r->value_memset = 0;
     
     gprint(DEBUG, "region loaded\n");
@@ -1747,7 +1801,7 @@ static int region_load_cow(struct region *r)
 	}
     
 #ifndef GMM_CONFIG_RW
-    r->flags &= ~FLAG_COW;
+    r->gmm_flags &= ~FLAG_COW;
     r->usr_addr = NULL;
 #endif
     
@@ -1765,9 +1819,10 @@ static int region_attach(
 {
 	cl_int cret;
 	int ret;
-    
+    cl_int * errcode_CB=NULL;
+
 	gprint(DEBUG, "attaching%s region %p\n", \
-           (r->flags & FLAG_COW) ? " cow" : "", r);
+           (r->gmm_flags & FLAG_COW) ? " cow" : "", r);
     
 	if (r->state == STATE_EVICTING) {
 		gprint(ERROR, "should not see an evicting region\n");
@@ -1788,8 +1843,9 @@ static int region_attach(
     
 	// Attach if current free memory space is larger than region size.
 	if (r->size <= memsize_free()) {
-		r->dev_addr = ocl_clCreateBuffer(r->context, CL_MEM_READ_WRITE,r->size,NULL,errcode_CB)
-        if(errcode_CB!=CL_SUCCESS){
+		r->dev_addr = ocl_clCreateBuffer(pcontext->context_kernel, CL_MEM_READ_WRITE,r->size,NULL,errcode_CB);
+        gprint(DEBUG,"check few things here: free size(%lu), r->size(%lu),context(%p),errcode_CB(%d)",memsize_free(),r->size,pcontext->context_kernel,errcode_CB);
+        if(errcode_CB==CL_SUCCESS){
 			goto attach_success;
         }
 		else {
@@ -1806,14 +1862,10 @@ static int region_attach(
 		return ret;
     
 	// Try to attach again.
-	if ((cret = nv_cudaMalloc(&r->dev_addr, r->size)) != cudaSuccess) {
+    if(ocl_clCreateBuffer(pcontext->context_kernel, CL_MEM_READ_WRITE,r->size,NULL,errcode_CB)!=CL_SUCCESS){
 		r->dev_addr = NULL;
-		gprint(DEBUG, "nv_cudaMalloc failed: %s (%d)\n", \
-               cudaGetErrorString(cret), cret);
-		if (cret == cudaErrorLaunchFailure)
-			return -1;
-		else
-			return 1;
+		gprint(DEBUG, "openCL creating buffer failed\n");
+		return 1;
 	}
     
 attach_success:

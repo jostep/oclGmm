@@ -21,13 +21,12 @@ cl_int (*ocl_clEnqueueFillBuffer)(cl_command_queue, cl_mem, const void *, size_t
 cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event)=NULL;
 //cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event)=NULL;
 cl_context (*ocl_clCreateContext)(cl_context_properties *,cl_uint ,const cl_device_id *,void*, void *,cl_int *)=NULL;
-
+cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id, cl_command_queue_properties, cl_int errcode_ret)=NULL;
 cl_program (*ocl_clCreateProgramWithSource)(cl_context, cl_uint, const char**, const size_t *, cl_int *errcode_ret)=NULL;
 cl_int (*ocl_clBuildProgram)(cl_program, cl_uint, const cl_device_id*, const char *, void *,void*)=NULL;
 cl_kernel (*ocl_clCreateKernel)(cl_program ,const char *,cl_int*)=NULL;
 cl_int (*ocl_clSetKernelArg)(cl_kernel, cl_uint,size_t, const void* arg_value)=NULL;
-cl_int (*ocl_clEnqueueTask)(cl_command_queue, cl_kernel, cl_uint, cl_uint, const cl_event*, cl_event *)=NULL;
-cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id,cl_command_queue_properties, cl_int *)=NULL;
+cl_int (*ocl_clEnqueueTask)(cl_command_queue, cl_kernel, cl_uint, const cl_event*, cl_event *)=NULL;
 static int initialized = 0;
 
 // The library constructor.
@@ -52,7 +51,7 @@ void gmm_init(void)
     INTERCEPT_CL("clBuildProgram",ocl_clBuildProgram);//2
     INTERCEPT_CL("clCreateKernel",ocl_clCreateKernel);//3
     INTERCEPT_CL("clSetKernelArg",ocl_clSetKernelArg);//4
-    /INTERCEPT_CL("clEnqueueTask",ocl_clEnqueueTask);//5
+    INTERCEPT_CL("clEnqueueTask",ocl_clEnqueueTask);//5
     /*INTERCEPT_CL("clEnqueueReadBuffer",ocl_clEnqueueReadBuffer);
     */
     gprint_init();

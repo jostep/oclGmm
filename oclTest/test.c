@@ -103,18 +103,21 @@ int main(){
                 printf("kernel creating failure\n");
             }
 
+
+/*            if(clEnqueueFillBuffer(cqueue,buffer,&value,sizeof(int),0,100*sizeof(cl_int),0,NULL,NULL)!=CL_SUCCESS){
+                printf("Memseting failed\n");
+            }*/
+            if(clEnqueueWriteBuffer(cqueue,buffer,CL_TRUE,0,sizeof(int)*100,data,0,NULL,NULL)!=CL_SUCCESS){
+                printf("write buffer failed\n");
+            }
             if(oclReference(0,2)!=CL_SUCCESS){
                 printf("unable to set the arg ref\n");
             }
             if(clSetKernelArg(kernel,0,sizeof(cl_mem),&buffer)!=CL_SUCCESS){
                 printf("unable to set the arg\n");
             }
-
-            if(clEnqueueFillBuffer(cqueue,buffer,&value,sizeof(int),0,100*sizeof(cl_int),0,NULL,NULL)!=CL_SUCCESS){
-                printf("Memseting failed\n");
-            }
-            if(clEnqueueWriteBuffer(cqueue,buffer,CL_TRUE,0,sizeof(int)*100,data,0,NULL,NULL)!=CL_SUCCESS){
-                printf("write buffer failed\n");
+            if(clEnqueueTask(cqueue,kernel,0,NULL,NULL)!=CL_SUCCESS){
+                printf("kernel launch failed\n"); 
             }
             if(CL_SUCCESS!=clReleaseMemObject(buffer)){
                 printf("Buffer Deleting unsuccessful");
