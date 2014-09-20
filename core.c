@@ -1609,7 +1609,7 @@ static int gmm_launch(const char *entry, struct region **rgns, int nrgns)
 	pcb->nrgns = nrgns;
     
 	//stats_time_begin();
-	if ((cret = ocl_EnqueueTask(pcontext->commandQueue_kernel, )) != cudaSuccess) {
+	if ((cret = ocl_clEnqueueTask(pcontext->commandQueue_kernel,pcontext->kernel )) != cudaSuccess) {
 		for (i = 0; i < nrgns; i++) {
 			if (pcb->flags[i] & HINT_WRITE)
 				atomic_dec(&pcb->rgns[i]->writing);
