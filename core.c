@@ -2146,3 +2146,203 @@ fail_evict:
 	return ret;
 }
 
+
+static int gmm_dtoh_block(
+                          struct region *r,
+                          void *dst,
+                          unsigned long off,
+                          unsigned long size,
+                          int iblock,
+                          int skip,
+                          char *skipped)
+{
+	struct block *b = r->blocks + iblock;
+	int ret = 0;
+    
+    /*	GMM_DPRINT("gmm_dtoh_block: r(%p) dst(%p) off(%lu)" \
+     " size(%lu) block(%d) swp_valid(%d) dev_valid(%d)\n", \
+     r, dst, off, size, iblock, b->swp_valid, b->dev_valid);
+     */
+	if (BLOCKIDX(off) != iblock)
+		panic("dtoh_block");
+    
+	if (b->swp_valid) {
+		stats_time_begin();
+		memcpy(dst, r->swp_addr + off, size);
+		stats_time_end(&pcontext->stats, time_s2u);
+		stats_inc(&pcontext->stats, bytes_s2u, size);
+        
+		if (skipped)
+			*skipped = 0;
+		return 0;
+	}
+    
+	stats_time_begin();
+	while (!try_acquire(&b->lock)) {
+		if (skip) {
+			if (skipped)
+				*skipped = 1;
+			return 0;
+		}
+	}
+	stats_time_end(&pcontext->stats, time_sync);
+    
+	if (b->swp_valid) {
+		release(&b->lock);
+		stats_time_begin();
+		memcpy(dst, r->swp_addr + off, size);
+		stats_time_end(&pcontext->stats, time_s2u);
+		stats_inc(&pcontext->stats, bytes_s2u, size);
+	}
+	else if (!b->dev_valid) {
+		release(&b->lock);
+	}
+	else if (skip) {
+		release(&b->lock);
+		if (skipped)
+			*skipped = 1;
+		return 0;
+	}
+	else { // dev_valid == 1 && swp_valid == 0
+		// We don't need to pin the device memory because we are holding the
+		// lock of a swp_valid=0,dev_valid=1 block, which will prevent the
+		// evictor, if any, from freeing the device memory under us.
+		ret = block_sync(r, iblock);
+		release(&b->lock);
+		if (ret != 0)
+			goto finish;
+        
+		stats_time_begin();
+		memcpy(dst, r->swp_addr + off, size);
+		stats_time_end(&pcontext->stats, time_s2u);
+		stats_inc(&pcontext->stats, bytes_s2u, size);
+	}
+    
+finish:
+	if (skipped)
+		*skipped = 0;
+	return ret;
+}
+
+static int gmm_dtoh_pta(
+                        struct region *r,
+                        void *dst,
+                        const void *src,
+                        size_t count)
+{
+	unsigned long off = (unsigned long)(src - r->swp_addr);
+    
+	if (off % sizeof(void *)) {
+		gprint(ERROR, "offset(%lu) not aligned for pta-to-host memcpy\n", off);
+		return -1;
+	}
+	if (count % sizeof(void *)) {
+		gprint(ERROR, "count(%lu) not aligned for pta-to-host memcpy\n", count);
+		return -1;
+	}
+    
+	stats_time_begin();
+	memcpy(dst, r->pta_addr + off, count);
+	stats_time_end(&pcontext->stats, time_s2u);
+	stats_inc(&pcontext->stats, bytes_s2u, count);
+    
+	return 0;
+}
+
+// TODO: It is possible to achieve pipelined copying, i.e., copy a block from
+// its host swap buffer to user buffer while the next block is being fetched
+// from device memory.
+int gmm_dtoh(struct region *r, void *dst, const void *src, size_t count)
+{
+	unsigned long off = (unsigned long)(src - r->swp_addr);
+	unsigned long end = off + count, size;
+	int ifirst = BLOCKIDX(off), iblock;
+	void *d = dst;
+	char *skipped;
+	int ret = 0;
+    
+	gprint(DEBUG, "dtoh: r(%p %p %ld %d %d) dst(%p) src(%p) count(%lu)\n", \
+           r, r->swp_addr, r->size, r->flags, r->state, dst, src, count);
+    
+	if (r->flags & HINT_PTARRAY)
+		return gmm_dtoh_pta(r, dst, src, count);
+    
+	skipped = (char *)malloc(BLOCKIDX(end - 1) - ifirst + 1);
+	if (!skipped) {
+		gprint(FATAL, "malloc failed for skipped[]: %s\n", strerror(errno));
+		return -1;
+	}
+    
+	// First, copy blocks whose swp buffers contain immediate, valid data.
+	iblock = ifirst;
+	while (off < end) {
+		size = MIN(BLOCKUP(off), end) - off;
+		ret = gmm_dtoh_block(r, d, off, size, iblock, 1,
+                             skipped + iblock - ifirst);
+		if (ret != 0)
+			goto finish;
+		d += size;
+		off += size;
+		iblock++;
+	}
+    
+	// Then, copy the rest blocks.
+	off = (unsigned long)(src - r->swp_addr);
+	iblock = ifirst;
+	d = dst;
+	while (off < end) {
+		size = MIN(BLOCKUP(off), end) - off;
+		if (skipped[iblock - ifirst]) {
+			ret = gmm_dtoh_block(r, d, off, size, iblock, 0, NULL);
+			if (ret != 0)
+				goto finish;
+		}
+		d += size;
+		off += size;
+		iblock++;
+	}
+    
+finish:
+	free(skipped);
+	return ret;
+}
+
+
+
+
+cudaError_t gmm_cudaMemcpyDtoH(
+                               void *dst,
+                               const void *src,
+                               size_t count)
+{
+	struct region *r;
+    
+	if (count <= 0)
+		return cudaErrorInvalidValue;
+    
+	r = region_lookup(pcontext, src);
+	if (!r) {
+		gprint(ERROR, "cannot find region containing %p in dtoh\n", src);
+		return cudaErrorInvalidDevicePointer;
+	}
+	if (r->state == STATE_FREEING || r->state == STATE_ZOMBIE) {
+		gprint(ERROR, "region already freed\n");
+		return cudaErrorInvalidValue;
+	}
+	if (r->flags & FLAG_COW) {
+		gprint(ERROR, "dtoh: region already tagged COW\n");
+		return cudaErrorUnknown;
+	}
+	if (src + count > r->swp_addr + r->size) {
+		gprint(ERROR, "dtoh out of region boundary\n");
+		return cudaErrorInvalidValue;
+	}
+    
+	stats_time_begin();
+	if (gmm_dtoh(r, dst, src, count) < 0)
+		return cudaErrorUnknown;
+	stats_time_end(&pcontext->stats, time_dtoh);
+	stats_inc(&pcontext->stats, bytes_dtoh, count);
+    
+	return cudaSuccess;
+}
