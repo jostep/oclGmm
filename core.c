@@ -157,7 +157,6 @@ int gmm_context_init(){
 }
 
 void gmm_context_initEX(){
-    gprint(DEBUG,"check the ptrs for pcontext %p, and dma: %p ",pcontext,&pcontext->dma_htod);  
     cl_int * errcode_CQ=NULL; 
     
     /* //failed to show the diff between htod and dtoh 
@@ -185,7 +184,6 @@ void gmm_context_initEX(){
 
 void gmm_context_fini(){
 
-    gprint(DEBUG,"Check for the double empty\n");
     struct list_head *p;
     struct region *r;
     while(!list_empty(&pcontext->list_alloced)){
@@ -195,8 +193,8 @@ void gmm_context_fini(){
             list_move_tail(p,&pcontext->list_alloced);
         }
     }
+
     dma_channel_fini(&pcontext->dma_dtoh);
-    gprint(DEBUG,"clean up for dtoh has finished\n");
     dma_channel_fini(&pcontext->dma_htod);
 
     clReleaseCommandQueue(pcontext->commandQueue_kernel);
@@ -358,14 +356,14 @@ static void dma_channel_fini(struct dma_channel *chan){
     int i;
     for (i=0;i<NBUFS;i++){
         
-        gprint(DEBUG,"show me the event %p \n",chan->events[i]);
+        gprint(DEBUG,"we are cleaning the %d bufs now!\n",i);
         if(CL_SUCCESS!=clReleaseEvent(chan->events[i])){
             gprint(FATAL,"unable to release event of DMA Channal\n");
         }
-        gprint(DEBUG,"show me the buf %p \n",chan->stage_bufs[i]);
-        if(CL_SUCCESS!=ocl_clReleaseMemObject(chan->stage_bufs[i])){
+        gprint(DEBUG,"we are cleaning the stagin buf %p\n",chan->stage_bufs[i]);
+       /* if(CL_SUCCESS!=clReleaseMemObject((cl_mem)chan->stage_bufs[i])){
             gprint(FATAL,"unable to release memObj of DMA channal\n");
-        }
+        }*/
     }
 #endif 
 
@@ -679,7 +677,6 @@ static int gmm_memcpy_htod(cl_mem dst, const void * src, unsigned long size){
     struct dma_channel *chan = &pcontext->dma_htod;
     unsigned long off,delta;
     int ret=0, ilast;
-    int first=0;
     cl_int *debug=NULL;
     cl_int status;
 
@@ -690,18 +687,20 @@ static int gmm_memcpy_htod(cl_mem dst, const void * src, unsigned long size){
         if(CL_SUCCESS!=clGetEventInfo(chan->events[chan->ibuf],CL_EVENT_COMMAND_EXECUTION_STATUS,sizeof(cl_int),&status, NULL)){
             gprint(DEBUG,"unable to get the event status for htod\n");
         }
-         if(status!=CL_SUBMITTED||status!=CL_COMPLETE){
+         if(status!=CL_SUBMITTED&&status!=CL_COMPLETE){
+            debug=clWaitForEvents(1,&chan->events[chan->ibuf]);
             if(debug!=CL_SUCCESS){
                 gprint(FATAL,"sync failed in htod and the err is%d\n",debug);
                 ret=-1;
                 goto finish;
             }
+            gprint(DEBUG,"not bypassed for %d",chan->ibuf);
         }
-
-        memcpy((void *)chan->stage_bufs[chan->ibuf],src+off,delta);
-        gprint(DEBUG,"the buf here is bufs[%d] with pointer as %p",chan->ibuf,chan->stage_bufs[chan->ibuf]);
-
-        
+        gprint(DEBUG,"the src(%p) in the gmm_memcpy_htod\n",src);
+        memcpy(chan->stage_bufs[chan->ibuf],src+off,delta);
+         
+        gprint(DEBUG,"the dma stage buffer [%d] is  %p\n",chan->ibuf,chan->stage_bufs[chan->ibuf]);
+        ocl_clReleaseMemObject(chan->stage_bufs[chan->ibuf]); 
 
         if(ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,(cl_mem)((unsigned long)dst+off),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
             gprint(FATAL,"cl write buffer failed in htod\n");
@@ -717,7 +716,7 @@ static int gmm_memcpy_htod(cl_mem dst, const void * src, unsigned long size){
         ilast=chan->ibuf;
         chan->ibuf=(chan->ibuf+1)%NBUFS;
         off+=delta;
-        first++;
+        
     }
     
     if(clWaitForEvents(1,&chan->events[ilast])!=CL_SUCCESS){
@@ -873,6 +872,7 @@ static int block_sync(struct region *r, int block)
 		stats_time_end(&pcontext->stats, time_sync);
         
 		stats_time_begin();
+        gprint(DEBUG,"okay,tell me what is the swp_addr(%p), dev_addr(%p), and off(%d)\n",r->swp_addr,r->dev_addr,off);
 		ret = gmm_memcpy_htod((cl_mem)((unsigned long)r->dev_addr + off),
                 (cl_mem)((unsigned long)r->swp_addr + off), size);
 		if (ret == 0)
@@ -970,7 +970,7 @@ finish:
 
 */
 
-#if defined(GMM_CONFIG_HTOD_RADICAL)
+//#if defined(GMM_CONFIG_HTOD_RADICAL)
 // The radical version
 static int gmm_htod(
                     struct region *r,
@@ -987,7 +987,7 @@ static int gmm_htod(
 	if (r->gmm_flags & HINT_PTARRAY)
 		return gmm_htod_pta(r, dst, src, count);
     
-	off = (unsigned long)(dst - r->swp_addr);
+	off = (unsigned long)dst -(unsigned long)r->swp_addr;
 	end = off + count;
 	ifirst = BLOCKIDX(off);
 	ilast = BLOCKIDX(end - 1);
@@ -1005,8 +1005,8 @@ static int gmm_htod(
 	// or knowledge.
 	for (iblock = ifirst; iblock <= ilast; iblock++) {
 		unsigned long size = MIN(BLOCKUP(off), end) - off;
-		if ((offset % BLOCKSIZE) == 0 &&
-			(size == BLOCKSIZE || (offset + size) == r->size)) {
+		if ((off % BLOCKSIZE) == 0 &&
+			(size == BLOCKSIZE || (off + size) == r->size)) {// a change by ERCI offset->off
 			if (try_acquire(&r->blocks[iblock].lock)) {
 				r->blocks[iblock].dev_valid = 0;
 				r->blocks[iblock].swp_valid = 1;
@@ -1019,7 +1019,7 @@ static int gmm_htod(
 	// Then, copy data block by block, skipping blocks that are not available
 	// for immediate operation (very likely due to being evicted). skipped[]
 	// records whether a block was skipped.
-	off = (unsigned long)(dst - r->swp_addr);
+	off = (unsigned long)dst -(unsigned long) r->swp_addr;
 	for (iblock = ifirst; iblock <= ilast; iblock++) {
 		unsigned long size = MIN(BLOCKUP(off), end) - off;
 		ret = gmm_htod_block(r, off, s, size, iblock, 1,
@@ -1031,7 +1031,7 @@ static int gmm_htod(
 	}
     
 	// Finally, copy the rest blocks, no skipping.
-	off = (unsigned long)(dst - r->swp_addr);
+	off = (unsigned long)dst - (unsigned long)r->swp_addr;
 	s = (void *)src;
 	for (iblock = ifirst; iblock <= ilast; iblock++) {
 		unsigned long size = MIN(BLOCKUP(off), end) - off;
@@ -1048,6 +1048,8 @@ finish:
 	free(skipped);
 	return ret;
 }
+
+/*
 #else
 // The conservative version
 static int gmm_htod(
@@ -1067,7 +1069,7 @@ static int gmm_htod(
     
 	if (r->gmm_flags & HINT_PTARRAY)
 		return gmm_htod_pta(r, dst, (void *)src, count);
-    
+    gprint(DEBUG,"conservative? what the fuck\n"); 
 	off = (unsigned long)dst -(unsigned long)r->swp_addr;
 	end = off + count;
 	ifirst = BLOCKIDX(off);
@@ -1110,7 +1112,7 @@ finish:
 	return ret;
 }
 #endif
-
+*/
 
 
 
@@ -1146,7 +1148,7 @@ cl_int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_b
 
         stats_time_begin();
         if(gmm_)
-        
+            
     }
     else{*/
             if(gmm_htod(r,dst,(void *)src,count)<0)
@@ -1241,7 +1243,6 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint offset,size_t size, const voi
 	int is_dptr = 0;
 	int iref = 0;
 
-    gprint(DEBUG,"not here? what the fuck\n");
 
     if(kernel!=pcontext->kernel){
             gprint(FATAL,"invalid kernel\n");
@@ -1852,7 +1853,6 @@ static int region_attach(
 	// Attach if current free memory space is larger than region size.
 	if (r->size <= memsize_free()) {
 		r->dev_addr = ocl_clCreateBuffer(pcontext->context_kernel, CL_MEM_READ_WRITE,r->size,NULL,errcode_CB);
-        gprint(DEBUG,"check few things here: free size(%lu), r->size(%lu),context(%p),errcode_CB(%d)",memsize_free(),r->size,pcontext->context_kernel,errcode_CB);
         if(errcode_CB==CL_SUCCESS){
 			goto attach_success;
         }

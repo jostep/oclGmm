@@ -50,7 +50,6 @@ static inline void __list_del(struct list_head * prev, struct list_head * next)
 // Delete an entry from list.
 static inline void list_del(struct list_head *entry)
 {
-    gprint(DEBUG,"lets see the ptrs: previous entry addr%p and next entry addr %p\n",entry->prev,entry->next);
     if((entry->prev==NULL)&&(entry->next=NULL)){
         gprint(WARN,"deleting empty ptrs\n");
     }
