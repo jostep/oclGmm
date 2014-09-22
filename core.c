@@ -253,11 +253,10 @@ cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, v
     
     r->swp_addr=malloc(size);
     if (!r->swp_addr){
-
-        gprint(FATAL,"malloc for a swap buffer: %s\n",strerror(errno));
+        
+        gprint(FATAL,"malloc for a swap buffer: %s\n");
         free(r);
-        errcode_CB=CL_MEM_OBJECT_ALLOCATION_FAILURE;
-        return NULL;
+        return errcode_CB;
     }
 
     if (gmm_flags & HINT_PTARRAY){
@@ -298,7 +297,7 @@ cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, v
     r->state= STATE_DETACHED;
     r->flags=flags;
     r->gmm_flags=gmm_flags;
-    
+    r->dev_addr=NULL;
     list_alloced_add(pcontext, r);
     stats_inc_alloc(&pcontext->stats, size);
     
@@ -317,7 +316,7 @@ static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, in
    int i;
 #endif 
 
-   chan->commandQueue_chan=ocl_clCreateCommandQueue(ctx->context_kernel,ctx->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_DMA);//
+   chan->commandQueue_chan=ocl_clCreateCommandQueue(ctx->context_kernel,ctx->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_INIT);//
    if(errcode_INIT!=CL_SUCCESS){
         gprint(FATAL,"failed to create channel\n");
    }
@@ -327,7 +326,12 @@ static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, in
    chan->ibuf=0;
    
    for (i=0;i<NBUFS;i++){
-        chan->stage_bufs[i]=ocl_clCreateBuffer(pcontext->context_kernel,CL_MEM_ALLOC_HOST_PTR,BUFSIZE,NULL,errcode_DMA);
+        chan->stage_bufs[i]=ocl_clCreateBuffer(ctx->context_kernel,CL_MEM_READ_WRITE,BUFSIZE,NULL,errcode_DMA);
+        
+        if(i==0)
+            gprint(DEBUG,"the first block addr is %p \n",chan->stage_bufs[i]);
+
+
         if(errcode_DMA!=CL_SUCCESS){
             gprint(FATAL,"failed for staging buffer\n");
             break;
@@ -356,17 +360,16 @@ static void dma_channel_fini(struct dma_channel *chan){
     int i;
     for (i=0;i<NBUFS;i++){
         
-        gprint(DEBUG,"we are cleaning the %d bufs now!\n",i);
         if(CL_SUCCESS!=clReleaseEvent(chan->events[i])){
             gprint(FATAL,"unable to release event of DMA Channal\n");
         }
-        gprint(DEBUG,"we are cleaning the stagin buf %p\n",chan->stage_bufs[i]);
-       /* if(CL_SUCCESS!=clReleaseMemObject((cl_mem)chan->stage_bufs[i])){
+        gprint(DEBUG,"we are cleaning the stagin buf %d with addr %p\n",i,chan->stage_bufs[i]);
+       if(CL_SUCCESS!=ocl_clReleaseMemObject(chan->stage_bufs[i])){
             gprint(FATAL,"unable to release memObj of DMA channal\n");
-        }*/
+       }
+        //free((void*)chan->stage_bufs[i]);
     }
 #endif 
-
     clReleaseCommandQueue(chan->commandQueue_chan);
 
 }
@@ -672,13 +675,14 @@ static int gmm_htod_pta(
     return 0;
 }
 
-static int gmm_memcpy_htod(cl_mem dst, const void * src, unsigned long size){
+static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size){
 
     struct dma_channel *chan = &pcontext->dma_htod;
     unsigned long off,delta;
     int ret=0, ilast;
     cl_int *debug=NULL;
     cl_int status;
+    cl_int*errcode_CB=NULL;
 
     begin_dma(chan);
     off=0;
@@ -696,11 +700,19 @@ static int gmm_memcpy_htod(cl_mem dst, const void * src, unsigned long size){
             }
             gprint(DEBUG,"not bypassed for %d",chan->ibuf);
         }
-        gprint(DEBUG,"the src(%p) in the gmm_memcpy_htod\n",src);
-        memcpy(chan->stage_bufs[chan->ibuf],src+off,delta);
-         
-        gprint(DEBUG,"the dma stage buffer [%d] is  %p\n",chan->ibuf,chan->stage_bufs[chan->ibuf]);
-        ocl_clReleaseMemObject(chan->stage_bufs[chan->ibuf]); 
+        gprint(DEBUG,"the src(%p) to dst(%p) with size(%d) in the gmm_memcpy_htod\n",src,chan->stage_bufs[chan->ibuf],delta);
+        errcode_CB=ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_FALSE,off,size,(src+off),0,NULL,NULL);
+        if(errcode_CB=CL_SUCCESS){
+            gprint(DEBUG,"copy buffer failure\n");
+            if(errcode_CB==CL_INVALID_COMMAND_QUEUE)
+                gprint(DEBUG,"command queue is not valid\n");
+            else if(errcode_CB==CL_INVALID_CONTEXT)
+                gprint(DEBUG,"context is not valid\n");
+            else if(errcode_CB==CL_INVALID_MEM_OBJECT)
+                gprint(DEBUG,"command queue is not valid\n");
+            else
+                gprint(DEBUG,"else\n");
+        }
 
         if(ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,(cl_mem)((unsigned long)dst+off),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
             gprint(FATAL,"cl write buffer failed in htod\n");
@@ -872,9 +884,7 @@ static int block_sync(struct region *r, int block)
 		stats_time_end(&pcontext->stats, time_sync);
         
 		stats_time_begin();
-        gprint(DEBUG,"okay,tell me what is the swp_addr(%p), dev_addr(%p), and off(%d)\n",r->swp_addr,r->dev_addr,off);
-		ret = gmm_memcpy_htod((cl_mem)((unsigned long)r->dev_addr + off),
-                (cl_mem)((unsigned long)r->swp_addr + off), size);
+		ret = gmm_memcpy_htod((cl_mem)((unsigned long)r->dev_addr+off),r->swp_addr+off, size);
 		if (ret == 0)
 			r->blocks[block].dev_valid = 1;
 		stats_time_end(&pcontext->stats, time_s2d);
@@ -970,7 +980,7 @@ finish:
 
 */
 
-//#if defined(GMM_CONFIG_HTOD_RADICAL)
+#if defined(GMM_CONFIG_HTOD_RADICAL)
 // The radical version
 static int gmm_htod(
                     struct region *r,
@@ -1049,7 +1059,7 @@ finish:
 	return ret;
 }
 
-/*
+
 #else
 // The conservative version
 static int gmm_htod(
@@ -1069,7 +1079,6 @@ static int gmm_htod(
     
 	if (r->gmm_flags & HINT_PTARRAY)
 		return gmm_htod_pta(r, dst, (void *)src, count);
-    gprint(DEBUG,"conservative? what the fuck\n"); 
 	off = (unsigned long)dst -(unsigned long)r->swp_addr;
 	end = off + count;
 	ifirst = BLOCKIDX(off);
@@ -1099,6 +1108,7 @@ static int gmm_htod(
 	for (iblock = ifirst; iblock <= ilast; iblock++) {
 		size = MIN(BLOCKUP(off), end) - off;
 		if (skipped[iblock - ifirst]) {
+            gprint(DEBUG,"we have skipped\n");
 			ret = gmm_htod_block(r, off, s, size, iblock, 0, NULL);
 			if (ret != 0)
 				goto finish;
@@ -1112,7 +1122,7 @@ finish:
 	return ret;
 }
 #endif
-*/
+
 
 
 
@@ -1144,16 +1154,21 @@ cl_int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_b
     }
 
     stats_time_begin();
-    /*if(cow){
+   /*if(cow){
 
         stats_time_begin();
-        if(gmm_)
+        if(gmm_htod_cow(r,dst,src,count)<0){
+            gprint(FATAL,"reasons unknown\n");
+            return CL_INVALID_VALUE;
+        }
+        stats_time_end(&pcontext->stats,time_htod_cow);
+        stats_inc(&pcontext->stats,bytes_htod_cow, count);
             
     }
     else{*/
-            if(gmm_htod(r,dst,(void *)src,count)<0)
-            return CL_INVALID_MEM_OBJECT;
-    //}
+            if(gmm_htod(r,dst,src,count)<0)
+                return CL_INVALID_MEM_OBJECT;
+    // }
     stats_time_end(&pcontext->stats,time_htod);
     stats_inc(&pcontext->stats,bytes_htod, count);
     
@@ -1853,6 +1868,7 @@ static int region_attach(
 	// Attach if current free memory space is larger than region size.
 	if (r->size <= memsize_free()) {
 		r->dev_addr = ocl_clCreateBuffer(pcontext->context_kernel, CL_MEM_READ_WRITE,r->size,NULL,errcode_CB);
+        //gprint(DEBUG,"what is in the dev_addr(%p)\n",r->dev_addr);
         if(errcode_CB==CL_SUCCESS){
 			goto attach_success;
         }
@@ -1870,7 +1886,8 @@ static int region_attach(
 		return ret;
     
 	// Try to attach again.
-    if(ocl_clCreateBuffer(pcontext->context_kernel, CL_MEM_READ_WRITE,r->size,NULL,errcode_CB)!=CL_SUCCESS){
+    r->dev_addr=ocl_clCreateBuffer(pcontext->context_kernel, CL_MEM_READ_WRITE,r->size,NULL,errcode_CB);
+    if(errcode_CB!=CL_SUCCESS){
 		r->dev_addr = NULL;
 		gprint(DEBUG, "openCL creating buffer failed\n");
 		return 1;
@@ -1949,7 +1966,7 @@ long region_evict(struct region *r)
 			if (!r->blocks[i].swp_valid) {
 				ret = block_sync(r, i);
 			}
-			release(&r->blocks[i].lock);
+		release(&r->blocks[i].lock);
 			if (ret != 0)
 				goto finish;	// this is problematic if r is freeing
 			skipped[i] = 0;

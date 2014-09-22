@@ -27,7 +27,7 @@ int main(){
     cl_ulong localMem;
     char devName[1024];
     int i=0; 
-    int data[100]={5};
+    int data[10000]={5};
     int value=44;
     char *nvidia="NVIDIA Corporation";
     int flag=FALSE;
@@ -85,7 +85,7 @@ int main(){
                 printf("Context Creating Success!\n");
             }
            cqueue=clCreateCommandQueue(context,devId[0],CL_QUEUE_PROFILING_ENABLE,errcode_CQ); 
-           buffer=clCreateBuffer(context,CL_MEM_READ_WRITE,100*sizeof(cl_int),NULL,errcode_CB);
+           buffer=clCreateBuffer(context,CL_MEM_READ_WRITE,10000*sizeof(cl_int),NULL,errcode_CB);
             if(errcode_CB!=CL_SUCCESS){
                 printf("Buffer Creating failed!  %p\n",errcode_CB);
             }
@@ -107,7 +107,7 @@ int main(){
 /*            if(clEnqueueFillBuffer(cqueue,buffer,&value,sizeof(int),0,100*sizeof(cl_int),0,NULL,NULL)!=CL_SUCCESS){
                 printf("Memseting failed\n");
             }*/
-            if(clEnqueueWriteBuffer(cqueue,buffer,CL_TRUE,0,sizeof(int)*100,data,0,NULL,NULL)!=CL_SUCCESS){
+            if(clEnqueueWriteBuffer(cqueue,buffer,CL_TRUE,0,sizeof(int)*10000,data,0,NULL,NULL)!=CL_SUCCESS){
                 printf("write buffer failed\n");
             }
             if(oclReference(0,2)!=CL_SUCCESS){

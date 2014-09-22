@@ -19,7 +19,7 @@ cl_mem (*ocl_clCreateBuffer)(cl_context, cl_mem_flags, size_t, void*, cl_int)= N
 cl_int (*ocl_clReleaseMemObject)(cl_mem)= NULL;
 cl_int (*ocl_clEnqueueFillBuffer)(cl_command_queue, cl_mem, const void *, size_t, size_t,size_t, cl_uint, const cl_event, cl_event)=NULL;
 cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event)=NULL;
-//cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event)=NULL;
+cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event)=NULL;
 cl_context (*ocl_clCreateContext)(cl_context_properties *,cl_uint ,const cl_device_id *,void*, void *,cl_int *)=NULL;
 cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id, cl_command_queue_properties, cl_int errcode_ret)=NULL;
 cl_program (*ocl_clCreateProgramWithSource)(cl_context, cl_uint, const char**, const size_t *, cl_int *errcode_ret)=NULL;
@@ -52,8 +52,8 @@ void gmm_init(void)
     INTERCEPT_CL("clCreateKernel",ocl_clCreateKernel);//3
     INTERCEPT_CL("clSetKernelArg",ocl_clSetKernelArg);//4
     INTERCEPT_CL("clEnqueueTask",ocl_clEnqueueTask);//5
-    /*INTERCEPT_CL("clEnqueueReadBuffer",ocl_clEnqueueReadBuffer);
-    */
+    INTERCEPT_CL("clEnqueueReadBuffer",ocl_clEnqueueReadBuffer);
+    
     gprint_init();
     
 
@@ -163,7 +163,9 @@ GMM_EXPORT
 cl_int clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, 
         size_t offset, size_t cb, const void * ptr, cl_uint num_events_in_wait_list, 
         const cl_event *events_wait_list, cl_event *event){
-
+/*#ifdef GMM_CONFIG_COW
+    int cow=1;
+#endif*/
     if(initialized){
         return gmm_clEnqueueWriteBuffer(command_queue, buffer, blocking_write, offset, cb, ptr, num_events_in_wait_list, events_wait_list,event);
     }
@@ -173,18 +175,17 @@ cl_int clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bo
 }
 
 
-/*
+
 GMM_EXPORT
 cl_int clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, size_t offset, size_t cb, const void * ptr, cl_uint num_events_in_wait_list, const cl_event *events_wait_list, cl_event *event){
 
     if(initialized){
         return ocl_clEnqueueReadBuffer(command_queue, buffer, blocking_read, offset, cb, ptr, num_events_in_wait_list, events_wait_list,event);
     }
-    else 
+    else{ 
         return ocl_clEnqueueReadBuffer(command_queue, buffer, blocking_read, offset, cb, ptr, num_events_in_wait_list, events_wait_list, event);
-
+    }
 }
-*/
 
 
 GMM_EXPORT
