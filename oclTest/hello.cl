@@ -1,17 +1,8 @@
-__kernel void hello(__global char * string){
-    string[0]='H';
-    string[1]='e';
-    string[2]='l';
-    string[3]='l';
-    string[4]='o';
-    string[5]=' ';
-    string[6]='W';
-    string[7]='o';
-    string[8]='r';
-    string[9]='l';
-    string[10]='d';
-    string[11]='!';
-    string[12]='\n';
-
-
+__kernel void square(__global int* input, __global int*output){
+    
+    int i=get_global_id(0);
+    if(i<10){
+        output[i]=input[i]*input[i];
+//        printf("the value of input[%d] %d and output[%d]%d\n",i,input[i],i,ouput[i]);
+    }
 }

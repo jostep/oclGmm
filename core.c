@@ -571,7 +571,7 @@ finish:
     return ret;
 } 
 
-static int gmm_memcpy_dtoh(cl_mem dst, cl_mem src, unsigned long size)
+static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size)
 {
 	struct dma_channel *chan = &pcontext->dma_dtoh;
 	unsigned long	off_dtos,	// Device to Stage buffer
@@ -586,9 +586,11 @@ static int gmm_memcpy_dtoh(cl_mem dst, cl_mem src, unsigned long size)
 	off_dtos = 0;
 	while (off_dtos < size && off_dtos < NBUFS * BUFSIZE) {
 		delta = MIN(off_dtos + BUFSIZE, size) - off_dtos;
-		if(clEnqueueReadBuffer(chan->commandQueue_chan, (cl_mem)((unsigned long)src+off_dtos),CL_FALSE,0,
-                        delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
-			gprint(FATAL,"Read Buffer Async failed in dtoh\n");
+		/*if(ocl_clEnqueueReadBuffer(chan->commandQueue_chan, (cl_mem)((unsigned long)src+off_dtos),CL_FALSE,0,
+                        delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){*/
+        if(clEnqueueCopyBuffer(chan->commandQueue_chan,src,chan->stage_bufs[chan->ibuf],off_dtos,0,delta,0,NULL,NULL)!=CL_SUCCESS){
+        
+			gprint(FATAL,"Copy Buffer failed in dtoh\n");
 			ret = -1;
 			goto finish;
 		}
@@ -615,12 +617,17 @@ static int gmm_memcpy_dtoh(cl_mem dst, cl_mem src, unsigned long size)
 			ret = -1;
 			goto finish;
 		}
-		memcpy((void *)((unsigned long)dst + off_stoh), chan->stage_bufs[chan->ibuf], delta);
+		//memcpy((void *)((unsigned long)dst + off_stoh), chan->stage_bufs[chan->ibuf], delta);
+        if(CL_SUCCESS!=ocl_clEnqueueReadBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_TRUE,0,delta,(void*)(unsigned long)dst+off_stoh,0,NULL,NULL)){
+            gprint(DEBUG,"cannot copy to dst \n");
+            ret=-1;
+            goto finish;
+        }
 		off_stoh += delta;
         
 		if (off_dtos < size) {
 			delta = MIN(off_dtos + BUFSIZE, size) - off_dtos;
-		    if(clEnqueueReadBuffer(chan->commandQueue_chan, 
+		    if(ocl_clEnqueueReadBuffer(chan->commandQueue_chan, 
                         (cl_mem)((unsigned long)src+off_dtos),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
 				gprint(FATAL, "openCL memcpy Async failed in dtoh\n");
 				ret = -1;
@@ -865,7 +872,7 @@ static int block_sync(struct region *r, int block)
 	size = MIN(off + BLOCKSIZE, r->size) - off;
 	if (dvalid && !svalid) {
 		stats_time_begin();
-		ret = gmm_memcpy_dtoh((cl_mem)((unsigned long)r->swp_addr + off),
+		ret = gmm_memcpy_dtoh((void*)((unsigned long)r->swp_addr + off),
                 (cl_mem)((unsigned long)r->dev_addr + off), size);
 		if (ret == 0)
 			r->blocks[block].swp_valid = 1;
@@ -2246,7 +2253,7 @@ static int gmm_dtoh_pta(
 // TODO: It is possible to achieve pipelined copying, i.e., copy a block from
 // its host swap buffer to user buffer while the next block is being fetched
 // from device memory.
-int gmm_dtoh(struct region *r, void *dst, const void *src, size_t count)
+int gmm_dtoh(struct region *r, void *dst, const cl_mem src, size_t count)
 {
 	unsigned long off = (unsigned long)src - (unsigned long)r->swp_addr;
 	unsigned long end = off + count, size;
@@ -2281,7 +2288,7 @@ int gmm_dtoh(struct region *r, void *dst, const void *src, size_t count)
 	}
     
 	// Then, copy the rest blocks.
-	off = (unsigned long)(src - r->swp_addr);
+	off = (unsigned long)src -(unsigned long)r->swp_addr;
 	iblock = ifirst;
 	d = dst;
 	while (off < end) {

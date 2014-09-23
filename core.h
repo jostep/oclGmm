@@ -106,7 +106,7 @@ struct dma_channel {
 	struct spinlock lock;
     cl_command_queue commandQueue_chan;
 	int ibuf;					// The next staging buffer to be used
-	void* stage_bufs[NBUFS];	// Host-pinned staging buffers
+	cl_mem stage_bufs[NBUFS];	// Host-pinned staging buffers
 	cl_event events[NBUFS];	// Events for syncing staging buffers
 };
 
