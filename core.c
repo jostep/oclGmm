@@ -34,7 +34,7 @@ extern cl_int (*ocl_clEnqueueFillBuffer)(cl_command_queue, cl_mem,const void * ,
 void gmm_context_initEX();
 static int gmm_memset(struct region *r, cl_mem buffer, int value, size_t count);
 extern cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t, const void* , cl_uint, const cl_event *, cl_event *);
-//extern cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t, const void* , cl_uint, const cl_event *, cl_event *);
+extern cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t, const void* , cl_uint, const cl_event *, cl_event *);
 extern cl_int (*ocl_clBuildProgram)(cl_program program,cl_uint num_devices, const cl_device_id *devices_list,const char *options,void(*pfn_notify)(cl_program, void* user_data),void * user_data);
 extern cl_program (*ocl_clCreateProgramWithSource)(cl_context context, cl_uint count, const char**strings, const size_t * lengths, cl_int *errcode_ret);
 extern cl_kernel(*ocl_clCreateKernel)(cl_program, const char *, cl_int*);
@@ -328,10 +328,6 @@ static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, in
    for (i=0;i<NBUFS;i++){
         chan->stage_bufs[i]=ocl_clCreateBuffer(ctx->context_kernel,CL_MEM_READ_WRITE,BUFSIZE,NULL,errcode_DMA);
         
-        if(i==0)
-            gprint(DEBUG,"the first block addr is %p \n",chan->stage_bufs[i]);
-
-
         if(errcode_DMA!=CL_SUCCESS){
             gprint(FATAL,"failed for staging buffer\n");
             break;
@@ -363,11 +359,9 @@ static void dma_channel_fini(struct dma_channel *chan){
         if(CL_SUCCESS!=clReleaseEvent(chan->events[i])){
             gprint(FATAL,"unable to release event of DMA Channal\n");
         }
-        gprint(DEBUG,"we are cleaning the stagin buf %d with addr %p\n",i,chan->stage_bufs[i]);
        if(CL_SUCCESS!=ocl_clReleaseMemObject(chan->stage_bufs[i])){
             gprint(FATAL,"unable to release memObj of DMA channal\n");
        }
-        //free((void*)chan->stage_bufs[i]);
     }
 #endif 
     clReleaseCommandQueue(chan->commandQueue_chan);
@@ -700,9 +694,9 @@ static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size){
             }
             gprint(DEBUG,"not bypassed for %d",chan->ibuf);
         }
-        gprint(DEBUG,"the src(%p) to dst(%p) with size(%d) in the gmm_memcpy_htod\n",src,chan->stage_bufs[chan->ibuf],delta);
+        /*gprint(DEBUG,"the src(%p) to dst(%p) with size(%d) in the gmm_memcpy_htod\n",src,chan->stage_bufs[chan->ibuf],delta);*/
         errcode_CB=ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_FALSE,off,size,(src+off),0,NULL,NULL);
-        if(errcode_CB=CL_SUCCESS){
+        if(errcode_CB!=CL_SUCCESS){
             gprint(DEBUG,"copy buffer failure\n");
             if(errcode_CB==CL_INVALID_COMMAND_QUEUE)
                 gprint(DEBUG,"command queue is not valid\n");
@@ -2254,7 +2248,7 @@ static int gmm_dtoh_pta(
 // from device memory.
 int gmm_dtoh(struct region *r, void *dst, const void *src, size_t count)
 {
-	unsigned long off = (unsigned long)(src - r->swp_addr);
+	unsigned long off = (unsigned long)src - (unsigned long)r->swp_addr;
 	unsigned long end = off + count, size;
 	int ifirst = BLOCKIDX(off), iblock;
 	void *d = dst;
@@ -2262,7 +2256,7 @@ int gmm_dtoh(struct region *r, void *dst, const void *src, size_t count)
 	int ret = 0;
     
 	gprint(DEBUG, "dtoh: r(%p %p %ld %d %d) dst(%p) src(%p) count(%lu)\n", \
-           r, r->swp_addr, r->size, r->flags, r->state, dst, src, count);
+           r, r->swp_addr, r->size, r->gmm_flags, r->state, dst, src, count);
     
 	if (r->flags & HINT_PTARRAY)
 		return gmm_dtoh_pta(r, dst, src, count);
@@ -2310,39 +2304,36 @@ finish:
 
 
 
-cudaError_t gmm_cudaMemcpyDtoH(
-                               void *dst,
-                               const void *src,
-                               size_t count)
-{
+cl_int gmm_clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem src, cl_bool blocking, size_t offset,size_t count, void * dst, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event*event){
+
 	struct region *r;
     
 	if (count <= 0)
-		return cudaErrorInvalidValue;
+		return CL_INVALID_VALUE;
     
 	r = region_lookup(pcontext, src);
 	if (!r) {
 		gprint(ERROR, "cannot find region containing %p in dtoh\n", src);
-		return cudaErrorInvalidDevicePointer;
+		return CL_INVALID_MEM_OBJECT;
 	}
 	if (r->state == STATE_FREEING || r->state == STATE_ZOMBIE) {
 		gprint(ERROR, "region already freed\n");
-		return cudaErrorInvalidValue;
+		return CL_INVALID_VALUE;
 	}
-	if (r->flags & FLAG_COW) {
+	if (r->gmm_flags & FLAG_COW) {
 		gprint(ERROR, "dtoh: region already tagged COW\n");
-		return cudaErrorUnknown;
+		return CL_INVALID_VALUE;
 	}
-	if (src + count > r->swp_addr + r->size) {
+	if ((unsigned long)src + count > r->swp_addr + r->size) {
 		gprint(ERROR, "dtoh out of region boundary\n");
-		return cudaErrorInvalidValue;
+		return CL_INVALID_VALUE;
 	}
     
 	stats_time_begin();
 	if (gmm_dtoh(r, dst, src, count) < 0)
-		return cudaErrorUnknown;
+	    return CL_INVALID_VALUE;
 	stats_time_end(&pcontext->stats, time_dtoh);
 	stats_inc(&pcontext->stats, bytes_dtoh, count);
     
-	return cudaSuccess;
+	return CL_SUCCESS;
 }

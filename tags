@@ -5,12 +5,12 @@
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 .DEFAULT_GOAL	Makefile	/^.DEFAULT_GOAL := all$/;"	m
-ALIGNUP	core.h	154;"	d
-BLOCKIDX	core.h	151;"	d
-BLOCKMASK	core.h	147;"	d
-BLOCKSHIFT	core.h	146;"	d
-BLOCKSIZE	core.h	145;"	d
-BLOCKUP	core.h	152;"	d
+ALIGNUP	core.h	155;"	d
+BLOCKIDX	core.h	152;"	d
+BLOCKMASK	core.h	148;"	d
+BLOCKSHIFT	core.h	147;"	d
+BLOCKSIZE	core.h	146;"	d
+BLOCKUP	core.h	153;"	d
 BUFSIZE	core.h	102;"	d
 CC	Makefile	/^CC := gcc$/;"	m
 CFLAGS	Makefile	/^CFLAGS := -g -Wall -pthread -fPIC -fvisibility=hidden \\$/;"	m
@@ -51,20 +51,20 @@ INTERCEPT_CL	interfaces.h	33;"	d
 LDFLAGS	Makefile	/^LDFLAGS := -shared -pthread -ldl -fPIC -OpenCL$/;"	m
 LIBGMM	Makefile	/^LIBGMM = libgmm.so$/;"	m
 LMAX	core.c	/^long LMAX(long a, long b)$/;"	f
-LOWER_PAGE	core.h	141;"	d
+LOWER_PAGE	core.h	142;"	d
 MAX_SOURCE_SIZE	oclTest/test.c	12;"	d	file:
 MEM_SIZE	oclTest/test.c	11;"	d	file:
-MIN	core.h	143;"	d
+MIN	core.h	144;"	d
 MSG_REP_ACK	protocol.h	/^	MSG_REP_ACK,$/;"	e	enum:msgtype
 MSG_REQ_EVICT	protocol.h	/^	MSG_REQ_EVICT,$/;"	e	enum:msgtype
 NBUFS	core.h	101;"	d
 NCLIENTS	protocol.h	12;"	d
-NRBLOCKS	core.h	150;"	d
+NRBLOCKS	core.h	151;"	d
 NREFS	core.h	66;"	d
 OBJS	Makefile	/^OBJS = $(SRCS:.c=.o)$/;"	m
-OFFSETOF	list.h	91;"	d
+OFFSETOF	list.h	90;"	d
 OPENCL_PATH	interfaces.h	16;"	d
-PAGEMASK	core.h	139;"	d
+PAGEMASK	core.h	140;"	d
 PRINT_LEVEL	gmm.mk	/^PRINT_LEVEL = 6$/;"	m
 PRINT_LEVELS	common.h	15;"	d
 PRIO_DEFAULT	hint.h	28;"	d
@@ -81,7 +81,7 @@ TREAT_ERROR	interfaces.h	18;"	d
 TRUE	oclTest/test.c	10;"	d	file:
 TRY_ACQUIRE_TIMES	spinlock.h	42;"	d
 TVAL	stats.h	52;"	d
-UPPER_PAGE	core.h	140;"	d
+UPPER_PAGE	core.h	141;"	d
 USE_PRINT_BUFFER	gmm.mk	/^USE_PRINT_BUFFER = 0$/;"	m
 WARN	common.h	12;"	d
 _GMM_ATOMIC_H_	atomic.h	2;"	d
@@ -146,8 +146,10 @@ clCreateContext	interfaces.c	/^cl_context clCreateContext(const cl_context_prope
 clCreateKernel	interfaces.c	/^cl_kernel clCreateKernel(cl_program program, const char *kernel_name,cl_int *errcode_ret){$/;"	f
 clCreateProgramWithSource	interfaces.c	/^cl_program clCreateProgramWithSource(cl_context context, cl_uint count, const char** strings, const size_t *lengths, cl_int *errcode_ret){$/;"	f
 clEnqueueFillBuffer	interfaces.c	/^cl_int clEnqueueFillBuffer(cl_command_queue command_queue, cl_mem buffer, const void *pattern, size_t pattern_size, size_t offset,size_t size, cl_uint num_events_in_wait_list,const cl_event *event_wait_list, cl_event * event){$/;"	f
+clEnqueueReadBuffer	interfaces.c	/^cl_int clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, size_t offset, size_t cb, const void * ptr, cl_uint num_events_in_wait_list, const cl_event *events_wait_list, cl_event *event){$/;"	f
 clEnqueueTask	interfaces.c	/^cl_int clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel, cl_uint num_events, const cl_event * events_wait_list, cl_event* event){$/;"	f
 clEnqueueWriteBuffer	interfaces.c	/^cl_int clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, $/;"	f
+clReference	interfaces.c	/^cl_int clReference(int which_arg, int flags){$/;"	f
 clReleaseMemObject	interfaces.c	/^cl_int clReleaseMemObject(cl_mem memObj){$/;"	f
 clSetKernelArg	interfaces.c	/^cl_int clSetKernelArg(cl_kernel kernel, cl_uint arg_index,size_t arg_size, const void* arg_value){$/;"	f
 client	core.h	/^	int client;				\/\/ for a remote victim$/;"	m	struct:victim
@@ -174,12 +176,13 @@ dma_channel_fini	core.c	/^static void dma_channel_fini(struct dma_channel *chan)
 dma_channel_init	core.c	/^static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, int htod){$/;"	f	file:
 dma_dtoh	core.h	/^	struct dma_channel dma_dtoh;		\/\/ DtoH DMA channel$/;"	m	struct:gmm_context	typeref:struct:gmm_context::dma_channel
 dma_htod	core.h	/^	struct dma_channel dma_htod;		\/\/ HtoD DMA channel$/;"	m	struct:gmm_context	typeref:struct:gmm_context::dma_channel
-dptr	core.h	/^	void *dptr;				\/\/ the actual device memory address$/;"	m	struct:dptr_arg
+dptr	core.h	/^	cl_mem  dptr;				\/\/ the actual device memory address$/;"	m	struct:dptr_arg
 dptr_arg	core.h	/^struct dptr_arg {$/;"	s
 end_dma	core.c	/^static void end_dma(struct dma_channel *chan){$/;"	f	file:
 entry	core.h	/^	struct list_head entry;$/;"	m	struct:victim	typeref:struct:victim::list_head
 entry_alloced	core.h	/^	struct list_head entry_alloced;		\/\/ linked to the list of allocated$/;"	m	struct:region	typeref:struct:region::list_head
 entry_attached	core.h	/^	struct list_head entry_attached;	\/\/ linked to the list of attached$/;"	m	struct:region	typeref:struct:region::list_head
+event_kernel	core.h	/^    cl_event event_kernel;$/;"	m	struct:gmm_context
 events	core.h	/^	cl_event events[NBUFS];	\/\/ Events for syncing staging buffers$/;"	m	struct:dma_channel
 flags	core.h	/^	int flags;				\/\/ RW hints$/;"	m	struct:dptr_arg
 flags	core.h	/^	int flags;$/;"	m	struct:rwhint
@@ -196,7 +199,8 @@ gmm_clCreateContext	core.c	/^cl_context gmm_clCreateContext(cl_context_propertie
 gmm_clCreateKernel	core.c	/^cl_kernel gmm_clCreateKernel(cl_program program, const char* kernel_name, cl_int* errcode_ret){$/;"	f
 gmm_clCreateProgramWithSource	core.c	/^cl_program gmm_clCreateProgramWithSource(cl_context context, cl_uint count, const char**strings, const size_t * lengths, cl_int *errcode_ret){$/;"	f
 gmm_clEnqueueFillBuffer	core.c	/^cl_int gmm_clEnqueueFillBuffer(cl_command_queue command_queue, cl_mem  buffer, int value, size_t pattern_size, size_t offset,size_t size, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){$/;"	f
-gmm_clEnqueueTask	core.c	/^cl_int gmm_clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel,cl_uint num_events_wait_list, const cl_event* event_wait_list, cl_event *event ){$/;"	f
+gmm_clEnqueueReadBuffer	core.c	/^cl_int gmm_clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem src, cl_bool blocking, size_t offset,size_t count, void * dst, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event*event){$/;"	f
+gmm_clEnqueueTask	core.c	/^cl_int gmm_clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel, cl_uint num_events_in_wait_list, const cl_event * event_in_wait_list, cl_event *event)$/;"	f
 gmm_clEnqueueWriteBuffer	core.c	/^cl_int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_bool blocking_write, size_t offset, size_t count, const void *src, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){$/;"	f
 gmm_clReleaseMemObject	core.c	/^cl_int gmm_clReleaseMemObject(cl_mem memObjPtr){$/;"	f
 gmm_clSetKernelArg	core.c	/^cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint offset,size_t size, const void* arg){$/;"	f
@@ -205,7 +209,9 @@ gmm_context	core.h	/^struct gmm_context {$/;"	s
 gmm_context_fini	core.c	/^void gmm_context_fini(){$/;"	f
 gmm_context_init	core.c	/^int gmm_context_init(){$/;"	f
 gmm_context_initEX	core.c	/^void gmm_context_initEX(){$/;"	f
-gmm_cudaLaunch	core.c	/^cudaError_t gmm_cudaLaunch(const char *entry)$/;"	f
+gmm_dtoh	core.c	/^int gmm_dtoh(struct region *r, void *dst, const void *src, size_t count)$/;"	f
+gmm_dtoh_block	core.c	/^static int gmm_dtoh_block($/;"	f	file:
+gmm_dtoh_pta	core.c	/^static int gmm_dtoh_pta($/;"	f	file:
 gmm_dump_dptr	debug.c	/^void gmm_dump_dptr(const char *filepath, const void *dptr, const size_t size)$/;"	f
 gmm_dump_region	debug.c	/^void gmm_dump_region($/;"	f
 gmm_evict	core.c	/^static int gmm_evict(long size_needed, struct region **excls, int nexcl)$/;"	f	file:
@@ -217,10 +223,11 @@ gmm_htod	core.c	/^static int gmm_htod($/;"	f	file:
 gmm_htod_block	core.c	/^static int gmm_htod_block($/;"	f	file:
 gmm_htod_pta	core.c	/^static int gmm_htod_pta($/;"	f	file:
 gmm_init	interfaces.c	/^void gmm_init(void)$/;"	f
-gmm_launch	core.c	/^static int gmm_launch(const char *entry, struct region **rgns, int nrgns)$/;"	f	file:
+gmm_kernel_callback	core.c	/^void CL_CALLBACK gmm_kernel_callback(cl_event event, cl_int status, void *data){$/;"	f
+gmm_launch	core.c	/^static int gmm_launch(struct region **rgns, int nrgns)$/;"	f	file:
 gmm_load	core.c	/^static int gmm_load(struct region **rgns, int nrgns)$/;"	f	file:
 gmm_memcpy_dtoh	core.c	/^static int gmm_memcpy_dtoh(cl_mem dst, cl_mem src, unsigned long size)$/;"	f	file:
-gmm_memcpy_htod	core.c	/^static int gmm_memcpy_htod(cl_mem dst, const void * src, unsigned long size){$/;"	f	file:
+gmm_memcpy_htod	core.c	/^static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size){$/;"	f	file:
 gmm_memset	core.c	/^static int gmm_memset(struct region *r, cl_mem buffer,int value, size_t count){$/;"	f	file:
 gmm_memset_pta	core.c	/^static int gmm_memset_pta(struct region * r, cl_mem dst, int value, size_t count){$/;"	f	file:
 gmm_print_dptr	debug.c	/^void gmm_print_dptr(const void *dptr)$/;"	f
@@ -273,9 +280,9 @@ list_attached_del	core.c	/^static void list_attached_del(struct gmm_context *ctx
 list_attached_mov	core.c	/^static void list_attached_mov(struct gmm_context *ctx, struct region *r)$/;"	f	file:
 list_del	list.h	/^static inline void list_del(struct list_head *entry)$/;"	f
 list_empty	list.h	/^static inline int list_empty(const struct list_head *head)$/;"	f
-list_entry	list.h	94;"	d
-list_for_each	list.h	78;"	d
-list_for_each_prev	list.h	82;"	d
+list_entry	list.h	93;"	d
+list_for_each	list.h	77;"	d
+list_for_each_prev	list.h	81;"	d
 list_head	list.h	/^struct list_head {$/;"	s
 list_move	list.h	/^static inline void list_move(struct list_head *list, struct list_head *head)$/;"	f
 list_move_tail	list.h	/^static inline void list_move_tail($/;"	f
@@ -313,16 +320,16 @@ ndptr_arg	core.h	/^struct ndptr_arg {$/;"	s
 next	list.h	/^	struct list_head *next;$/;"	m	struct:list_head	typeref:struct:list_head::list_head
 nrefs	interfaces.c	/^int nrefs=0;$/;"	v
 nrgns	core.h	/^	int nrgns;					\/\/ Number of regions referenced$/;"	m	struct:kcb
-oclReference	interfaces.c	/^cl_int oclReference(int which_arg, int flags){$/;"	f
 ocl_clBuildProgram	interfaces.c	/^cl_int (*ocl_clBuildProgram)(cl_program, cl_uint, const cl_device_id*, const char *, void *,void*)=NULL;$/;"	v
 ocl_clCreateBuffer	interfaces.c	/^cl_mem (*ocl_clCreateBuffer)(cl_context, cl_mem_flags, size_t, void*, cl_int)= NULL;$/;"	v
-ocl_clCreateCommandQueue	interfaces.c	/^cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id,cl_command_queue_properties, cl_int *)=NULL;$/;"	v
+ocl_clCreateCommandQueue	interfaces.c	/^cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id, cl_command_queue_properties, cl_int errcode_ret)=NULL;$/;"	v
 ocl_clCreateContext	interfaces.c	/^cl_context (*ocl_clCreateContext)(cl_context_properties *,cl_uint ,const cl_device_id *,void*, void *,cl_int *)=NULL;$/;"	v
 ocl_clCreateKernel	interfaces.c	/^cl_kernel (*ocl_clCreateKernel)(cl_program ,const char *,cl_int*)=NULL;$/;"	v
 ocl_clCreateProgramWithSource	interfaces.c	/^cl_program (*ocl_clCreateProgramWithSource)(cl_context, cl_uint, const char**, const size_t *, cl_int *errcode_ret)=NULL;$/;"	v
 ocl_clEnqueueFillBuffer	interfaces.c	/^cl_int (*ocl_clEnqueueFillBuffer)(cl_command_queue, cl_mem, const void *, size_t, size_t,size_t, cl_uint, const cl_event, cl_event)=NULL;$/;"	v
-ocl_clEnqueueTask	interfaces.c	/^cl_int (*ocl_clEnqueueTask)(cl_command_queue, cl_kernel, cl_uint, cl_uint, const cl_event*, cl_event *)=NULL;$/;"	v
-ocl_clEnqueueWriteBuffer	interfaces.c	/^cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event)=NULL;$/;"	v
+ocl_clEnqueueReadBuffer	interfaces.c	/^cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event*)=NULL;$/;"	v
+ocl_clEnqueueTask	interfaces.c	/^cl_int (*ocl_clEnqueueTask)(cl_command_queue, cl_kernel, cl_uint, const cl_event*, cl_event *)=NULL;$/;"	v
+ocl_clEnqueueWriteBuffer	interfaces.c	/^cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event*)=NULL;$/;"	v
 ocl_clReleaseMemObject	interfaces.c	/^cl_int (*ocl_clReleaseMemObject)(cl_mem)= NULL;$/;"	v
 ocl_clSetKernelArg	interfaces.c	/^cl_int (*ocl_clSetKernelArg)(cl_kernel, cl_uint,size_t, const void* arg_value)=NULL;$/;"	v
 off	core.h	/^	unsigned long off;		\/\/ device pointer offset in the region$/;"	m	struct:dptr_arg
@@ -335,7 +342,7 @@ pinned	protocol.h	/^	int pinned;$/;"	m	struct:gmm_client
 platform	core.h	/^    cl_platform_id *platform;$/;"	m	struct:gmm_context
 prev	list.h	/^	struct list_head *prev;$/;"	m	struct:list_head	typeref:struct:list_head::list_head
 program_kernel	core.h	/^    cl_program program_kernel;$/;"	m	struct:gmm_context
-pta_addr	core.h	/^	cl_mem pta_addr;			\/\/ dptr array address$/;"	m	struct:region
+pta_addr	core.h	/^	void* pta_addr;			\/\/ dptr array address$/;"	m	struct:region
 r	core.h	/^	struct region *r;		\/\/ for a local victim$/;"	m	struct:victim	typeref:struct:victim::region
 r	core.h	/^	struct region *r;		\/\/ the region this argument points to$/;"	m	struct:dptr_arg	typeref:struct:dptr_arg::region
 reading	core.h	/^	atomic_t reading;		\/\/ being read by how many kernels$/;"	m	struct:region
@@ -350,7 +357,7 @@ region_load_memset	core.c	/^static int region_load_memset(struct region *r)$/;"	
 region_load_pta	core.c	/^static int region_load_pta(struct region *r)$/;"	f	file:
 region_lookup	core.c	/^struct region * region_lookup(struct gmm_context *ctx, const cl_mem ptr){$/;"	f
 region_pin	core.c	/^static inline void region_pin(struct region *r)$/;"	f	file:
-region_pinned	core.h	158;"	d
+region_pinned	core.h	159;"	d
 region_state	core.h	/^typedef enum region_state {$/;"	g
 region_state_t	core.h	/^} region_state_t;$/;"	t	typeref:enum:region_state
 region_unpin	core.c	/^static inline void region_unpin(struct region *r)$/;"	f	file:
@@ -375,7 +382,7 @@ size_attached	core.h	/^	latomic_t size_attached;			\/\/ Total size of attached m
 size_detachable	protocol.h	/^	latomic_t size_detachable;$/;"	m	struct:gmm_client
 size_needed	protocol.h	/^	long size_needed;$/;"	m	struct:msg_req
 spinlock	spinlock.h	/^struct spinlock {$/;"	s
-stage_bufs	core.h	/^	void *stage_bufs[NBUFS];	\/\/ Host-pinned staging buffers$/;"	m	struct:dma_channel
+stage_bufs	core.h	/^	void* stage_bufs[NBUFS];	\/\/ Host-pinned staging buffers$/;"	m	struct:dma_channel
 start	server.c	/^int start(size_t mem_total)$/;"	f
 state	core.h	/^	region_state_t state;	\/\/ state of the object$/;"	m	struct:region
 statistics	stats.h	/^struct statistics {$/;"	s
@@ -399,7 +406,7 @@ stats_time_begin	stats.h	87;"	d
 stats_time_end	stats.h	130;"	d
 stats_time_end	stats.h	92;"	d
 stop	server.c	/^int stop()$/;"	f
-swp_addr	core.h	/^	cl_mem swp_addr;			\/\/ host swap buffer address$/;"	m	struct:region
+swp_addr	core.h	/^	void* swp_addr;			\/\/ host swap buffer address$/;"	m	struct:region
 swp_valid	core.h	/^	int swp_valid;			\/\/ if data copy in host swap buffer is valid$/;"	m	struct:block
 thread_msq_listener	msq.c	/^void *thread_msq_listener(void *arg)$/;"	f
 tid_msq	msq.c	/^pthread_t tid_msq;$/;"	v

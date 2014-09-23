@@ -28,6 +28,7 @@ int main(){
     char devName[1024];
     int i=0; 
     int data[10000]={5};
+    int result[10000]={0};
     int value=44;
     char *nvidia="NVIDIA Corporation";
     int flag=FALSE;
@@ -89,6 +90,7 @@ int main(){
             if(errcode_CB!=CL_SUCCESS){
                 printf("Buffer Creating failed!  %p\n",errcode_CB);
             }
+            printf("the addr of buffer is %p\n",buffer);
 
             program=clCreateProgramWithSource(context,1,(const char**)&source_str,(const size_t*)&source_size, errcode_CP);
             if(errcode_CP!=CL_SUCCESS){
@@ -110,22 +112,32 @@ int main(){
             if(clEnqueueWriteBuffer(cqueue,buffer,CL_TRUE,0,sizeof(int)*10000,data,0,NULL,NULL)!=CL_SUCCESS){
                 printf("write buffer failed\n");
             }
-            if(oclReference(0,2)!=CL_SUCCESS){
+            if(clReference(0,3)!=CL_SUCCESS){
                 printf("unable to set the arg ref\n");
             }
+                
             if(clSetKernelArg(kernel,0,sizeof(cl_mem),&buffer)!=CL_SUCCESS){
                 printf("unable to set the arg\n");
             }
             if(clEnqueueTask(cqueue,kernel,0,NULL,NULL)!=CL_SUCCESS){
                 printf("kernel launch failed\n"); 
             }
+            if(CL_SUCCESS!=clFinish(cqueue)){
+                printf("unsuccessfully quited\n");
+            }
+            if(clEnqueueReadBuffer(cqueue,buffer,CL_TRUE,0,sizeof(int)*10000,result,0,NULL,NULL)!=CL_SUCCESS){
+            
+                printf("read buffer error\n");
+
+            }
             if(CL_SUCCESS!=clReleaseMemObject(buffer)){
-                printf("Buffer Deleting unsuccessful");
+                printf("Buffer Deleting unsuccessful\n");
             }
         }
         
         clGetDeviceInfo(devId[0],CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem),&mem,NULL);
         printf("The global size is %d \n",mem);
+        printf("lets just show one of them %di\n",result[10]);
         flag=FALSE;    
     }
     return 0;
