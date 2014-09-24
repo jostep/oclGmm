@@ -689,7 +689,10 @@ static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size){
     off=0;
     while(off<size){
         delta=MIN(off+BUFSIZE, size)-off;
-        if(CL_SUCCESS!=clGetEventInfo(chan->events[chan->ibuf],CL_EVENT_COMMAND_EXECUTION_STATUS,sizeof(cl_int),&status, NULL)){
+        if(CL_SUCCESS!=clFinish(chan->commandQueue_chan)){
+            gprint(FATAL,"unsuccessfully waiting\n");
+        }
+        /*if(CL_SUCCESS!=clGetEventInfo(chan->events[chan->ibuf],CL_EVENT_COMMAND_EXECUTION_STATUS,sizeof(cl_int),&status, NULL)){
             gprint(DEBUG,"unable to get the event status for htod\n");
         }
          if(status!=CL_SUBMITTED&&status!=CL_COMPLETE){
@@ -700,22 +703,15 @@ static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size){
                 goto finish;
             }
             gprint(DEBUG,"not bypassed for %d",chan->ibuf);
-        }
-        /*gprint(DEBUG,"the src(%p) to dst(%p) with size(%d) in the gmm_memcpy_htod\n",src,chan->stage_bufs[chan->ibuf],delta);*/
-        errcode_CB=ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_FALSE,off,size,(src+off),0,NULL,NULL);
+        }*/
+        gprint(DEBUG,"what's in the src %p\n",(src+off));
+        errcode_CB=ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_FALSE,off,delta,(src+off),0,NULL,NULL);
         if(errcode_CB!=CL_SUCCESS){
             gprint(DEBUG,"copy buffer failure\n");
-            if(errcode_CB==CL_INVALID_COMMAND_QUEUE)
-                gprint(DEBUG,"command queue is not valid\n");
-            else if(errcode_CB==CL_INVALID_CONTEXT)
-                gprint(DEBUG,"context is not valid\n");
-            else if(errcode_CB==CL_INVALID_MEM_OBJECT)
-                gprint(DEBUG,"command queue is not valid\n");
-            else
-                gprint(DEBUG,"else\n");
         }
 
-        if(ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,(cl_mem)((unsigned long)dst+off),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
+        //if(ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,(cl_mem)((unsigned long)dst+off),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
+        if(clEnqueueCopyBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],dst,0,off,delta,0,NULL,NULL)){
             gprint(FATAL,"cl write buffer failed in htod\n");
             ret=-1;
             goto finish;
@@ -801,6 +797,7 @@ static int gmm_htod_block(
 		stats_time_begin();
 		// this is not thread-safe; otherwise, move memcpy before release
 		memcpy((void *)((unsigned long )r->swp_addr + offset), src, size);
+        printf("test the input of swp_addr %p \n",(int *)r->swp_addr);
 		stats_time_end(&pcontext->stats, time_u2s);
 		stats_inc(&pcontext->stats, bytes_u2s, size);
 	}
@@ -1567,6 +1564,7 @@ static int gmm_load(struct region **rgns, int nrgns)
     
 	for (i = 0; i < nrgns; i++) {
 		if (rgns[i]->rwhint.flags & HINT_READ) {
+            gprint(DEBUG,"both of you should be here\n");
 			ret = region_load(rgns[i]);
 			if (ret != 0)
 				return -1;
@@ -1874,7 +1872,7 @@ static int region_attach(
 			goto attach_success;
         }
 		else {
-			gprint(DEBUG, "nv_cudaMalloc failed inside the gmm_attach");
+			gprint(DEBUG, "ocl_clCreateBuffer failed inside the gmm_attach");
             return -1;
 		}
 	}

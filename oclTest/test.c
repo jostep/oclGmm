@@ -10,7 +10,7 @@
 #define TRUE 0
 #define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0X100000)
-
+#define testSize 400000
 
 int main(){
 
@@ -26,9 +26,9 @@ int main(){
     cl_ulong localMem;
     char devName[1024];
     int i=0; 
-    int data[10000]={5,6,7,8,9,0,1,2,3,4};
-    int data2[10000]={5,6,7,8,9,0,1,2,3,4};
-    int result[10000]={1,2,3,4,5,6,7,8,9,0};
+    int data[testSize]={5,6,7,8,9,0,1,2,3,4};
+    int data2[testSize]={5,6,7,8,9,0,1,2,3,4};
+    int result[testSize]={1,2,3,4,5,6,7,8,9,0};
     int value=44;
     char *nvidia="NVIDIA Corporation";
     int flag=FALSE;
@@ -87,11 +87,11 @@ int main(){
                 printf("Context Creating Failed!\n");
             }
            cqueue=clCreateCommandQueue(context,devId[0],CL_QUEUE_PROFILING_ENABLE,errcode_CQ); 
-           buffer=clCreateBuffer(context,CL_MEM_READ_WRITE,10000*sizeof(int),NULL,errcode_CB);
+           buffer=clCreateBuffer(context,CL_MEM_READ_WRITE,testSize*sizeof(int),NULL,errcode_CB);
            if(errcode_CB!=CL_SUCCESS){
                 printf("Buffer Creating failed!  %p\n",errcode_CB);
             }
-           buffer2=clCreateBuffer(context,CL_MEM_READ_WRITE,10000*sizeof(int),NULL,errcode_CB);
+           buffer2=clCreateBuffer(context,CL_MEM_READ_WRITE,testSize*sizeof(int),NULL,errcode_CB);
            if(errcode_CB!=CL_SUCCESS){
                 printf("Buffer Creating failed!  %p\n",errcode_CB);
             }
@@ -152,12 +152,12 @@ int main(){
             if(clEnqueueWriteBuffer(cqueue,buffer2,CL_TRUE,0,sizeof(int)*10000,result,0,NULL,NULL)!=CL_SUCCESS){
                 printf("write buffer failed\n");
             }
-            /*if(clReference(0,2)!=CL_SUCCESS){
+            if(clReference(0,2)!=CL_SUCCESS){
                 printf("unable to set the arg ref\n");
             }
             if(clReference(1,1)!=CL_SUCCESS){
                 printf("unable to set the arg ref\n");
-            }*/
+            }
                 
             if(clSetKernelArg(kernel,0,sizeof(cl_mem),&buffer)!=CL_SUCCESS){
                 printf("unable to set the arg\n");
