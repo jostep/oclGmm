@@ -10,7 +10,7 @@
 #define TRUE 0
 #define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0X100000)
-#define testSize 400000
+#define testSize 20*1024
 
 int main(){
 
@@ -24,11 +24,13 @@ int main(){
     cl_kernel kernel;
     cl_ulong mem;
     cl_ulong localMem;
+    size_t global=testSize;
+    size_t local;
     char devName[1024];
-    int i=0; 
-    int data[testSize]={5,6,7,8,9,0,1,2,3,4};
-    int data2[testSize]={5,6,7,8,9,0,1,2,3,4};
-    int result[testSize]={1,2,3,4,5,6,7,8,9,0};
+    int i=0,j=0; 
+    int *data=malloc(testSize);
+    int *data2=malloc(testSize);
+    int *result=malloc(testSize);
     int value=44;
     char *nvidia="NVIDIA Corporation";
     int flag=FALSE;
@@ -146,10 +148,10 @@ int main(){
            /*if(clEnqueueFillBuffer(cqueue,buffer,&value,sizeof(int),0,100*sizeof(cl_int),0,NULL,NULL)!=CL_SUCCESS){
                 printf("Memseting failed\n");
             }*/
-            if(clEnqueueWriteBuffer(cqueue,buffer,CL_TRUE,0,sizeof(int)*10000,data2,0,NULL,NULL)!=CL_SUCCESS){
+            if(clEnqueueWriteBuffer(cqueue,buffer,CL_TRUE,0,sizeof(int)*testSize,data2,0,NULL,NULL)!=CL_SUCCESS){
                 printf("write buffer failed\n");
             }
-            if(clEnqueueWriteBuffer(cqueue,buffer2,CL_TRUE,0,sizeof(int)*10000,result,0,NULL,NULL)!=CL_SUCCESS){
+            if(clEnqueueWriteBuffer(cqueue,buffer2,CL_TRUE,0,sizeof(int)*testSize,result,0,NULL,NULL)!=CL_SUCCESS){
                 printf("write buffer failed\n");
             }
             if(clReference(0,2)!=CL_SUCCESS){
@@ -165,13 +167,18 @@ int main(){
             if(clSetKernelArg(kernel,1,sizeof(cl_mem),&buffer2)!=CL_SUCCESS){
                 printf("unable to set the arg\n");
             }
+            if(clGetKernelWorkGroupInfo(kernel,devId[0],CL_KERNEL_WORK_GROUP_SIZE,sizeof(local),&local,NULL)!=CL_SUCCESS){
+                printf("Failed to get the work info\n");
+            }
+            if(clEnqueueNDRangeKernel(cqueue,kernel,1,NULL,&global,&local,0,NULL,NULL)!=CL_SUCCESS)
+            /*
             if(clEnqueueTask(cqueue,kernel,0,NULL,NULL)!=CL_SUCCESS){
                 printf("kernel launch failed\n"); 
-            }
-            /*if(CL_SUCCESS!=clFinish(cqueue)){
-                printf("unsuccessfully quited\n");
             }*/
-           if(clEnqueueReadBuffer(cqueue,buffer2,CL_TRUE,0,sizeof(int)*10000,result,0,NULL,NULL)!=CL_SUCCESS){
+            if(CL_SUCCESS!=clFinish(cqueue)){
+                printf("unsuccessfully quited\n");
+            }
+           if(clEnqueueReadBuffer(cqueue,buffer2,CL_TRUE,0,sizeof(int)*testSize,result,0,NULL,NULL)!=CL_SUCCESS){
             
                 printf("read buffer error\n");
 
@@ -183,7 +190,8 @@ int main(){
         
         clGetDeviceInfo(devId[0],CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem),&mem,NULL);
         printf("The global size is %lu \n",mem/(1024*1024));
-        printf("lets just show one of them %d\n",result[0]);
+        for(j=0;j<10;j++)
+            printf("lets just show one of them %d\n",result[j]);
         flag=FALSE;    
     }
     return 0;

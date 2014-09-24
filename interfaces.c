@@ -27,6 +27,7 @@ cl_int (*ocl_clBuildProgram)(cl_program, cl_uint, const cl_device_id*, const cha
 cl_kernel (*ocl_clCreateKernel)(cl_program ,const char *,cl_int*)=NULL;
 cl_int (*ocl_clSetKernelArg)(cl_kernel, cl_uint,size_t, const void* arg_value)=NULL;
 cl_int (*ocl_clEnqueueTask)(cl_command_queue, cl_kernel, cl_uint, const cl_event*, cl_event *)=NULL;
+cl_int (*ocl_clEnqueueNDRangeKernel)(cl_command_queue,cl_kernel,cl_uint,const size_t*,const size_t *,const size_t *,cl_uint, const cl_event*,cl_event*)=NULL;
 static int initialized = 0;
 
 // The library constructor.
@@ -53,6 +54,7 @@ void gmm_init(void)
     INTERCEPT_CL("clSetKernelArg",ocl_clSetKernelArg);//4
     INTERCEPT_CL("clEnqueueTask",ocl_clEnqueueTask);//5
     INTERCEPT_CL("clEnqueueReadBuffer",ocl_clEnqueueReadBuffer);
+    INTERCEPT_CL("clEnqueueNDRangeKernel",ocl_clEnqueueNDRangeKernel);
     
     gprint_init();
     
@@ -300,6 +302,16 @@ cl_int clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel, cl_uint n
 
 }
 
+GMM_EXPORT
+cl_int clEnqueueNDRangeKernel(cl_command_queue command_queue,cl_kernel kernel,cl_uint work_dim,const size_t* global_work_offset, const size_t* global_work_size,const size_t* local_work_size,cl_uint num_events, const cl_event* events_wait_list, cl_event* event){
+    
+    if(initialized){
+        return gmm_clEnqueueNDRangeKernel(command_queue, kernel, work_dim,global_work_offset,global_work_size,local_work_size,num_events, events_wait_list,event);
+    }
+    else {
+        return ocl_clEnqueueNDRangeKernel(command_queue, kernel, work_dim,global_work_offset,global_work_size,local_work_size,num_events, events_wait_list,event);
+    }
+}
 
 /*
  *

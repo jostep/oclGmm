@@ -22,6 +22,7 @@
 
 static int gmm_free(struct region *m);
 static int gmm_launch(struct region **rgns, int nrgns);
+static int gmm_launch2(struct region **rgns, int nrgns,cl_uint,const size_t*,const size_t*,const size_t*);
 static int gmm_attach(struct region **rgns, int n);
 static int gmm_load(struct region **rgns, int nrgns);
 static int gmm_evict(long size_needed, struct region **excls, int nexcl);
@@ -40,6 +41,7 @@ extern cl_program (*ocl_clCreateProgramWithSource)(cl_context context, cl_uint c
 extern cl_kernel(*ocl_clCreateKernel)(cl_program, const char *, cl_int*);
 extern cl_int (*ocl_clEnqueueTask)(cl_command_queue, cl_kernel, cl_uint, const cl_event *,cl_event*);
 extern cl_int (*ocl_clSetKernelArg)(cl_kernel, cl_uint, size_t, const void*);
+extern cl_int (*ocl_clEnqueueNDRangeKernel)(cl_command_queue,cl_kernel,cl_uint,const size_t *, const size_t *, const size_t *,cl_uint,const cl_event*,cl_event*);
 
 
 
@@ -704,10 +706,20 @@ static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size){
             }
             gprint(DEBUG,"not bypassed for %d",chan->ibuf);
         }*/
-        gprint(DEBUG,"what's in the src %p\n",(src+off));
-        errcode_CB=ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_FALSE,off,delta,(src+off),0,NULL,NULL);
+        errcode_CB=ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_FALSE,0,delta,(src+off),0,NULL,NULL);
         if(errcode_CB!=CL_SUCCESS){
             gprint(DEBUG,"copy buffer failure\n");
+            switch((int)errcode_CB){
+                case CL_INVALID_MEM_OBJECT:
+                    gprint(DEBUG,"invalid mem object\n");
+                    break;
+                case CL_INVALID_VALUE:
+                    gprint(DEBUG,"invalid mem object\n");
+                    break;
+                default:
+                    gprint(DEBUG,"else\n");
+                    break; 
+            }
         }
 
         //if(ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,(cl_mem)((unsigned long)dst+off),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
@@ -797,7 +809,6 @@ static int gmm_htod_block(
 		stats_time_begin();
 		// this is not thread-safe; otherwise, move memcpy before release
 		memcpy((void *)((unsigned long )r->swp_addr + offset), src, size);
-        printf("test the input of swp_addr %p \n",(int *)r->swp_addr);
 		stats_time_end(&pcontext->stats, time_u2s);
 		stats_inc(&pcontext->stats, bytes_u2s, size);
 	}
@@ -1557,6 +1568,112 @@ finish:
 	return ret;
 }
 
+cl_int gmm_clEnqueueNDRangeKernel(cl_command_queue command_queue, cl_kernel kernel,cl_uint work_dim,const size_t *global_work_offset,const size_t * global_work_size,const size_t * local_work_size, cl_uint num_events_in_wait_list, const cl_event * event_in_wait_list, cl_event *event)
+{
+	cl_int ret = CL_SUCCESS;
+	struct region **rgns = NULL;
+	int nrgns = 0;
+	long total = 0;
+	int i, ldret;
+    
+	gprint(DEBUG, "openCL is about to launch\n");
+    
+	// NOTE: it is possible that nrgns == 0 when regions_referenced
+	// returns. Consider a kernel that only uses registers, for
+	// example.
+	total = regions_referenced(&rgns, &nrgns);
+	if (total < 0) {
+		gprint(ERROR, "failed to get the regions to be referenced\n");
+		ret = CL_INVALID_ARG_SIZE;
+		goto finish;
+	}
+	else if (total > memsize_total()) {
+		gprint(ERROR, "kernel requires too much space (%ld)\n", total);
+		ret = CL_INVALID_ARG_SIZE;
+		goto finish;
+	}
+    
+reload:
+	stats_time_begin();
+	launch_wait();
+	stats_time_end(&pcontext->stats, time_sync);
+	stats_time_begin();
+	ldret = gmm_attach(rgns, nrgns);
+	stats_time_end(&pcontext->stats, time_attach);
+	launch_signal();
+	if (ldret > 0) {	// attach unsuccessful, retry later
+		//stats_inc(&pcontext->stats, num_attach_fail, 1);
+		sched_yield();
+		goto reload;
+	}
+	else if (ldret < 0) {	// fatal load error, quit launching
+		gprint(ERROR, "attach failed; quitting kernel launch\n");
+		ret = CL_INVALID_ARG_SIZE;
+		goto finish;
+	}
+    
+	// Transfer data to device memory if they are to be read, and
+	// handle WRITE hints. Note that, by this moment, all regions
+	// pointed by each dptr array has been attached and pinned to
+	// device memory.
+	// XXX: What if the launch below failed? Partial modification?
+	stats_time_begin();
+	ldret = gmm_load(rgns, nrgns);
+	stats_time_end(&pcontext->stats, time_load);
+	if (ldret < 0) {
+		gprint(ERROR, "gmm_load failed\n");
+		for (i = 0; i < nrgns; i++)
+			region_unpin(rgns[i]);
+		ret = CL_INVALID_VALUE;
+		goto finish;
+	}
+    
+	// Configure and push all kernel arguments.
+    /*
+	if (nv_cudaConfigureCall(grid, block, shared, stream_issue)
+        != cudaSuccess) {
+		gprint(ERROR, "cudaConfigureCall failed\n");
+		for (i = 0; i < nrgns; i++)
+			region_unpin(rgns[i]);
+		ret = cudaErrorUnknown;
+		goto finish;
+	}
+    */
+	for (i = 0; i < nargs; i++) {
+		if (kargs[i].is_dptr) {
+			kargs[i].arg.arg1.dptr =(cl_mem)((unsigned long)kargs[i].arg.arg1.r->dev_addr + kargs[i].arg.arg1.off);
+
+            ocl_clSetKernelArg(pcontext->kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
+			/*gprint(DEBUG, "setup %p %lu %lu\n", \
+             &kargs[i].arg.arg1.dptr, \
+             sizeof(void *), \
+             kargs[i].arg.arg1.argoff);*/
+		}
+		else {
+            ocl_clSetKernelArg(pcontext->kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg2.arg);
+            
+			/*gprint(DEBUG, "setup %p %lu %lu\n", \
+             kargs[i].arg.arg2.arg, \
+             kargs[i].arg.arg2.size, \
+             kargs[i].arg.arg2.offset);*/
+		}
+	}
+    
+	// Now we can launch the kernel.
+	if (gmm_launch2(rgns, nrgns,work_dim,global_work_offset,global_work_size,local_work_size) < 0) {
+		for (i = 0; i < nrgns; i++)
+			region_unpin(rgns[i]);
+		ret = CL_INVALID_KERNEL;
+	}
+    
+finish:
+	if (rgns)
+		free(rgns);
+	nrefs = 0;
+	nargs = 0;
+	ktop = (void *)kstack;
+	return ret;
+}
 
 static int gmm_load(struct region **rgns, int nrgns)
 {
@@ -1697,6 +1814,60 @@ static int gmm_launch(struct region **rgns, int nrgns)
 		return -1;
 	} 
 	//nv_cudaStreamAddCallback(stream_issue, gmm_kernel_callback, (void *)pcb, 0);
+    clSetEventCallback(pcontext->event_kernel, CL_COMPLETE,gmm_kernel_callback,(void*)pcb); 
+
+
+    // Uncomment the following expression if kernel time is to be measured
+	//if (nv_cudaStreamSynchronize(pcontext->stream_kernel) != cudaSuccess) {
+	//	gprint(ERROR, "stream synchronization failed in gmm_launch\n");
+	//}
+	//stats_time_end(&pcontext->stats, time_kernel);
+    
+	// TODO: update this client's position in global LRU client list
+    
+	gprint(DEBUG, "kernel launched\n");
+	return 0;
+}
+
+static int gmm_launch2(struct region **rgns, int nrgns,cl_uint work_dim,const size_t*global_work_offset, const size_t * global_work_size, const size_t* local_work_size)
+{
+	cl_int ret=CL_SUCCESS;
+	struct kcb *pcb;
+	int i;
+    
+	if (nrgns > NREFS) {
+		gprint(ERROR, "too many regions\n");
+		return -1;
+	}
+    
+	pcb = (struct kcb *)malloc(sizeof(*pcb));
+	if (!pcb) {
+		gprint(FATAL, "malloc failed for kcb: %s\n", strerror(errno));
+		return -1;
+	}
+	if (nrgns > 0)
+		memcpy(pcb->rgns, rgns, sizeof(void *) * nrgns);
+	for (i = 0; i < nrgns; i++) {
+		pcb->flags[i] = rgns[i]->rwhint.flags;
+		if (pcb->flags[i] & HINT_WRITE)
+			atomic_inc(&rgns[i]->writing);
+		if (pcb->flags[i] & HINT_READ)
+			atomic_inc(&rgns[i]->reading);
+	}
+	pcb->nrgns = nrgns;
+    
+	//stats_time_begin();
+	if (ocl_clEnqueueNDRangeKernel(pcontext->commandQueue_kernel,pcontext->kernel,work_dim,global_work_offset,global_work_size,local_work_size,0,NULL,&pcontext->event_kernel) != CL_SUCCESS) {
+		for (i = 0; i < nrgns; i++) {
+			if (pcb->flags[i] & HINT_WRITE)
+				atomic_dec(&pcb->rgns[i]->writing);
+			if (pcb->flags[i] & HINT_READ)
+				atomic_dec(&pcb->rgns[i]->reading);
+		}
+		free(pcb);
+		gprint(ERROR, "clEnqueueNDRangeKernel failed\n");
+		return -1;
+	} 
     clSetEventCallback(pcontext->event_kernel, CL_COMPLETE,gmm_kernel_callback,(void*)pcb); 
 
 
