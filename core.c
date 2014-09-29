@@ -1117,6 +1117,104 @@ finish:
 #endif
 
 
+static int gmm_dtod(
+                    struct region *rd,
+                    struct region *rs,
+                    void *dst,
+                    const void *src,
+                    size_t count)
+{
+	int ret = 0;
+	void *temp;
+    
+	gprint(DEBUG, "dtod: rd(%p %p %ld %d %d) rs(%p %p %ld %d %d) " \
+           "dst(%p) src(%p) count(%lu)\n", \
+           rd, rd->swp_addr, rd->size, rd->flags, rd->state, \
+           rs, rs->swp_addr, rs->size, rs->flags, rs->state, \
+           dst, src, count);
+    
+	temp = malloc(count);
+	if (!temp) {
+		gprint(FATAL, "malloc failed for temporary dtod buffer: %s\n", \
+               strerror(errno));
+		return -1;
+	}
+    
+	if (gmm_dtoh(rs, temp, src, count) < 0) {
+		gprint(ERROR, "failed to copy data to temp dtod buffer\n");
+		free(temp);
+		return -1;
+	}
+    
+	if (gmm_htod(rd, dst, temp, count) < 0) {
+		gprint(ERROR, "failed to copy data from temp dtod buffer\n");
+		free(temp);
+		return -1;
+	}
+    
+	free(temp);
+	return ret;
+}
+
+
+cudaError_t gmm_cudaMemcpyDtoD(
+                               void *dst,
+                               const void *src,
+                               size_t count)
+{
+	struct region *rs, *rd;
+    
+	if (count <= 0)
+		return cudaErrorInvalidValue;
+    
+	rs = region_lookup(pcontext, src);
+	if (!rs) {
+		gprint(ERROR, "cannot find src region containing %p in dtod\n", src);
+		return cudaErrorInvalidDevicePointer;
+	}
+	if (rs->state == STATE_FREEING || rs->state == STATE_ZOMBIE) {
+		gprint(ERROR, "src region already freed\n");
+		return cudaErrorInvalidValue;
+	}
+	if (rs->flags & FLAG_COW) {
+		gprint(ERROR, "dtod: src region already tagged COW\n");
+		return cudaErrorUnknown;
+	}
+	if (src + count > rs->swp_addr + rs->size) {
+		gprint(ERROR, "dtod out of src boundary\n");
+		return cudaErrorInvalidValue;
+	}
+    
+	rd = region_lookup(pcontext, dst);
+	if (!rd) {
+		gprint(ERROR, "cannot find dst region containing %p in dtod\n", dst);
+		return cudaErrorInvalidDevicePointer;
+	}
+	if (rd->state == STATE_FREEING || rd->state == STATE_ZOMBIE) {
+		gprint(ERROR, "dst region already freed\n");
+		return cudaErrorInvalidValue;
+	}
+	if (rd->flags & FLAG_COW) {
+		gprint(ERROR, "dtod: dst region already tagged COW\n");
+		return cudaErrorUnknown;
+	}
+	if (dst + count > rd->swp_addr + rd->size) {
+		gprint(ERROR, "dtod out of dst boundary\n");
+		return cudaErrorInvalidValue;
+	}
+    
+	stats_time_begin();
+	if (gmm_dtod(rd, rs, dst, src, count) < 0)
+		return cudaErrorUnknown;
+	stats_time_end(&pcontext->stats, time_dtod);
+	stats_inc(&pcontext->stats, bytes_dtod, count);
+    
+	return cudaSuccess;
+}
+
+
+
+
 
 
 cl_int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_bool blocking_write, size_t offset, size_t count, const void *src, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){
