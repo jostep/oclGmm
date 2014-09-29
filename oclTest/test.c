@@ -10,7 +10,7 @@
 #define TRUE 0
 #define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0X100000)
-#define testSize 20*1024
+#define testSize 93*1024*1024
 
 int main(){
 
@@ -21,16 +21,17 @@ int main(){
     cl_context context;
     cl_command_queue cqueue;
     cl_program program;
-    cl_kernel kernel;
+    cl_kernel kernel,kernel2;
     cl_ulong mem;
     cl_ulong localMem;
-    size_t global=testSize;
+    size_t global=testSize*sizeof(int);
     size_t local;
     char devName[1024];
     int i=0,j=0; 
-    int *data=malloc(testSize);
-    int *data2=malloc(testSize);
-    int *result=malloc(testSize);
+   // int *data=(int*)malloc(testSize*sizeof(int));
+    int *data2=(int*)malloc(testSize*sizeof(int));
+    int *result=(int*)malloc(testSize*sizeof(int));
+    int *result2=(int*)malloc(testSize*sizeof(int));
     int value=44;
     char *nvidia="NVIDIA Corporation";
     int flag=FALSE;
@@ -41,7 +42,16 @@ int main(){
     cl_int *errcode_CP=NULL;
     cl_int *errcode_CK=NULL;
     cl_int *errcode_BP=NULL;
-    cl_mem buffer,buffer2;
+    cl_mem buffer,buffer2,buffer3,buffer4;
+  
+
+    // memset(result,0,testSize*sizeof(int));
+    for(j=0;j<testSize;j++){
+     //   data[j]=j;
+        data2[j]=j;
+        result[j]=0;
+        result2[j]=0;
+    }
 
     FILE*fp;
     char fileName[]="./hello.cl";
@@ -89,11 +99,20 @@ int main(){
                 printf("Context Creating Failed!\n");
             }
            cqueue=clCreateCommandQueue(context,devId[0],CL_QUEUE_PROFILING_ENABLE,errcode_CQ); 
+
            buffer=clCreateBuffer(context,CL_MEM_READ_WRITE,testSize*sizeof(int),NULL,errcode_CB);
            if(errcode_CB!=CL_SUCCESS){
                 printf("Buffer Creating failed!  %p\n",errcode_CB);
             }
            buffer2=clCreateBuffer(context,CL_MEM_READ_WRITE,testSize*sizeof(int),NULL,errcode_CB);
+           if(errcode_CB!=CL_SUCCESS){
+                printf("Buffer Creating failed!  %p\n",errcode_CB);
+            }
+           buffer3=clCreateBuffer(context,CL_MEM_READ_WRITE,testSize*sizeof(int),NULL,errcode_CB);
+           if(errcode_CB!=CL_SUCCESS){
+                printf("Buffer Creating failed!  %p\n",errcode_CB);
+            }
+           buffer4=clCreateBuffer(context,CL_MEM_READ_WRITE,testSize*sizeof(int),NULL,errcode_CB);
            if(errcode_CB!=CL_SUCCESS){
                 printf("Buffer Creating failed!  %p\n",errcode_CB);
             }
@@ -105,41 +124,12 @@ int main(){
             errcode_BP=clBuildProgram(program,1,devId,NULL,NULL,NULL);
             if(errcode_BP!=CL_SUCCESS){
                 printf("unable to build the program\n");
-                switch ((int)errcode_BP){
-                case CL_INVALID_PROGRAM:
-                    printf("program is not valid\n");
-                    break;
-
-                case CL_INVALID_VALUE:
-                    printf("value is not valid\n");
-                    break;
-                case CL_INVALID_DEVICE:
-                    printf("device is not valid\n");
-                    break;
-                case CL_INVALID_BINARY:
-                    printf("BINARY is not valid\n");
-                    break;
-                case CL_INVALID_BUILD_OPTIONS:
-                    printf("build opt is not valid\n");
-                    break;
-                case CL_INVALID_OPERATION:
-                    printf("op is not valid\n");
-                    break;
-                case CL_COMPILER_NOT_AVAILABLE:
-                    printf("compiler is not valid\n");
-                    break;
-                case CL_BUILD_PROGRAM_FAILURE:
-                    printf("build program is not valid\n");
-                    break;
-                case CL_OUT_OF_HOST_MEMORY:
-                    printf("Host Mem is not valid\n");
-                    break;
-                default:
-                    printf("I have no idea\n");
-                }
             }
-            
             kernel=clCreateKernel(program,"square",errcode_CK);
+            if(errcode_CK!=CL_SUCCESS){
+                printf("kernel creating failure\n");
+            }
+            kernel2=clCreateKernel(program,"square",errcode_CK);
             if(errcode_CK!=CL_SUCCESS){
                 printf("kernel creating failure\n");
             }
@@ -152,6 +142,12 @@ int main(){
                 printf("write buffer failed\n");
             }
             if(clEnqueueWriteBuffer(cqueue,buffer2,CL_TRUE,0,sizeof(int)*testSize,result,0,NULL,NULL)!=CL_SUCCESS){
+                printf("write buffer failed\n");
+            }
+            if(clEnqueueWriteBuffer(cqueue,buffer3,CL_TRUE,0,sizeof(int)*testSize,data2,0,NULL,NULL)!=CL_SUCCESS){
+                printf("write buffer failed\n");
+            }
+            if(clEnqueueWriteBuffer(cqueue,buffer4,CL_TRUE,0,sizeof(int)*testSize,result,0,NULL,NULL)!=CL_SUCCESS){
                 printf("write buffer failed\n");
             }
             if(clReference(0,2)!=CL_SUCCESS){
@@ -171,27 +167,60 @@ int main(){
                 printf("Failed to get the work info\n");
             }
             if(clEnqueueNDRangeKernel(cqueue,kernel,1,NULL,&global,&local,0,NULL,NULL)!=CL_SUCCESS)
-            /*
-            if(clEnqueueTask(cqueue,kernel,0,NULL,NULL)!=CL_SUCCESS){
-                printf("kernel launch failed\n"); 
-            }*/
+            {
+                printf("kernel launched failed\n");
+            
+            }
+
+
+            if(clReference(0,2)!=CL_SUCCESS){
+                printf("unable to set the arg ref\n");
+            }
+            if(clReference(1,1)!=CL_SUCCESS){
+                printf("unable to set the arg ref\n");
+            }
+            if(clSetKernelArg(kernel2,0,sizeof(cl_mem),&buffer3)!=CL_SUCCESS){
+                printf("unable to set the arg\n");
+            }
+            if(clSetKernelArg(kernel2,1,sizeof(cl_mem),&buffer4)!=CL_SUCCESS){
+                printf("unable to set the arg\n");
+            }
+            if(clGetKernelWorkGroupInfo(kernel2,devId[0],CL_KERNEL_WORK_GROUP_SIZE,sizeof(local),&local,NULL)!=CL_SUCCESS){
+                printf("Failed to get the work info\n");
+            }
+            if(clEnqueueNDRangeKernel(cqueue,kernel2,1,NULL,&global,&local,0,NULL,NULL)!=CL_SUCCESS)
+            {       
+                printf("kernel2 launched failed\n");
+            
+            }
+
             if(CL_SUCCESS!=clFinish(cqueue)){
                 printf("unsuccessfully quited\n");
             }
            if(clEnqueueReadBuffer(cqueue,buffer2,CL_TRUE,0,sizeof(int)*testSize,result,0,NULL,NULL)!=CL_SUCCESS){
-            
                 printf("read buffer error\n");
-
+            }
+           if(clEnqueueReadBuffer(cqueue,buffer4,CL_TRUE,0,sizeof(int)*testSize,result2,0,NULL,NULL)!=CL_SUCCESS){
+                printf("read buffer error\n");
             }
             if(CL_SUCCESS!=clReleaseMemObject(buffer)){
+                printf("Buffer Deleting unsuccessful\n");
+            }
+            if(CL_SUCCESS!=clReleaseMemObject(buffer2)){
+                printf("Buffer Deleting unsuccessful\n");
+            }
+            if(CL_SUCCESS!=clReleaseMemObject(buffer3)){
+                printf("Buffer Deleting unsuccessful\n");
+            }
+            if(CL_SUCCESS!=clReleaseMemObject(buffer4)){
                 printf("Buffer Deleting unsuccessful\n");
             }
         }
         
         clGetDeviceInfo(devId[0],CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem),&mem,NULL);
         printf("The global size is %lu \n",mem/(1024*1024));
-        for(j=0;j<10;j++)
-            printf("lets just show one of them %d\n",result[j]);
+        for(j=0;j<30;j++)
+            printf("lets just show one of them %d, %d\n",result[j*1000],result2[j*1000]);
         flag=FALSE;    
     }
     return 0;

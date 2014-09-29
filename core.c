@@ -21,8 +21,8 @@
 
 
 static int gmm_free(struct region *m);
-static int gmm_launch(struct region **rgns, int nrgns);
-static int gmm_launch2(struct region **rgns, int nrgns,cl_uint,const size_t*,const size_t*,const size_t*);
+static int gmm_launch(struct region **rgns, int nrgns,cl_kernel);
+static int gmm_launch2(struct region **rgns, int nrgns,cl_kernel,cl_uint,const size_t*,const size_t*,const size_t*);
 static int gmm_attach(struct region **rgns, int n);
 static int gmm_load(struct region **rgns, int nrgns);
 static int gmm_evict(long size_needed, struct region **excls, int nexcl);
@@ -38,7 +38,7 @@ extern cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, siz
 extern cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t, const void* , cl_uint, const cl_event *, cl_event *);
 extern cl_int (*ocl_clBuildProgram)(cl_program program,cl_uint num_devices, const cl_device_id *devices_list,const char *options,void(*pfn_notify)(cl_program, void* user_data),void * user_data);
 extern cl_program (*ocl_clCreateProgramWithSource)(cl_context context, cl_uint count, const char**strings, const size_t * lengths, cl_int *errcode_ret);
-extern cl_kernel(*ocl_clCreateKernel)(cl_program, const char *, cl_int*);
+//extern cl_kernel(*ocl_clCreateKernel)(cl_program, const char *, cl_int*);
 extern cl_int (*ocl_clEnqueueTask)(cl_command_queue, cl_kernel, cl_uint, const cl_event *,cl_event*);
 extern cl_int (*ocl_clSetKernelArg)(cl_kernel, cl_uint, size_t, const void*);
 extern cl_int (*ocl_clEnqueueNDRangeKernel)(cl_command_queue,cl_kernel,cl_uint,const size_t *, const size_t *, const size_t *,cl_uint,const cl_event*,cl_event*);
@@ -160,22 +160,6 @@ int gmm_context_init(){
 
 void gmm_context_initEX(){
     cl_int * errcode_CQ=NULL; 
-    
-    /* //failed to show the diff between htod and dtoh 
-    if(dma_channel_init(pcontext,&pcontext->dma_htod,1)!=0){
-        gprint(FATAL,"failed to create HtoD DMA channel\n");
-        free(pcontext);
-        pcontext=NULL;
-        return ;
-    }    
-    if(dma_channel_init(pcontext,&pcontext->dma_dtoh,0)!=0){
-        gprint(FATAL,"failed to create DtoH DMA channel\n");
-        dma_channel_fini(&pcontext->dma_htod);
-        free(pcontext);
-        pcontext=NULL;
-        return ;
-    }
-    */
     pcontext->commandQueue_kernel=ocl_clCreateCommandQueue(pcontext->context_kernel,pcontext->device[0],CL_QUEUE_PROFILING_ENABLE,errcode_CQ);// add error handler;ERCI
     if (errcode_CQ!=CL_SUCCESS){
         
@@ -256,6 +240,7 @@ cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, v
     r->swp_addr=malloc(size);
     if (!r->swp_addr){
         
+        gprint(FATAL,"malloc for a swap buffer: %s\n",strerror(errno));
         gprint(FATAL,"malloc for a swap buffer: %s\n");
         free(r);
         return errcode_CB;
@@ -573,7 +558,7 @@ finish:
     return ret;
 } 
 
-static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size)
+static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_off)
 {
 	struct dma_channel *chan = &pcontext->dma_dtoh;
 	unsigned long	off_dtos,	// Device to Stage buffer
@@ -590,7 +575,7 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size)
 		delta = MIN(off_dtos + BUFSIZE, size) - off_dtos;
 		/*if(ocl_clEnqueueReadBuffer(chan->commandQueue_chan, (cl_mem)((unsigned long)src+off_dtos),CL_FALSE,0,
                         delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){*/
-        if(clEnqueueCopyBuffer(chan->commandQueue_chan,src,chan->stage_bufs[chan->ibuf],off_dtos,0,delta,0,NULL,NULL)!=CL_SUCCESS){
+        if(clEnqueueCopyBuffer(chan->commandQueue_chan,src,chan->stage_bufs[chan->ibuf],off_dtos+prev_off,0,delta,0,NULL,NULL)!=CL_SUCCESS){
         
 			gprint(FATAL,"Copy Buffer failed in dtoh\n");
 			ret = -1;
@@ -620,7 +605,7 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size)
 			goto finish;
 		}
 		//memcpy((void *)((unsigned long)dst + off_stoh), chan->stage_bufs[chan->ibuf], delta);
-        if(CL_SUCCESS!=ocl_clEnqueueReadBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_TRUE,0,delta,(void*)(unsigned long)dst+off_stoh,0,NULL,NULL)){
+        if(CL_SUCCESS!=ocl_clEnqueueReadBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_TRUE,0,delta,(void*)(unsigned long)dst+off_stoh+prev_off,0,NULL,NULL)){
             gprint(DEBUG,"cannot copy to dst \n");
             ret=-1;
             goto finish;
@@ -629,8 +614,7 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size)
         
 		if (off_dtos < size) {
 			delta = MIN(off_dtos + BUFSIZE, size) - off_dtos;
-		    if(ocl_clEnqueueReadBuffer(chan->commandQueue_chan, 
-                        (cl_mem)((unsigned long)src+off_dtos),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
+            if(clEnqueueCopyBuffer(chan->commandQueue_chan,src,chan->stage_bufs[chan->ibuf],off_dtos+prev_off,0,delta,0,NULL,NULL)){
 				gprint(FATAL, "openCL memcpy Async failed in dtoh\n");
 				ret = -1;
 				goto finish;
@@ -678,7 +662,7 @@ static int gmm_htod_pta(
     return 0;
 }
 
-static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size){
+static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size,int prev_off){
 
     struct dma_channel *chan = &pcontext->dma_htod;
     unsigned long off,delta;
@@ -706,7 +690,7 @@ static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size){
             }
             gprint(DEBUG,"not bypassed for %d",chan->ibuf);
         }*/
-        errcode_CB=ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_FALSE,0,delta,(src+off),0,NULL,NULL);
+        errcode_CB=ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_FALSE,0,delta,(src+off+prev_off),0,NULL,NULL);
         if(errcode_CB!=CL_SUCCESS){
             gprint(DEBUG,"copy buffer failure\n");
             switch((int)errcode_CB){
@@ -723,7 +707,7 @@ static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size){
         }
 
         //if(ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,(cl_mem)((unsigned long)dst+off),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
-        if(clEnqueueCopyBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],dst,0,off,delta,0,NULL,NULL)){
+        if(clEnqueueCopyBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],dst,0,off+prev_off,delta,0,NULL,NULL)){
             gprint(FATAL,"cl write buffer failed in htod\n");
             ret=-1;
             goto finish;
@@ -880,8 +864,8 @@ static int block_sync(struct region *r, int block)
 	size = MIN(off + BLOCKSIZE, r->size) - off;
 	if (dvalid && !svalid) {
 		stats_time_begin();
-		ret = gmm_memcpy_dtoh((void*)((unsigned long)r->swp_addr + off),
-                (cl_mem)((unsigned long)r->dev_addr + off), size);
+		ret = gmm_memcpy_dtoh((void*)((unsigned long)r->swp_addr),
+                (cl_mem)((unsigned long)r->dev_addr), size,off);
 		if (ret == 0)
 			r->blocks[block].swp_valid = 1;
 		stats_time_end(&pcontext->stats, time_d2s);
@@ -893,7 +877,7 @@ static int block_sync(struct region *r, int block)
 		stats_time_end(&pcontext->stats, time_sync);
         
 		stats_time_begin();
-		ret = gmm_memcpy_htod((cl_mem)((unsigned long)r->dev_addr+off),r->swp_addr+off, size);
+		ret = gmm_memcpy_htod((cl_mem)((unsigned long)r->dev_addr),r->swp_addr, size,off);
 		if (ret == 0)
 			r->blocks[block].dev_valid = 1;
 		stats_time_end(&pcontext->stats, time_s2d);
@@ -1217,7 +1201,7 @@ cl_int gmm_clBuildProgram(cl_program program,cl_uint num_devices, const cl_devic
     }
     return CL_SUCCESS;
 }
-
+/*
 cl_kernel gmm_clCreateKernel(cl_program program, const char* kernel_name, cl_int* errcode_ret){
         
         cl_int * errcode_CK=NULL;
@@ -1234,7 +1218,7 @@ cl_kernel gmm_clCreateKernel(cl_program program, const char* kernel_name, cl_int
         return pcontext->kernel;
 
 }
-
+*/
 
 /*
 cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint arg_index,size_t arg_size, const void* arg_value){
@@ -1267,12 +1251,12 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint offset,size_t size, const voi
 	int is_dptr = 0;
 	int iref = 0;
 
-
+    /*
     if(kernel!=pcontext->kernel){
             gprint(FATAL,"invalid kernel\n");
             return CL_INVALID_KERNEL;
     }
-    
+    */
 	gprint(DEBUG, "opencl Setup Argument: nargs(%d) size(%lu) offset(%lu)\n", \
            nargs, size, offset);
     
@@ -1536,14 +1520,14 @@ reload:
 		if (kargs[i].is_dptr) {
 			kargs[i].arg.arg1.dptr =(cl_mem)((unsigned long)kargs[i].arg.arg1.r->dev_addr + kargs[i].arg.arg1.off);
 
-            ocl_clSetKernelArg(pcontext->kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
+            ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
 			/*gprint(DEBUG, "setup %p %lu %lu\n", \
              &kargs[i].arg.arg1.dptr, \
              sizeof(void *), \
              kargs[i].arg.arg1.argoff);*/
 		}
 		else {
-            ocl_clSetKernelArg(pcontext->kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg2.arg);
+            ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg2.arg);
             
 			/*gprint(DEBUG, "setup %p %lu %lu\n", \
              kargs[i].arg.arg2.arg, \
@@ -1553,7 +1537,7 @@ reload:
 	}
     
 	// Now we can launch the kernel.
-	if (gmm_launch(rgns, nrgns) < 0) {
+	if (gmm_launch(rgns, nrgns,kernel) < 0) {
 		for (i = 0; i < nrgns; i++)
 			region_unpin(rgns[i]);
 		ret = CL_INVALID_KERNEL;
@@ -1643,14 +1627,14 @@ reload:
 		if (kargs[i].is_dptr) {
 			kargs[i].arg.arg1.dptr =(cl_mem)((unsigned long)kargs[i].arg.arg1.r->dev_addr + kargs[i].arg.arg1.off);
 
-            ocl_clSetKernelArg(pcontext->kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
+            ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
 			/*gprint(DEBUG, "setup %p %lu %lu\n", \
              &kargs[i].arg.arg1.dptr, \
              sizeof(void *), \
              kargs[i].arg.arg1.argoff);*/
 		}
 		else {
-            ocl_clSetKernelArg(pcontext->kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg2.arg);
+            ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg2.arg);
             
 			/*gprint(DEBUG, "setup %p %lu %lu\n", \
              kargs[i].arg.arg2.arg, \
@@ -1660,7 +1644,7 @@ reload:
 	}
     
 	// Now we can launch the kernel.
-	if (gmm_launch2(rgns, nrgns,work_dim,global_work_offset,global_work_size,local_work_size) < 0) {
+	if (gmm_launch2(rgns, nrgns,kernel,work_dim,global_work_offset,global_work_size,local_work_size) < 0) {
 		for (i = 0; i < nrgns; i++)
 			region_unpin(rgns[i]);
 		ret = CL_INVALID_KERNEL;
@@ -1681,7 +1665,6 @@ static int gmm_load(struct region **rgns, int nrgns)
     
 	for (i = 0; i < nrgns; i++) {
 		if (rgns[i]->rwhint.flags & HINT_READ) {
-            gprint(DEBUG,"both of you should be here\n");
 			ret = region_load(rgns[i]);
 			if (ret != 0)
 				return -1;
@@ -1774,7 +1757,7 @@ void CL_CALLBACK gmm_kernel_callback(cl_event event, cl_int status, void *data){
     free(pcb);
 }
 
-static int gmm_launch(struct region **rgns, int nrgns)
+static int gmm_launch(struct region **rgns, int nrgns,cl_kernel kernel)
 {
 	cl_int ret=CL_SUCCESS;
 	struct kcb *pcb;
@@ -1802,7 +1785,7 @@ static int gmm_launch(struct region **rgns, int nrgns)
 	pcb->nrgns = nrgns;
     
 	//stats_time_begin();
-	if (ocl_clEnqueueTask(pcontext->commandQueue_kernel,pcontext->kernel,0,NULL,&pcontext->event_kernel) != CL_SUCCESS) {
+	if (ocl_clEnqueueTask(pcontext->commandQueue_kernel,kernel,0,NULL,&pcontext->event_kernel) != CL_SUCCESS) {
 		for (i = 0; i < nrgns; i++) {
 			if (pcb->flags[i] & HINT_WRITE)
 				atomic_dec(&pcb->rgns[i]->writing);
@@ -1829,7 +1812,7 @@ static int gmm_launch(struct region **rgns, int nrgns)
 	return 0;
 }
 
-static int gmm_launch2(struct region **rgns, int nrgns,cl_uint work_dim,const size_t*global_work_offset, const size_t * global_work_size, const size_t* local_work_size)
+static int gmm_launch2(struct region **rgns, int nrgns,cl_kernel kernel,cl_uint work_dim,const size_t*global_work_offset, const size_t * global_work_size, const size_t* local_work_size)
 {
 	cl_int ret=CL_SUCCESS;
 	struct kcb *pcb;
@@ -1857,7 +1840,7 @@ static int gmm_launch2(struct region **rgns, int nrgns,cl_uint work_dim,const si
 	pcb->nrgns = nrgns;
     
 	//stats_time_begin();
-	if (ocl_clEnqueueNDRangeKernel(pcontext->commandQueue_kernel,pcontext->kernel,work_dim,global_work_offset,global_work_size,local_work_size,0,NULL,&pcontext->event_kernel) != CL_SUCCESS) {
+	if (ocl_clEnqueueNDRangeKernel(pcontext->commandQueue_kernel,kernel,work_dim,global_work_offset,global_work_size,local_work_size,0,NULL,&pcontext->event_kernel) != CL_SUCCESS) {
 		for (i = 0; i < nrgns; i++) {
 			if (pcb->flags[i] & HINT_WRITE)
 				atomic_dec(&pcb->rgns[i]->writing);
@@ -1983,7 +1966,7 @@ static int region_load_cow(struct region *r)
     
 	if (!r->blocks[0].dev_valid) {
 		stats_time_begin();
-		ret = gmm_memcpy_htod(r->dev_addr, r->usr_addr, r->size);
+		ret = gmm_memcpy_htod(r->dev_addr, r->usr_addr, r->size,0);
 		if (ret < 0) {
 			gprint(ERROR, "load failed\n");
 			return -1;

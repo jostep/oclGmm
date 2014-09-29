@@ -20,11 +20,12 @@ cl_int (*ocl_clReleaseMemObject)(cl_mem)= NULL;
 cl_int (*ocl_clEnqueueFillBuffer)(cl_command_queue, cl_mem, const void *, size_t, size_t,size_t, cl_uint, const cl_event, cl_event)=NULL;
 cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event*)=NULL;
 cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event*)=NULL;
+cl_int (*ocl_clEnqueueCopyBuffer)(cl_command_queue,cl_mem,cl_mem,size_t,size_t,size_t,cl_uint,const cl_event*,cl_event)=NULL;
 cl_context (*ocl_clCreateContext)(cl_context_properties *,cl_uint ,const cl_device_id *,void*, void *,cl_int *)=NULL;
 cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id, cl_command_queue_properties, cl_int errcode_ret)=NULL;
 cl_program (*ocl_clCreateProgramWithSource)(cl_context, cl_uint, const char**, const size_t *, cl_int *errcode_ret)=NULL;
 cl_int (*ocl_clBuildProgram)(cl_program, cl_uint, const cl_device_id*, const char *, void *,void*)=NULL;
-cl_kernel (*ocl_clCreateKernel)(cl_program ,const char *,cl_int*)=NULL;
+//cl_kernel (*ocl_clCreateKernel)(cl_program ,const char *,cl_int*)=NULL;
 cl_int (*ocl_clSetKernelArg)(cl_kernel, cl_uint,size_t, const void* arg_value)=NULL;
 cl_int (*ocl_clEnqueueTask)(cl_command_queue, cl_kernel, cl_uint, const cl_event*, cl_event *)=NULL;
 cl_int (*ocl_clEnqueueNDRangeKernel)(cl_command_queue,cl_kernel,cl_uint,const size_t*,const size_t *,const size_t *,cl_uint, const cl_event*,cl_event*)=NULL;
@@ -48,9 +49,10 @@ void gmm_init(void)
     INTERCEPT_CL("clCreateCommandQueue",ocl_clCreateCommandQueue);
     INTERCEPT_CL("clEnqueueFillBuffer",ocl_clEnqueueFillBuffer);
     INTERCEPT_CL("clEnqueueWriteBuffer",ocl_clEnqueueWriteBuffer);
+    INTERCEPT_CL("clEnqueueCopyBuffer",ocl_clEnqueueCopyBuffer);
     INTERCEPT_CL("clCreateProgramWithSource",ocl_clCreateProgramWithSource);//1
     INTERCEPT_CL("clBuildProgram",ocl_clBuildProgram);//2
-    INTERCEPT_CL("clCreateKernel",ocl_clCreateKernel);//3
+  //  INTERCEPT_CL("clCreateKernel",ocl_clCreateKernel);//3
     INTERCEPT_CL("clSetKernelArg",ocl_clSetKernelArg);//4
     INTERCEPT_CL("clEnqueueTask",ocl_clEnqueueTask);//5
     INTERCEPT_CL("clEnqueueReadBuffer",ocl_clEnqueueReadBuffer);
@@ -191,6 +193,17 @@ cl_int clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem buffer, cl_boo
 
 
 GMM_EXPORT
+cl_int clEnqueueCopyBuffer(cl_command_queue command_queue,cl_mem src,cl_mem dst, size_t src_off,size_t dst_off, size_t cb, cl_uint num_events_in_wait_list,const cl_event* event_wait_list,cl_event* event){
+        
+    if(initialized){
+        return gmm_clEnqueueCopyBuffer(command_queue, src,dst, src_off, dst_off, cb,num_events_in_wait_list, events_wait_list,event);
+    }
+    else{ 
+        return ocl_clEnqueueCopyBuffer(command_queue, src,dst, src_off, dst_off, cb,num_events_in_wait_list, events_wait_list,event);
+    }
+}
+
+GMM_EXPORT
 cl_program clCreateProgramWithSource(cl_context context, cl_uint count, const char** strings, const size_t *lengths, cl_int *errcode_ret){
     if(initialized){
         return gmm_clCreateProgramWithSource(context,count,strings,lengths,errcode_ret);
@@ -219,7 +232,7 @@ cl_int clBuildProgram(cl_program program, cl_uint num_devices, const cl_device_i
 }
 
 
-GMM_EXPORT
+/*GMM_EXPORT
 cl_kernel clCreateKernel(cl_program program, const char *kernel_name,cl_int *errcode_ret){
     
     if(initialized){
@@ -231,7 +244,7 @@ cl_kernel clCreateKernel(cl_program program, const char *kernel_name,cl_int *err
     }
 
 
-}
+}*/
 
 int refs[NREFS];
 int rwflags[NREFS];

@@ -125,7 +125,6 @@ struct gmm_context {
     cl_context context_kernel;
     cl_command_queue commandQueue_kernel;
     cl_program program_kernel;
-    cl_kernel kernel;
     cl_event event_kernel;
 	struct statistics stats;
 };
