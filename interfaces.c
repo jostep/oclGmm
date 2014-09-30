@@ -167,9 +167,9 @@ GMM_EXPORT
 cl_int clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, 
         size_t offset, size_t cb, const void * ptr, cl_uint num_events_in_wait_list, 
         const cl_event *events_wait_list, cl_event *event){
-/*#ifdef GMM_CONFIG_COW
+#ifdef GMM_CONFIG_COW
     int cow=1;
-#endif*/
+#endif
     if(initialized){
         return gmm_clEnqueueWriteBuffer(command_queue, buffer, blocking_write, offset, cb, ptr, num_events_in_wait_list, events_wait_list,event);
     }
@@ -196,10 +196,10 @@ GMM_EXPORT
 cl_int clEnqueueCopyBuffer(cl_command_queue command_queue,cl_mem src,cl_mem dst, size_t src_off,size_t dst_off, size_t cb, cl_uint num_events_in_wait_list,const cl_event* event_wait_list,cl_event* event){
         
     if(initialized){
-        return gmm_clEnqueueCopyBuffer(command_queue, src,dst, src_off, dst_off, cb,num_events_in_wait_list, events_wait_list,event);
+        return gmm_clEnqueueCopyBuffer(command_queue, src,dst, src_off, dst_off, cb,num_events_in_wait_list, event_wait_list,event);
     }
     else{ 
-        return ocl_clEnqueueCopyBuffer(command_queue, src,dst, src_off, dst_off, cb,num_events_in_wait_list, events_wait_list,event);
+        return ocl_clEnqueueCopyBuffer(command_queue, src,dst, src_off, dst_off, cb,num_events_in_wait_list, event_wait_list,event);
     }
 }
 
@@ -326,221 +326,3 @@ cl_int clEnqueueNDRangeKernel(cl_command_queue command_queue,cl_kernel kernel,cl
     }
 }
 
-/*
- *
- *
- *
- *
- *
- *
- *
- *
- *
-
-GMM_EXPORT
-cudaError_t cudaMemcpy(
-		void *dst,
-		const void *src,
-		size_t count,
-		enum cudaMemcpyKind kind)
-{
-	cudaError_t ret;
-	int cow = 0;
-
-#ifdef GMM_CONFIG_COW
-	if (kind & cudaMemcpyHostToDeviceCow)
-		cow = 1;
-#endif
-	kind = (enum cudaMemcpyKind)(kind & (~cudaMemcpyHostToDeviceCow));
-
-	if (initialized) {
-		if (kind == cudaMemcpyHostToDevice)
-			ret = gmm_cudaMemcpyHtoD(dst, src, count, cow);
-		else if (kind == cudaMemcpyDeviceToHost)
-			ret = gmm_cudaMemcpyDtoH(dst, src, count);
-		else if (kind == cudaMemcpyDeviceToDevice)
-			ret = gmm_cudaMemcpyDtoD(dst, src, count);
-		else {
-			gprint(WARN, "HtoH memory copy not supported by GMM\n");
-			ret = nv_cudaMemcpy(dst, src, count, kind);
-		}
-	}
-	else {
-		gprint(WARN, "cudaMemcpy called outside GMM\n");
-		ret = nv_cudaMemcpy(dst, src, count, kind);
-	}
-
-	return ret;
-}
-
-GMM_EXPORT
-cudaError_t cudaMemGetInfo(size_t *free, size_t *total)
-{
-	cudaError_t ret;
-
-	if (initialized)
-		ret = gmm_cudaMemGetInfo(free, total);
-	else {
-		gprint(WARN, "cudaMemGetInfo called outside GMM\n");
-		ret = nv_cudaMemGetInfo(free, total);
-	}
-
-	return ret;
-}
-
-GMM_EXPORT
-cudaError_t cudaConfigureCall(
-		dim3 gridDim,
-		dim3 blockDim,
-		size_t sharedMem,
-		cudaStream_t stream)
-{
-	cudaError_t ret;
-
-	if (initialized)
-		ret = gmm_cudaConfigureCall(gridDim, blockDim, sharedMem, stream);
-	else {
-		gprint(WARN, "cudaConfigureCall called outside GMM\n");
-		ret = nv_cudaConfigureCall(gridDim, blockDim, sharedMem, stream);
-	}
-
-	return ret;
-}
-
-GMM_EXPORT
-cudaError_t cudaSetupArgument(
-		const void *arg,
-		size_t size,
-		size_t offset)
-{
-	cudaError_t ret;
-
-	if (initialized)
-		ret = gmm_cudaSetupArgument(arg, size, offset);
-	else {
-		gprint(WARN, "cudaSetupArgument called outside GMM\n");
-		ret = nv_cudaSetupArgument(arg, size, offset);
-	}
-
-	return ret;
-}
-
-GMM_EXPORT
-cudaError_t cudaMemset(void * devPtr, int value, size_t count)
-{
-	cudaError_t ret;
-
-	if (initialized)
-		ret = gmm_cudaMemset(devPtr, value, count);
-	else {
-		gprint(WARN, "cudaMemset called outside GMM\n");
-		ret = nv_cudaMemset(devPtr, value, count);
-	}
-
-	return ret;
-}
-
-//GMM_EXPORT
-//cudaError_t cudaDeviceSynchronize()
-//{
-//	return nv_cudaDeviceSynchronize();
-//}
-
-GMM_EXPORT
-cudaError_t cudaLaunch(const void *entry)
-{
-	cudaError_t ret;
-
-	if (initialized)
-		ret = gmm_cudaLaunch(entry);
-	else {
-		gprint(WARN, "cudaLaunch called outside GMM\n");
-		ret = nv_cudaLaunch(entry);
-	}
-
-	return ret;
-}
-
-// The priority of the next kernel launch.
-// Value ranges from 0 (highest) to PRIO_MAX (lowest).
-int prio_kernel = PRIO_DEFAULT;
-
-// GMM-specific: specify kernel launch priority.
-GMM_EXPORT
-cudaError_t cudaSetKernelPrio(int prio)
-{
-	if (!initialized)
-		return cudaErrorInitializationError;
-	if (prio < 0 || prio > PRIO_LOWEST)
-		return cudaErrorInvalidValue;
-
-	prio_kernel = prio;
-	return cudaSuccess;
-}
-
-// For passing reference hints before each kernel launch.
-// TODO: should prepare the following structures for each stream.
-int refs[NREFS];
-int rwflags[NREFS];
-int nrefs = 0;
-
-// GMM-specific: pass reference hints.
-// %which_arg tells which argument (starting with 0) in the following
-// cudaSetupArgument calls is a device memory pointer. %flags is the
-// read-write flag.
-// The GMM runtime should expect to see call sequence similar to below:
-// cudaReference, ..., cudaReference, cudaConfigureCall,
-// cudaSetupArgument, ..., cudaSetupArgument, cudaLaunch
-//
-GMM_EXPORT
-cudaError_t cudaReference(int which_arg, int flags)
-{
-	int i;
-
-	gprint(DEBUG, "cudaReference: %d %x\n", which_arg, flags);
-
-	if (!initialized)
-		return cudaErrorInitializationError;
-
-	if (which_arg < NREFS) {
-		for (i = 0; i < nrefs; i++) {
-			if (refs[i] == which_arg)
-				break;
-		}
-		if (i == nrefs) {
-			refs[nrefs] = which_arg;
-#ifdef GMM_CONFIG_RW
-			rwflags[nrefs++] = flags | HINT_READ;	// let's be conservative with HINT_WRITE now
-#else
-			rwflags[nrefs++] = HINT_DEFAULT |
-					(flags & HINT_PTARRAY) | HINT_PTADEFAULT;
-#endif
-		}
-		else {
-#ifdef GMM_CONFIG_RW
-			rwflags[i] |= flags;
-#endif
-		}
-	}
-	else {
-		gprint(ERROR, "bad cudaReference argument %d (max %d)\n", \
-				which_arg, NREFS-1);
-		return cudaErrorInvalidValue;
-	}
-
-	return cudaSuccess;
-}
-
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*/

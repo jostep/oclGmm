@@ -28,7 +28,6 @@ static int gmm_load(struct region **rgns, int nrgns);
 static int gmm_evict(long size_needed, struct region **excls, int nexcl);
 extern cl_mem (*ocl_clCreateBuffer)(cl_context , cl_mem_flags, size_t, void *, cl_int*);
 extern cl_int (*ocl_clReleaseMemObject)(cl_mem);
-//extern cl_int (*ocl_clReleaseCommandQueue)(cl_command_queue);
 extern cl_context(*ocl_clCreateContext)(cl_context_properties * ,cl_uint ,const cl_device_id *,void*, void *,cl_int*);
 extern cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id,cl_command_queue_properties,cl_int *);
 extern cl_int (*ocl_clEnqueueFillBuffer)(cl_command_queue, cl_mem,const void * , size_t, size_t,size_t, cl_uint, const cl_event, cl_event);
@@ -36,9 +35,9 @@ void gmm_context_initEX();
 static int gmm_memset(struct region *r, cl_mem buffer, int value, size_t count);
 extern cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t, const void* , cl_uint, const cl_event *, cl_event *);
 extern cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t, const void* , cl_uint, const cl_event *, cl_event *);
+extern cl_int (*ocl_clEnqueueCopyBuffer)(cl_command_queue, cl_mem,cl_mem, size_t, size_t, size_t, cl_uint, const cl_event *, cl_event *);
 extern cl_int (*ocl_clBuildProgram)(cl_program program,cl_uint num_devices, const cl_device_id *devices_list,const char *options,void(*pfn_notify)(cl_program, void* user_data),void * user_data);
 extern cl_program (*ocl_clCreateProgramWithSource)(cl_context context, cl_uint count, const char**strings, const size_t * lengths, cl_int *errcode_ret);
-//extern cl_kernel(*ocl_clCreateKernel)(cl_program, const char *, cl_int*);
 extern cl_int (*ocl_clEnqueueTask)(cl_command_queue, cl_kernel, cl_uint, const cl_event *,cl_event*);
 extern cl_int (*ocl_clSetKernelArg)(cl_kernel, cl_uint, size_t, const void*);
 extern cl_int (*ocl_clEnqueueNDRangeKernel)(cl_command_queue,cl_kernel,cl_uint,const size_t *, const size_t *, const size_t *,cl_uint,const cl_event*,cl_event*);
@@ -565,7 +564,7 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_of
     off_stoh,	// Stage buffer to Host buffer
     delta;
 	int ret = 0, ibuf_old;
-    
+    cl_int * err;
 	begin_dma(chan);
     
 	// First issue DtoH commands for all staging buffers
@@ -573,9 +572,7 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_of
 	off_dtos = 0;
 	while (off_dtos < size && off_dtos < NBUFS * BUFSIZE) {
 		delta = MIN(off_dtos + BUFSIZE, size) - off_dtos;
-		/*if(ocl_clEnqueueReadBuffer(chan->commandQueue_chan, (cl_mem)((unsigned long)src+off_dtos),CL_FALSE,0,
-                        delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){*/
-        if(clEnqueueCopyBuffer(chan->commandQueue_chan,src,chan->stage_bufs[chan->ibuf],off_dtos+prev_off,0,delta,0,NULL,NULL)!=CL_SUCCESS){
+        if(ocl_clEnqueueCopyBuffer(chan->commandQueue_chan,src,chan->stage_bufs[chan->ibuf],off_dtos+prev_off,0,delta,0,NULL,NULL)!=CL_SUCCESS){
         
 			gprint(FATAL,"Copy Buffer failed in dtoh\n");
 			ret = -1;
@@ -599,8 +596,21 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_of
 	while (off_stoh < size) {
 		delta = MIN(off_stoh + BUFSIZE, size) - off_stoh;
         
-		if (clWaitForEvents(1,&chan->events[chan->ibuf]) != CL_SUCCESS) {
-			gprint(FATAL,"openCL Event Synchronize failed in dtoh\n");
+		err=clWaitForEvents(1,&chan->events[chan->ibuf]);
+        if(err!=CL_SUCCESS){
+            
+			gprint(FATAL,"openCL Event Synchronize failed %d in dtoh\n",err);
+            if(err==CL_INVALID_CONTEXT){
+                gprint(DEBUG,"reason is invalid context\n");
+            }
+            else if(err==CL_INVALID_VALUE){
+                gprint(DEBUG,"reason is invalid value\n");
+            }
+            else if(err==CL_INVALID_EVENT)
+                gprint(DEBUG,"reason is invalid event\n");
+            else{
+                gprint(DEBUG,"I have no fucking clue\n");
+            }
 			ret = -1;
 			goto finish;
 		}
@@ -614,7 +624,7 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_of
         
 		if (off_dtos < size) {
 			delta = MIN(off_dtos + BUFSIZE, size) - off_dtos;
-            if(clEnqueueCopyBuffer(chan->commandQueue_chan,src,chan->stage_bufs[chan->ibuf],off_dtos+prev_off,0,delta,0,NULL,NULL)){
+            if(ocl_clEnqueueCopyBuffer(chan->commandQueue_chan,src,chan->stage_bufs[chan->ibuf],off_dtos+prev_off,0,delta,0,NULL,NULL)){
 				gprint(FATAL, "openCL memcpy Async failed in dtoh\n");
 				ret = -1;
 				goto finish;
@@ -707,7 +717,7 @@ static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size,int p
         }
 
         //if(ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,(cl_mem)((unsigned long)dst+off),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
-        if(clEnqueueCopyBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],dst,0,off+prev_off,delta,0,NULL,NULL)){
+        if(ocl_clEnqueueCopyBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],dst,0,off+prev_off,delta,0,NULL,NULL)){
             gprint(FATAL,"cl write buffer failed in htod\n");
             ret=-1;
             goto finish;
@@ -877,7 +887,7 @@ static int block_sync(struct region *r, int block)
 		stats_time_end(&pcontext->stats, time_sync);
         
 		stats_time_begin();
-		ret = gmm_memcpy_htod((cl_mem)((unsigned long)r->dev_addr),r->swp_addr, size,off);
+		ret = gmm_memcpy_htod(r->dev_addr,r->swp_addr, size,off);
 		if (ret == 0)
 			r->blocks[block].dev_valid = 1;
 		stats_time_end(&pcontext->stats, time_s2d);
@@ -979,7 +989,7 @@ static int gmm_htod(
                     struct region *r,
                     void *dst,
                     const void *src,
-                    size_t count)
+                    size_t count,size_t dst_off)
 {
 	int iblock, ifirst, ilast;
 	unsigned long off, end;
@@ -990,7 +1000,7 @@ static int gmm_htod(
 	if (r->gmm_flags & HINT_PTARRAY)
 		return gmm_htod_pta(r, dst, src, count);
     
-	off = (unsigned long)dst -(unsigned long)r->swp_addr;
+	off = (unsigned long)dst -(unsigned long)r->swp_addr+dst_off;
 	end = off + count;
 	ifirst = BLOCKIDX(off);
 	ilast = BLOCKIDX(end - 1);
@@ -1022,7 +1032,7 @@ static int gmm_htod(
 	// Then, copy data block by block, skipping blocks that are not available
 	// for immediate operation (very likely due to being evicted). skipped[]
 	// records whether a block was skipped.
-	off = (unsigned long)dst -(unsigned long) r->swp_addr;
+	off = (unsigned long)dst -(unsigned long) r->swp_addr+dst_off;
 	for (iblock = ifirst; iblock <= ilast; iblock++) {
 		unsigned long size = MIN(BLOCKUP(off), end) - off;
 		ret = gmm_htod_block(r, off, s, size, iblock, 1,
@@ -1034,7 +1044,7 @@ static int gmm_htod(
 	}
     
 	// Finally, copy the rest blocks, no skipping.
-	off = (unsigned long)dst - (unsigned long)r->swp_addr;
+	off = (unsigned long)dst - (unsigned long)r->swp_addr+dst_off;
 	s = (void *)src;
 	for (iblock = ifirst; iblock <= ilast; iblock++) {
 		unsigned long size = MIN(BLOCKUP(off), end) - off;
@@ -1059,7 +1069,7 @@ static int gmm_htod(
                     struct region *r,
                     cl_mem dst,
                     const void *src,
-                    size_t count)
+                    size_t count,size_t dst_off)
 {
 	unsigned long off, end, size;
 	int ifirst, ilast, iblock;
@@ -1072,7 +1082,7 @@ static int gmm_htod(
     
 	if (r->gmm_flags & HINT_PTARRAY)
 		return gmm_htod_pta(r, dst, (void *)src, count);
-	off = (unsigned long)dst -(unsigned long)r->swp_addr;
+	off = (unsigned long)dst -(unsigned long)r->swp_addr+dst_off;
 	end = off + count;
 	ifirst = BLOCKIDX(off);
 	ilast = BLOCKIDX(end - 1);
@@ -1096,7 +1106,7 @@ static int gmm_htod(
 	}
     
 	// Then, copy the rest blocks, no skipping.
-	off = (unsigned long)dst -(unsigned long)r->swp_addr;
+	off = (unsigned long)dst -(unsigned long)r->swp_addr+dst_off;
 	s = (void *)src;
 	for (iblock = ifirst; iblock <= ilast; iblock++) {
 		size = MIN(BLOCKUP(off), end) - off;
@@ -1117,20 +1127,15 @@ finish:
 #endif
 
 
-static int gmm_dtod(
-                    struct region *rd,
-                    struct region *rs,
-                    void *dst,
-                    const void *src,
-                    size_t count)
+static int gmm_dtod(struct region *rd,struct region *rs,cl_mem dst,cl_mem src,size_t count,size_t dst_off,size_t src_off)
 {
 	int ret = 0;
 	void *temp;
     
 	gprint(DEBUG, "dtod: rd(%p %p %ld %d %d) rs(%p %p %ld %d %d) " \
            "dst(%p) src(%p) count(%lu)\n", \
-           rd, rd->swp_addr, rd->size, rd->flags, rd->state, \
-           rs, rs->swp_addr, rs->size, rs->flags, rs->state, \
+           rd, rd->swp_addr, rd->size, rd->gmm_flags, rd->state, \
+           rs, rs->swp_addr, rs->size, rs->gmm_flags, rs->state, \
            dst, src, count);
     
 	temp = malloc(count);
@@ -1140,13 +1145,13 @@ static int gmm_dtod(
 		return -1;
 	}
     
-	if (gmm_dtoh(rs, temp, src, count) < 0) {
+	if (gmm_dtoh(rs, temp, src, count,src_off) < 0) {
 		gprint(ERROR, "failed to copy data to temp dtod buffer\n");
 		free(temp);
 		return -1;
 	}
     
-	if (gmm_htod(rd, dst, temp, count) < 0) {
+	if (gmm_htod(rd, dst, temp, count,dst_off) < 0) {
 		gprint(ERROR, "failed to copy data from temp dtod buffer\n");
 		free(temp);
 		return -1;
@@ -1157,61 +1162,57 @@ static int gmm_dtod(
 }
 
 
-cudaError_t gmm_cudaMemcpyDtoD(
-                               void *dst,
-                               const void *src,
-                               size_t count)
+cl_int  gmm_clEnqueueCopyBuffer(cl_command_queue command_queue,cl_mem src,cl_mem dst,size_t src_off,size_t dst_off,size_t count,cl_uint num_events_in_wait_list,const cl_event* event_wait_list,cl_event* event)
 {
 	struct region *rs, *rd;
-    
+         
 	if (count <= 0)
-		return cudaErrorInvalidValue;
+		return CL_INVALID_VALUE;
     
 	rs = region_lookup(pcontext, src);
 	if (!rs) {
 		gprint(ERROR, "cannot find src region containing %p in dtod\n", src);
-		return cudaErrorInvalidDevicePointer;
+		return CL_INVALID_MEM_OBJECT;
 	}
 	if (rs->state == STATE_FREEING || rs->state == STATE_ZOMBIE) {
 		gprint(ERROR, "src region already freed\n");
-		return cudaErrorInvalidValue;
+		return CL_INVALID_VALUE;
 	}
-	if (rs->flags & FLAG_COW) {
+	if (rs->gmm_flags & FLAG_COW) {
 		gprint(ERROR, "dtod: src region already tagged COW\n");
-		return cudaErrorUnknown;
+		return CL_INVALID_MEM_OBJECT;
 	}
-	if (src + count > rs->swp_addr + rs->size) {
+	if ((unsigned long)src + count > (unsigned long)rs->swp_addr + rs->size) {
 		gprint(ERROR, "dtod out of src boundary\n");
-		return cudaErrorInvalidValue;
+		return CL_INVALID_VALUE;
 	}
     
 	rd = region_lookup(pcontext, dst);
 	if (!rd) {
 		gprint(ERROR, "cannot find dst region containing %p in dtod\n", dst);
-		return cudaErrorInvalidDevicePointer;
+		return CL_INVALID_MEM_OBJECT;
 	}
 	if (rd->state == STATE_FREEING || rd->state == STATE_ZOMBIE) {
 		gprint(ERROR, "dst region already freed\n");
-		return cudaErrorInvalidValue;
+		return CL_INVALID_VALUE;
 	}
-	if (rd->flags & FLAG_COW) {
+	if (rd->gmm_flags & FLAG_COW) {
 		gprint(ERROR, "dtod: dst region already tagged COW\n");
-		return cudaErrorUnknown;
+		return CL_INVALID_MEM_OBJECT;
 	}
-	if (dst + count > rd->swp_addr + rd->size) {
+	if ((unsigned long)dst + count > (unsigned long)rd->swp_addr + rd->size) {
 		gprint(ERROR, "dtod out of dst boundary\n");
-		return cudaErrorInvalidValue;
+		return CL_INVALID_VALUE;
 	}
     
 	stats_time_begin();
-	if (gmm_dtod(rd, rs, dst, src, count) < 0)
-		return cudaErrorUnknown;
+	if (gmm_dtod(rd, rs, dst, src, count,dst_off,src_off) < 0)
+		return CL_INVALID_VALUE;
 	stats_time_end(&pcontext->stats, time_dtod);
 	stats_inc(&pcontext->stats, bytes_dtod, count);
     
-	return cudaSuccess;
+	return CL_SUCCESS;
 }
-
 
 
 
@@ -1257,7 +1258,7 @@ cl_int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_b
             
     }
     else{*/
-            if(gmm_htod(r,dst,src,count)<0)
+            if(gmm_htod(r,dst,src,count,0)<0)
                 return CL_INVALID_MEM_OBJECT;
     // }
     stats_time_end(&pcontext->stats,time_htod);
@@ -2503,10 +2504,10 @@ static int gmm_dtoh_pta(
 // TODO: It is possible to achieve pipelined copying, i.e., copy a block from
 // its host swap buffer to user buffer while the next block is being fetched
 // from device memory.
-int gmm_dtoh(struct region *r, void *dst, const cl_mem src, size_t count)
+int gmm_dtoh(struct region *r, void *dst, const cl_mem src, size_t count,size_t src_off)
 {
 	unsigned long off = (unsigned long)src - (unsigned long)r->swp_addr;
-	unsigned long end = off + count, size;
+	unsigned long end = off+src_off+count, size;
 	int ifirst = BLOCKIDX(off), iblock;
 	void *d = dst;
 	char *skipped;
@@ -2515,7 +2516,7 @@ int gmm_dtoh(struct region *r, void *dst, const cl_mem src, size_t count)
 	gprint(DEBUG, "dtoh: r(%p %p %ld %d %d) dst(%p) src(%p) count(%lu)\n", \
            r, r->swp_addr, r->size, r->gmm_flags, r->state, dst, src, count);
     
-	if (r->flags & HINT_PTARRAY)
+	if (r->gmm_flags & HINT_PTARRAY)
 		return gmm_dtoh_pta(r, dst, src, count);
     
 	skipped = (char *)malloc(BLOCKIDX(end - 1) - ifirst + 1);
@@ -2525,10 +2526,11 @@ int gmm_dtoh(struct region *r, void *dst, const cl_mem src, size_t count)
 	}
     
 	// First, copy blocks whose swp buffers contain immediate, valid data.
+    off=off+src_off;
 	iblock = ifirst;
 	while (off < end) {
 		size = MIN(BLOCKUP(off), end) - off;
-		ret = gmm_dtoh_block(r, d, off, size, iblock, 1,
+		ret = gmm_dtoh_block(r, d, off+src_off, size, iblock, 1,
                              skipped + iblock - ifirst);
 		if (ret != 0)
 			goto finish;
@@ -2539,6 +2541,7 @@ int gmm_dtoh(struct region *r, void *dst, const cl_mem src, size_t count)
     
 	// Then, copy the rest blocks.
 	off = (unsigned long)src -(unsigned long)r->swp_addr;
+    off = src_off+off;
 	iblock = ifirst;
 	d = dst;
 	while (off < end) {
@@ -2587,7 +2590,7 @@ cl_int gmm_clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem src, cl_bo
 	}
     
 	stats_time_begin();
-	if (gmm_dtoh(r, dst, src, count) < 0)
+	if (gmm_dtoh(r, dst, src, count,0) < 0)
 	    return CL_INVALID_VALUE;
 	stats_time_end(&pcontext->stats, time_dtoh);
 	stats_inc(&pcontext->stats, bytes_dtoh, count);
