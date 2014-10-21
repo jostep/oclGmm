@@ -86,7 +86,7 @@ int client_attach()
 		gprint(FATAL, "failed to allocate client\n");
 		goto fail_client;
 	}
-
+    gprint(DEBUG,"our cid is %d\n",cid);
 	close(shmfd);
 	return 0;
 
@@ -116,6 +116,10 @@ void client_detach() {
 		sem_close(sem_launch);
 		sem_launch = SEM_FAILED;
 	}
+}
+
+long memsize_getUsed(){
+    return pglobal->mem_used;
 }
 
 long memsize_total()

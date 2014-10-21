@@ -38,7 +38,7 @@ int start(size_t mem_total)
 	if (mem_total > 0 && mem_total <= total)
 		total = mem_total;
 	else
-		total -= 200000000;		// FIXME
+		total -= 250000000;		// FIXME
 	if (verbose) {
 		fprintf(stderr, "Use GPU memory: %lu bytes.\n", total);
 		fprintf(stderr, "Setting GMM ...\n");

@@ -25,7 +25,7 @@ int msq_send(int client, const struct msg *msg)
 	char qname[32];
 	mqd_t qid;
 
-	//GMM_DPRINT("msq_send: client(%d) type(%d) size(%d)\n", client, msg->type, msg->size);
+	gprint(INFO,"msq_send: client(%d) type(%d) size(%d)\n", client, msg->type, msg->size);
 	sprintf(qname, "/gmm_cli_%d", cidtopid(client));
 	qid = mq_open(qname, O_WRONLY);
 	if (qid == (mqd_t) -1) {
@@ -39,7 +39,7 @@ int msq_send(int client, const struct msg *msg)
 		mq_close(qid);
 		return -1;
 	}
-	//GMM_DPRINT("msq_send: message sent\n");
+    gprint(DEBUG,"msq_send: message sent\n");
 
 	mq_close(qid);
 	return 0;
@@ -86,7 +86,7 @@ int msq_send_rep_ack(int client, long ack)
 	return msq_send(client, (struct msg *)&msg);
 }
 
-//int local_victim_evict(long size_needed);
+int local_victim_evict(long size_needed);
 
 void handle_req_evict(struct msg_req *msg)
 {
@@ -102,7 +102,7 @@ void handle_req_evict(struct msg_req *msg)
 		return;
 	}
 
-	ret = 0;//local_victim_evict(msg->size_needed);
+	ret = local_victim_evict(msg->size_needed);
 	if (msg->block)
 		msq_send_rep_ack(msg->from, ret);
 	//GMM_DPRINT("handle_req_evict: handled\n");

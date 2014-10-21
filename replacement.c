@@ -89,6 +89,7 @@ int victim_select_lru(
 			client_unpin(iclient);
 			return -1;
 		}
+        gprint(DEBUG,"begin to evict a remote region\n");
 		v->r = NULL;
 		v->client = iclient;
 		list_add(&v->entry, victims);

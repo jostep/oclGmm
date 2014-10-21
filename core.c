@@ -717,7 +717,24 @@ static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size,int p
         }
 
         //if(ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,(cl_mem)((unsigned long)dst+off),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
-        if(ocl_clEnqueueCopyBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],dst,0,off+prev_off,delta,0,NULL,NULL)){
+        errcode_CB=ocl_clEnqueueCopyBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],dst,0,off+prev_off,delta,0,NULL,NULL);
+        if(errcode_CB!=CL_SUCCESS){
+            if(errcode_CB==CL_INVALID_COMMAND_QUEUE){
+                gprint(FATAL,"invalid command queue\n");
+            }
+            else if(errcode_CB==CL_INVALID_MEM_OBJECT){
+                gprint(FATAL,"invalid mem obect\n");
+            }
+            else if(errcode_CB==CL_MEM_OBJECT_ALLOCATION_FAILURE){
+                gprint(FATAL,"mem alloc is incorrect,with mem_used (%ld) and mem_total (%ld)\n",memsize_getUsed(),memsize_total());
+            
+            }
+            else if(errcode_CB==CL_INVALID_VALUE){
+                gprint(FATAL,"invalid value\n");
+            
+            }
+            else
+                gprint(DEBUG,"reason unknown\n");
             gprint(FATAL,"cl write buffer failed in htod\n");
             ret=-1;
             goto finish;
@@ -1211,6 +1228,7 @@ cl_int  gmm_clEnqueueCopyBuffer(cl_command_queue command_queue,cl_mem src,cl_mem
 	stats_time_end(&pcontext->stats, time_dtod);
 	stats_inc(&pcontext->stats, bytes_dtod, count);
     
+    clSetUserEventStatus(event,CL_COMPLETE);    
 	return CL_SUCCESS;
 }
 
@@ -1263,7 +1281,7 @@ cl_int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_b
     // }
     stats_time_end(&pcontext->stats,time_htod);
     stats_inc(&pcontext->stats,bytes_htod, count);
-    
+    clSetUserEventStatus(event,CL_COMPLETE);    
     return CL_SUCCESS;
 }
 
@@ -1641,6 +1659,7 @@ reload:
 			region_unpin(rgns[i]);
 		ret = CL_INVALID_KERNEL;
 	}
+    clSetUserEventStatus(event,CL_COMPLETE);    
     
 finish:
 	if (rgns)
@@ -1749,6 +1768,7 @@ reload:
 		ret = CL_INVALID_KERNEL;
 	}
     
+    clSetUserEventStatus(event,CL_COMPLETE);    
 finish:
 	if (rgns)
 		free(rgns);
@@ -2595,5 +2615,6 @@ cl_int gmm_clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem src, cl_bo
 	stats_time_end(&pcontext->stats, time_dtoh);
 	stats_inc(&pcontext->stats, bytes_dtoh, count);
     
+    clSetUserEventStatus(event,CL_COMPLETE);    
 	return CL_SUCCESS;
 }

@@ -1,0 +1,84 @@
+	the current tid is:9605
+Currently, we have 2 platforms;
+	Platform Vendor:	Advanced Micro Devices, Inc.
+number of devices 1
+	Device Name:	Intel(R) Core(TM) i7-2600 CPU @ 3.40GHz
+	Platform Vendor:	NVIDIA Corporation
+We've got the right one
+number of devices 1
+	Device Name:	GeForce GTX 480
+show 0th result 25
+show 1th result 25
+show 2th result 25
+show 3th result 25
+show 4th result 25
+show 5th result 25
+show 6th result 25
+show 7th result 25
+show 8th result 25
+show 9th result 25
+show 10th result 25
+show 11th result 25
+show 12th result 25
+show 13th result 25
+show 14th result 25
+show 15th result 25
+show 16th result 25
+show 17th result 25
+show 18th result 25
+show 19th result 25
+show 20th result 25
+[9605  info] msq_send: client(0) type(0) size(20)
+[9605  info] msq_send: client(0) type(0) size(20)
+show 21th result 25
+[9605  info] msq_send: client(0) type(0) size(20)
+[9605  info] msq_send: client(0) type(0) size(20)
+show 22th result 25
+[9605  info] msq_send: client(0) type(0) size(20)
+[9605  info] msq_send: client(0) type(0) size(20)
+show 23th result 25
+[9605  info] msq_send: client(0) type(0) size(20)
+[9605  info] msq_send: client(0) type(0) size(20)
+show 24th result 25
+show 25th result 25
+show 26th result 25
+show 27th result 25
+show 28th result 25
+show 29th result 25
+[9605  stat] ------------------------------
+[9605  stat] bytes_mem_alloc     754974720
+[9605  stat] bytes_mem_peak      754974720
+[9605  stat] bytes_mem_freed     754974720
+[9605  stat] bytes_htod          754974720
+[9605  stat] time_htod           243.131
+[9605  stat] bytes_htod_cow      0
+[9605  stat] time_htod_cow       0.000
+[9605  stat] bytes_dtoh          377487360
+[9605  stat] time_dtoh           1704.109
+[9605  stat] bytes_dtod          0
+[9605  stat] time_dtod           0.000
+[9605  stat] bytes_memset        0
+[9605  stat] time_memset         0.000
+[9605  stat] ------------------------------
+[9605  stat] bytes_u2s           754974720
+[9605  stat] time_u2s            242.857
+[9605  stat] bytes_s2d           754974720
+[9605  stat] time_s2d            345.751
+[9605  stat] bytes_u2d           0
+[9605  stat] time_u2d            0.000
+[9605  stat] bytes_d2s           377487360
+[9605  stat] time_d2s            1220.666
+[9605  stat] bytes_s2u           377487360
+[9605  stat] time_s2u            60.404
+[9605  stat] ------------------------------
+[9605  stat] bytes_evict_needed  94213120
+[9605  stat] bytes_evict_space   100663296
+[9605  stat] count_evict_victims 8
+[9605  stat] count_evict_fail    0
+[9605  stat] count_attach_fail   0
+[9605  stat] ------------------------------
+[9605  stat] time_sync           506.821
+[9605  stat] time_kernel         0.000
+[9605  stat] time_attach         65.498
+[9605  stat] time_load           345.923
+[9605  stat] ------------------------------

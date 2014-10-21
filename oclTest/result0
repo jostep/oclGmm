@@ -1,0 +1,140 @@
+	the current tid is:9603
+Currently, we have 2 platforms;
+	Platform Vendor:	Advanced Micro Devices, Inc.
+number of devices 1
+	Device Name:	Intel(R) Core(TM) i7-2600 CPU @ 3.40GHz
+	Platform Vendor:	NVIDIA Corporation
+We've got the right one
+number of devices 1
+	Device Name:	GeForce GTX 480
+show 0th result 25
+show 1th result 25
+show 2th result 25
+show 3th result 25
+show 4th result 25
+show 5th result 25
+show 6th result 25
+show 7th result 25
+show 8th result 25
+show 9th result 25
+show 10th result 25
+show 11th result 25
+show 12th result 25
+show 13th result 25
+show 14th result 25
+show 15th result 25
+show 16th result 25
+show 17th result 25
+show 18th result 25
+show 19th result 25
+show 20th result 25
+show 21th result 25
+show 22th result 25
+show 23th result 25
+show 24th result 25
+[9603  info] evicting region 0x96e6628
+[9603  info] region evicted
+[9603  info] msq_send: client(1) type(1) size(16)
+[9603  info] evicting region 0x96e65c0
+[9603  info] region evicted
+[9603  info] msq_send: client(1) type(1) size(16)
+[9603  info] evicting region 0x973cd30
+show 25th result 25
+[9603  info] region evicted
+[9603  info] msq_send: client(2) type(1) size(16)
+[9603  info] evicting region 0x973bcc8
+[9603  info] region evicted
+[9603  info] msq_send: client(2) type(1) size(16)
+[9603  info] evicting region 0x97897b0
+[9603  info] region evicted
+[9603  info] evicting region 0x9788748
+[9603  info] region evicted
+[9603  info] evicting region 0x97d61e8
+[9603  info] region evicted
+[9603  info] msq_send: client(2) type(1) size(16)
+[9603  info] evicting region 0x97d5180
+[9603  info] region evicted
+[9603  info] msq_send: client(2) type(1) size(16)
+show 26th result 25
+[9603  info] evicting region 0x9822c20
+[9603  info] region evicted
+[9603  info] evicting region 0x9821bb8
+[9603  info] region evicted
+[9603  info] evicting region 0x986f658
+[9603  info] region evicted
+[9603  info] msq_send: client(2) type(1) size(16)
+[9603  info] evicting region 0x986e5f0
+[9603  info] region evicted
+[9603  info] msq_send: client(2) type(1) size(16)
+[9603  info] evicting region 0x98bc090
+show 27th result 25
+[9603  info] region evicted
+[9603  info] msq_send: client(1) type(1) size(16)
+[9603  info] evicting region 0x98bb028
+[9603  info] region evicted
+[9603  info] msq_send: client(1) type(1) size(16)
+[9603  info] evicting region 0x9908ac8
+[9603  info] region evicted
+[9603  info] evicting region 0x9907a60
+[9603  info] region evicted
+[9603  info] evicting region 0x9955540
+[9603  info] region evicted
+[9603  info] msq_send: client(2) type(1) size(16)
+[9603  info] evicting region 0x99544d8
+[9603  info] region evicted
+[9603  info] msq_send: client(2) type(1) size(16)
+[9603  info] evicting region 0x99a1f78
+show 28th result 25
+[9603  info] region evicted
+[9603  info] msq_send: client(1) type(1) size(16)
+[9603  info] evicting region 0x99a0f10
+[9603  info] region evicted
+[9603  info] msq_send: client(1) type(1) size(16)
+[9603  info] evicting region 0x99ee9b0
+[9603  info] region evicted
+[9603  info] evicting region 0x99ed948
+[9603  info] region evicted
+[9603  info] evicting region 0x9a3b3e8
+show 29th result 25
+[9603  info] region evicted
+[9603  info] msq_send: client(1) type(1) size(16)
+[9603  info] evicting region 0x9a87e20
+[9603  info] region evicted
+[9603  info] msq_send: client(1) type(1) size(16)
+[9603  stat] ------------------------------
+[9603  stat] bytes_mem_alloc     754974720
+[9603  stat] bytes_mem_peak      754974720
+[9603  stat] bytes_mem_freed     754974720
+[9603  stat] bytes_htod          754974720
+[9603  stat] time_htod           188.256
+[9603  stat] bytes_htod_cow      0
+[9603  stat] time_htod_cow       0.000
+[9603  stat] bytes_dtoh          377487360
+[9603  stat] time_dtoh           1151.676
+[9603  stat] bytes_dtod          0
+[9603  stat] time_dtod           0.000
+[9603  stat] bytes_memset        0
+[9603  stat] time_memset         0.000
+[9603  stat] ------------------------------
+[9603  stat] bytes_u2s           754974720
+[9603  stat] time_u2s            188.019
+[9603  stat] bytes_s2d           754974720
+[9603  stat] time_s2d            321.881
+[9603  stat] bytes_u2d           0
+[9603  stat] time_u2d            0.000
+[9603  stat] bytes_d2s           536870912
+[9603  stat] time_d2s            1003.417
+[9603  stat] bytes_s2u           377487360
+[9603  stat] time_s2u            52.398
+[9603  stat] ------------------------------
+[9603  stat] bytes_evict_needed  94213120
+[9603  stat] bytes_evict_space   100663296
+[9603  stat] count_evict_victims 8
+[9603  stat] count_evict_fail    0
+[9603  stat] count_attach_fail   0
+[9603  stat] ------------------------------
+[9603  stat] time_sync           411.937
+[9603  stat] time_kernel         0.000
+[9603  stat] time_attach         144.015
+[9603  stat] time_load           322.045
+[9603  stat] ------------------------------

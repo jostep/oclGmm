@@ -3,14 +3,14 @@
 #include <CL/opencl.h>
 #include <inttypes.h>
 #include <string.h>
-
+//#include <../oclErr.h>
 
 
 #define FALSE 1
 #define TRUE 0
 #define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0X100000)
-#define testSize 6*1024*1024
+#define testSize 3*1024*1024
 #define corun 30
 int main(){
 
@@ -20,12 +20,12 @@ int main(){
     cl_uint num_Dev;
     cl_context context;
     cl_command_queue cqueue;
-    cl_program program;
+    cl_program program,program2;
     cl_kernel kernel[corun];
     cl_ulong mem;
     cl_ulong localMem;
     size_t global=testSize*sizeof(int);
-    size_t local;
+    size_t local=1024;
     char devName[1024];
     int i=0,j=0,k=0; 
     int *data2=(int*)malloc(testSize*sizeof(int));
@@ -149,10 +149,11 @@ int main(){
                 if(clSetKernelArg(kernel[k],1,sizeof(cl_mem),&buffer[2*k+1])!=CL_SUCCESS){
                     printf("unable to set the arg\n");
                 }
-                errcode_DEBUG=clGetKernelWorkGroupInfo(kernel[k],devId[0],CL_KERNEL_WORK_GROUP_SIZE,sizeof(local),&local,NULL);
+                /*errcode_DEBUG=clGetKernelWorkGroupInfo(kernel[k],devId[0],CL_KERNEL_WORK_GROUP_SIZE,sizeof(local),&local,NULL);
+                printf("the local is %d\n",local);
                 if(errcode_DEBUG!=CL_SUCCESS){
                     printf("Failed to get the work info\n");
-                }
+                }*/
                 if(clEnqueueNDRangeKernel(cqueue,kernel[k],1,NULL,&global,&local,0,NULL,NULL)!=CL_SUCCESS){
                     printf("kernel launched failed\n");
                 }
@@ -170,16 +171,17 @@ int main(){
                     printf("the %dth calculation is incorrect\n",k);
                 }
            }
-            program=clCreateProgramWithSource(context,1,(const char**)&source_str2,(const size_t*)&source_size2, errcode_CP);
+            /*program2=clCreateProgramWithSource(context,1,(const char**)&source_str2,(const size_t*)&source_size2, errcode_CP);
             if(errcode_CP!=CL_SUCCESS){
                 printf("unable to the load the program  %p\n",errcode_CP);
             }
-            errcode_BP=clBuildProgram(program,1,devId,NULL,NULL,NULL);
-            if(errcode_BP!=CL_SUCCESS){
-                printf("unable to build the program\n");
+            errcode_BP=clBuildProgram(program2,1,&devId[0],NULL,NULL,NULL);
+            if(errcode_BP==CL_INVALID_DEVICE){
+                printf("unable to build the program, INVALID DEV\n");
             }
            for(k=0;k<corun;k++){
             
+                
                 kernel[k]=clCreateKernel(program,"add",errcode_CK);
                 if(clReference(0,2)!=CL_SUCCESS){
                     printf("unable to set the arg ref\n");
@@ -214,7 +216,7 @@ int main(){
                 }
 
            
-           }
+           }*/
 
 
                 
@@ -229,7 +231,7 @@ int main(){
                 }
             }
         }
-        clGetDeviceInfo(devId[0],CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem),&mem,NULL);
+        //clGetDeviceInfo(devId[0],CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem),&mem,NULL);
         flag=FALSE;    
     }
     return 0;
