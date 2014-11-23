@@ -3,7 +3,6 @@
 #include <CL/opencl.h>
 #include <inttypes.h>
 #include <string.h>
-#include <time.h>
 #include "../gmm.h"
 
 
@@ -11,8 +10,8 @@
 #define TRUE 0
 #define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0X100000)
-#define testSize 5*1024*1024
-#define corun 5
+#define testSize 1*1024*1024
+#define corun 1
 int main(){
 
     char vendor[1024];
@@ -36,7 +35,7 @@ int main(){
     int flag=FALSE;
     int flag_cal[corun];
     int   para1=3;
-    int para2=8;
+    long para2=8;
     cl_device_id device;
     cl_device_info param_name;
     cl_int errcode_CC;
@@ -45,7 +44,6 @@ int main(){
     cl_int errcode_CK;
     cl_int errcode_BP;
     cl_int errcode_DEBUG;
-    cl_int errcode_COPY;
     cl_mem buffer[corun];
   
     memset(flag_cal,0,corun);
@@ -77,8 +75,6 @@ int main(){
         printf("failed to the open the openCL file");
         exit(1);
     }
-    struct timeval start,end; 
-    gettimeofday(&start,NULL);
     source_str2=(char *)malloc(MAX_SOURCE_SIZE);
     source_size2=fread(source_str2,1,MAX_SOURCE_SIZE,fp2);
     fclose(fp2);
@@ -111,7 +107,7 @@ int main(){
         
         if(flag==TRUE){
             context=clCreateContext(NULL,1,devId,NULL,NULL,&errcode_CC);
-            //printf("short debug: devId[0]%p,errcode_CC%d\n",devId,errcode_CC);
+            printf("short debug: devId[0]%p,errcode_CC%d\n",devId,errcode_CC);
             if(errcode_CC!=CL_SUCCESS){
                 printf("Context Creating Failed!\n");
             }
@@ -134,7 +130,7 @@ int main(){
                 if(errcode_CB!=CL_SUCCESS){
                     printf("Buffer Creating failed!  %d \n",errcode_CB);
                 }
-                kernel[k]=clCreateKernel(program,"square",&errcode_CK);
+                kernel[k]=clCreateKernel(program,"longSize",&errcode_CK);
                 if(errcode_CK!=CL_SUCCESS){
                 printf("kernel creating failure\n");
                 }
@@ -144,19 +140,19 @@ int main(){
                 if(clEnqueueWriteBuffer(cqueue,buffer[2*k+1],CL_TRUE,0,sizeof(int)*testSize,(result+k*testSize),0,NULL,NULL)!=CL_SUCCESS){
                     printf("write buffer failed\n");
                 }
-                if(clReference(0,2)!=CL_SUCCESS){
+                /*if(clReference(0,2)!=CL_SUCCESS){
                     printf("unable to set the arg ref\n");
                 }
                 if(clReference(3,1)!=CL_SUCCESS){
                     printf("unable to set the arg ref\n");
-                }
+                }*/
                 if(clSetKernelArg(kernel[k],0,sizeof(cl_mem),&buffer[2*k])!=CL_SUCCESS){
                     printf("unable to set the arg 0\n");
                 }   
                 if(clSetKernelArg(kernel[k],1,sizeof(int),&para1)!=CL_SUCCESS){
                     printf("unable to set the arg 1\n");
                 }   
-                if(clSetKernelArg(kernel[k],2,sizeof(int),&para2)!=CL_SUCCESS){
+                if(clSetKernelArg(kernel[k],2,8,&para2)!=CL_SUCCESS){
                     printf("unable to set the arg 2\n");
                 }   
                 if(clSetKernelArg(kernel[k],3,sizeof(cl_mem),&buffer[2*k+1])!=CL_SUCCESS){
@@ -170,12 +166,7 @@ int main(){
                 if(clEnqueueNDRangeKernel(cqueue,kernel[k],1,NULL,&global,&local,0,NULL,NULL)!=CL_SUCCESS){
                     printf("kernel launched failed\n");
                 }
-
-                errcode_COPY=clEnqueueCopyBuffer(cqueue,buffer[2*k+1],buffer[2*k],0,0,sizeof(int)*testSize,0,NULL,NULL);
-                if(errcode_COPY!=CL_SUCCESS){
-                    printf("incorrect copying, with err%d\n",errcode_COPY);
-                }
-                if(clEnqueueReadBuffer(cqueue,buffer[2*k],CL_TRUE,0,sizeof(int)*testSize,(result+k*testSize),0,NULL,NULL)!=CL_SUCCESS){
+                if(clEnqueueReadBuffer(cqueue,buffer[2*k+1],CL_TRUE,0,sizeof(int)*testSize,(result+k*testSize),0,NULL,NULL)!=CL_SUCCESS){
                     printf("read buffer error\n");
                 }
                 //answer check
@@ -252,8 +243,5 @@ int main(){
         //clGetDeviceInfo(devId[0],CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem),&mem,NULL);
         flag=FALSE;    
     }
-    gettimeofday(&end,NULL);
-    unsigned long total=(end.tv_sec-start.tv_sec)*1000000+end.tv_usec-start.tv_usec;
-    printf("========[Total time]========= |%ld \n",total);
     return 0;
 }

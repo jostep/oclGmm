@@ -204,34 +204,4 @@ static inline int is_included(void **a, int n, void *p)
 // Functions exposed by GMM core
 int gmm_context_init();
 void gmm_context_fini();
-
-/*
-cudaError_t gmm_cudaMalloc(void **devPtr, size_t size, int flags);
-cudaError_t gmm_cudaFree(void *devPtr);
-cudaError_t gmm_cudaSetupArgument(
-		const void *arg,
-		size_t size,
-		size_t offset);
-cudaError_t gmm_cudaMemcpyHtoD(
-		void *dst,
-		const void *src,
-		size_t count,
-		int cow);
-cudaError_t gmm_cudaMemcpyDtoH(
-		void *dst,
-		const void *src,
-		size_t count);
-cudaError_t gmm_cudaMemcpyDtoD(
-		void *dst,
-		const void *src,
-		size_t count);
-cudaError_t gmm_cudaMemGetInfo(size_t *free, size_t *total);
-cudaError_t gmm_cudaConfigureCall(
-		dim3 gridDim,
-		dim3 blockDim,
-		size_t sharedMem,
-		cudaStream_t stream);
-cudaError_t gmm_cudaMemset(void * devPtr, int value, size_t count);
-cudaError_t gmm_cudaLaunch(const char* entry);
-*/
 #endif

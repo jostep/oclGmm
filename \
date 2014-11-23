@@ -193,12 +193,14 @@ cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_dev
     pcontext->device=devices;
     cl_context temp=ocl_clCreateContext(properties,num_devices,devices,pfn_notify,user_data,errcode_ret);
     pcontext->context_kernel=temp;
+    gprint(DEBUG,"ok before ret judge\n");
     if(*errcode_ret!=CL_SUCCESS){
         printf("Cannot create the Context %lu for the PC\n",*errcode_ret);
         
         if(errcode_ret==CL_INVALID_DEVICE)
             printf("Cannot create the Context due to %d : invalid device\n",errcode_ret);
     }
+    gprint(DEBUG,"ok after ret judge\n");
 
     gmm_context_initEX();//finishing the init process of gmm_context
     if(dma_channel_init(pcontext,&pcontext->dma_htod,1)!=0){
@@ -214,6 +216,7 @@ cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_dev
         pcontext=NULL;
         return ;
     }
+    gprint(DEBUG,"job finished\n");
     return pcontext->context_kernel;
 }
 
@@ -331,10 +334,6 @@ static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, in
             ocl_clReleaseMemObject(chan->stage_bufs[i]);
             break;
         }
-        if(CL_SUCCESS!=clSetUserEventStatus(chan->events[i],CL_COMPLETE)){
-            gprint(FATAL,"failed to set DMA event status\n");
-            break;
-        }
    }
         if (i<NBUFS){
             while(--i>0){
@@ -368,9 +367,8 @@ cl_int gmm_clReleaseMemObject(cl_mem memObjPtr){
     
     struct region *r;
     if (!(r= region_lookup(pcontext, memObjPtr))){
-        //free(r->blocks);
+        free(r->blocks);
         gprint(ERROR,"cannot find region containg %p in clReleaseMemObject\n",memObjPtr);
-        return CL_INVALID_MEM_OBJECT;
     }
     stats_inc_freed(&pcontext->stats,r->size);
     if(gmm_free(r)<0)
@@ -562,7 +560,7 @@ static int gmm_memset(struct region *r, cl_mem buffer,int value, size_t count){
         off +=size;
     }
 
-finish: 
+finish:
     free(skipped);
     free(s);
     return ret;
@@ -575,46 +573,31 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_of
     off_stoh,	// Stage buffer to Host buffer
     delta;
 	int ret = 0, ibuf_old;
-    cl_int  err;
-    cl_int errcode_temp;
+    cl_int * err;
 	begin_dma(chan);
-    cl_event temp[NBUFS];
-    int i=0;
-    while(i<NBUFS){
-        temp[i]=clCreateUserEvent(pcontext->context_kernel,&errcode_temp);
-        if(errcode_temp!=CL_SUCCESS){
-            gprint(FATAL,"Failed to Create user event in HTOD\n");
-        }
-        if(CL_SUCCESS!=clSetUserEventStatus(temp[i],CL_COMPLETE)){
-            gprint(FATAL,"Failed to Set user event in HTOD\n");
-        }
-        i++;
-    }
     
 	// First issue DtoH commands for all staging buffers
 	ibuf_old = chan->ibuf;
 	off_dtos = 0;
 	while (off_dtos < size && off_dtos < NBUFS * BUFSIZE) {
 		delta = MIN(off_dtos + BUFSIZE, size) - off_dtos;
-        if(ocl_clEnqueueCopyBuffer(chan->commandQueue_chan,src,chan->stage_bufs[chan->ibuf],off_dtos+prev_off,0,delta,0,NULL,&temp[chan->ibuf])!=CL_SUCCESS){
+        if(ocl_clEnqueueCopyBuffer(chan->commandQueue_chan,src,chan->stage_bufs[chan->ibuf],off_dtos+prev_off,0,delta,0,NULL,NULL)!=CL_SUCCESS){
         
 			gprint(FATAL,"Copy Buffer failed in dtoh\n");
 			ret = -1;
 			goto finish;
 		}
-		/*if (clEnqueueMarker(chan->commandQueue_chan,&chan->events[chan->ibuf])!= CL_SUCCESS) {
+		if (clEnqueueMarker(chan->commandQueue_chan,&chan->events[chan->ibuf])//marker
+            != CL_SUCCESS) {
 			gprint(FATAL,"opencl marker failed in dtoh\n");
 			ret = -1;
 			goto finish;
-		}*/
+		}
         
 		chan->ibuf = (chan->ibuf + 1) % NBUFS;
 		off_dtos += delta;
 	}
     
-    /*if(CL_SUCCESS!=clFinish(chan->commandQueue_chan)){
-        gprint(FATAL,"FIRST dtoh waiting failed\n");
-    }*/
 	// Now copy data to user buffer, meanwhile issuing the
 	// rest DtoH commands if any.
 	chan->ibuf = ibuf_old;
@@ -622,7 +605,7 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_of
 	while (off_stoh < size) {
 		delta = MIN(off_stoh + BUFSIZE, size) - off_stoh;
         
-		/*err=clWaitForEvents(1,&chan->events[chan->ibuf]);
+		err=clWaitForEvents(1,&chan->events[chan->ibuf]);
         if(err!=CL_SUCCESS){
             
 			gprint(FATAL,"openCL Event Synchronize failed %d in dtoh\n",err);
@@ -639,11 +622,10 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_of
             }
 			ret = -1;
 			goto finish;
-		}*/
-        cl_int err_RB;
-        err_RB=ocl_clEnqueueReadBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_TRUE,0,delta,(void*)(unsigned long)dst+off_stoh+prev_off,1,&temp[chan->ibuf],NULL);
-        if(err_RB!=CL_SUCCESS){
-            gprint(FATAL,"cannot copy to dst with err %d\n",err_RB);
+		}
+		//memcpy((void *)((unsigned long)dst + off_stoh), chan->stage_bufs[chan->ibuf], delta);
+        if(CL_SUCCESS!=ocl_clEnqueueReadBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_TRUE,0,delta,(void*)(unsigned long)dst+off_stoh+prev_off,0,NULL,NULL)){
+            gprint(DEBUG,"cannot copy to dst \n");
             ret=-1;
             goto finish;
         }
@@ -656,11 +638,11 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_of
 				ret = -1;
 				goto finish;
 			}
-		    /*if (clEnqueueMarker(chan->commandQueue_chan,&chan->events[chan->ibuf])!= CL_SUCCESS){
+		    if (clEnqueueMarker(chan->commandQueue_chan,&chan->events[chan->ibuf])!= CL_SUCCESS){
 				gprint(FATAL,"opencl marker failed in dtoh\n");
 				ret = -1;
 				goto finish;
-			}*/
+			}
 			off_dtos += delta;
 		}
         
@@ -708,23 +690,16 @@ static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size,int p
     cl_int status;
     cl_int*errcode_CB=NULL;
     cl_int errcode_EX;
-    cl_int errcode_temp;
-    cl_event temp=clCreateUserEvent(pcontext->context_kernel,&errcode_temp);
-    if(errcode_temp!=CL_SUCCESS){
-        gprint(FATAL,"Failed to Create user event in HTOD\n");
-    }
-    if(CL_SUCCESS!=clSetUserEventStatus(temp,CL_COMPLETE)){
-        gprint(FATAL,"Failed to Set user event in HTOD\n");
-    }
+
     begin_dma(chan);
     off=0;
     while(off<size){
         delta=MIN(off+BUFSIZE, size)-off;
-        /*errcode_EX=clFinish(chan->commandQueue_chan);
+        errcode_EX=clFinish(chan->commandQueue_chan);
         if(errcode_EX!=CL_SUCCESS){
             gprint(FATAL,"unsuccessfully waiting with err: %d \n",errcode_EX);
         }
-        if(CL_SUCCESS!=clGetEventInfo(chan->events[chan->ibuf],CL_EVENT_COMMAND_EXECUTION_STATUS,sizeof(cl_int),&status, NULL)){
+        /*if(CL_SUCCESS!=clGetEventInfo(chan->events[chan->ibuf],CL_EVENT_COMMAND_EXECUTION_STATUS,sizeof(cl_int),&status, NULL)){
             gprint(DEBUG,"unable to get the event status for htod\n");
         }
          if(status!=CL_SUBMITTED&&status!=CL_COMPLETE){
@@ -736,8 +711,7 @@ static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size,int p
             }
             gprint(DEBUG,"not bypassed for %d",chan->ibuf);
         }*/
-        //clWaitForEvents(1,&chan->events[chan->ibuf]);
-        errcode_CB=ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_FALSE,0,delta,(src+off+prev_off),1,&chan->events[chan->ibuf],&temp);
+        errcode_CB=ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_FALSE,0,delta,(src+off+prev_off),0,NULL,NULL);
         if(errcode_CB!=CL_SUCCESS){
             gprint(DEBUG,"copy buffer failure\n");
             switch((int)errcode_CB){
@@ -752,7 +726,9 @@ static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size,int p
                     break; 
             }
         }
-        errcode_CB=ocl_clEnqueueCopyBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],dst,0,off+prev_off,delta,1,&temp,&chan->events[chan->ibuf]);
+
+        //if(ocl_clEnqueueWriteBuffer(chan->commandQueue_chan,(cl_mem)((unsigned long)dst+off),CL_FALSE,0,delta,chan->stage_bufs[chan->ibuf],0,NULL,NULL)!=CL_SUCCESS){
+        errcode_CB=ocl_clEnqueueCopyBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],dst,0,off+prev_off,delta,0,NULL,NULL);
         if(errcode_CB!=CL_SUCCESS){
             if(errcode_CB==CL_INVALID_COMMAND_QUEUE){
                 gprint(FATAL,"invalid command queue\n");
@@ -775,30 +751,19 @@ static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size,int p
             goto finish;
         }
 
-        /*if(clEnqueueMarker(chan->commandQueue_chan,&chan->events[chan->ibuf])!=CL_SUCCESS){
+        if(clEnqueueMarker(chan->commandQueue_chan,&chan->events[chan->ibuf])!=CL_SUCCESS){
             gprint(FATAL,"cl marker failed in htod\n");
             ret=-1;
             goto finish;
-        }*/
+        }
         ilast=chan->ibuf;
         chan->ibuf=(chan->ibuf+1)%NBUFS;
         off+=delta;
         
     }
-    if(clEnqueueMarker(chan->commandQueue_chan,&chan->events[ilast])!=CL_SUCCESS){
-            gprint(FATAL,"cl marker failed in htod\n");
-            ret=-1;
-            goto finish;
-    }
-    /*cl_int errcode_WFE;
-    errcode_WFE=clWaitForEvents(1,&chan->events[ilast]);
-    if(errcode_WFE!=CL_SUCCESS){
-        gprint(FATAL,"cl event sync failed in htod with err %d\n",errcode_WFE);
-        ret=-1;
-    }*/
-    errcode_EX=clFinish(chan->commandQueue_chan);
-    if(errcode_EX!=CL_SUCCESS){
-        gprint(FATAL,"unsuccessfully waiting with err: %d \n",errcode_EX);
+    
+    if(clWaitForEvents(1,&chan->events[ilast])!=CL_SUCCESS){
+        gprint(FATAL,"cl event sync failed in htod\n");
         ret=-1;
     }
 
@@ -1209,13 +1174,13 @@ static int gmm_dtod(struct region *rd,struct region *rs,cl_mem dst,cl_mem src,si
 	}
     
 	if (gmm_dtoh(rs, temp, src, count,src_off) < 0) {
-		gprint(ERROR, "failed to copy data to temp dtod for dtoh buffer\n");
+		gprint(ERROR, "failed to copy data to temp dtod buffer\n");
 		free(temp);
 		return -1;
 	}
     
 	if (gmm_htod(rd, dst, temp, count,dst_off) < 0) {
-		gprint(ERROR, "failed to copy data from temp htod  buffer\n");
+		gprint(ERROR, "failed to copy data from temp dtod buffer\n");
 		free(temp);
 		return -1;
 	}
@@ -1327,6 +1292,7 @@ cl_int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_b
     // }
     stats_time_end(&pcontext->stats,time_htod);
     stats_inc(&pcontext->stats,bytes_htod, count);
+    gprint(DEBUG,"we should return cl_SUCCESS\n");
     return CL_SUCCESS;
 }
 
@@ -1440,17 +1406,7 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint offset,size_t size, const voi
 				return CL_INVALID_ARG_SIZE;
 				//panic("cudaSetupArgument does not match cudaReference");
 			}
-            if(arg){
-			    r = region_lookup(pcontext, *(cl_mem*)arg);
-            }
-            else{
-		        kargs[nargs].arg.arg1.dptr = arg;
-	            kargs[nargs].is_dptr = 2;
-	            kargs[nargs].size = size;
-	            kargs[nargs].argoff = offset;
-	            nargs++;
-                return CL_SUCCESS;
-            }
+			r = region_lookup(pcontext, *(cl_mem*)arg);
 			if (!r) {
 				gprint(ERROR, "cannot find region containing %p (%d) in " \
                        "clSetkernel\n", *(cl_mem*)arg, nargs);
@@ -1484,19 +1440,18 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint offset,size_t size, const voi
 		// This argument is not a device memory pointer.
 		// XXX: Currently we ignore the case that nv_cudaSetupArgument
 		// returns error and CUDA runtime might stop pushing arguments.
-        /*void * temp = malloc(size);
+        void * temp = malloc(size);
         if(arg)
             memcpy(temp,arg,size);
         else
             temp=arg;
 		kargs[nargs].arg.arg2.arg = temp;
-		*/
-        if(arg)
-            memcpy(ktop, arg, size);
-        else 
-            ktop=arg;
-        kargs[nargs].arg.arg2.arg = ktop;
+		/*
+        memcpy(ktop, arg, size);
+		kargs[nargs].arg.arg2.arg = ktop;
+        printf("for a non-dptr your addr will be %p \n",temp);
 		ktop += size;
+        */
 	}
 	kargs[nargs].is_dptr = is_dptr;
 	kargs[nargs].size = size;
@@ -1699,23 +1654,21 @@ reload:
 	}
     */
 	for (i = 0; i < nargs; i++) {
-		if (kargs[i].is_dptr==1) {
+		if (kargs[i].is_dptr) {
 			kargs[i].arg.arg1.dptr =(cl_mem)((unsigned long)kargs[i].arg.arg1.r->dev_addr + kargs[i].arg.arg1.off);
 
             ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
-			 gprint(DEBUG, "setup device ptr %p %lu %lu\n", \
+			/*gprint(DEBUG, "setup %p %lu %lu\n", \
              &kargs[i].arg.arg1.dptr, \
              sizeof(void *), \
-             kargs[i].arg.arg1.off);
+             kargs[i].arg.arg1.argoff);*/
 		}
-        else if (kargs[i].is_dptr==2){
-            ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
-            gprint(DEBUG,"set up a null device ptr\n");
-        }
 		else {
             ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,kargs[i].arg.arg2.arg);
-	         gprint(DEBUG, "setup non-ptr %p \n", \
-             kargs[i].arg.arg2.arg);
+			/*gprint(DEBUG, "setup %p %lu %lu\n", \
+             kargs[i].arg.arg2.arg, \
+             kargs[i].arg.arg2.size, \
+             kargs[i].arg.arg2.offset);*/
 		}
 	}
     
@@ -1797,21 +1750,14 @@ reload:
 	}
     
 	for (i = 0; i < nargs; i++) {
-		if (kargs[i].is_dptr==1) {
+		if (kargs[i].is_dptr) {
 			kargs[i].arg.arg1.dptr =(cl_mem)((unsigned long)kargs[i].arg.arg1.r->dev_addr + kargs[i].arg.arg1.off);
             errcode_SK=ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
-			if(errcode_SK!=CL_SUCCESS)
-			    gprint(FATAL, "setup dptr with size%d  err:%d\n",kargs[i].size,errcode_SK);
+			gprint(DEBUG, "setup dptr with size%d  err:%d\n",kargs[i].size,errcode_SK);
 		}
-        else if (kargs[i].is_dptr==2){
-            errcode_SK=ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
-			if(errcode_SK!=CL_SUCCESS)
-                gprint(DEBUG,"set up a null device ptr\n");
-        }
 		else {
             errcode_SK=ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,kargs[i].arg.arg2.arg);
-			if(errcode_SK!=CL_SUCCESS)
-                gprint(FATAL, "setup  non-dptr %p with size %d err:%d\n",kargs[i].arg.arg2.arg,kargs[i].size,errcode_SK);
+			gprint(DEBUG, "setup  non-dptr %p with size %d err:%d\n",kargs[i].arg.arg2.arg,kargs[i].size,errcode_SK);
 		}
 	}
     
@@ -2425,7 +2371,7 @@ static int gmm_evict(long size_needed, struct region **excls, int nexcl)
               LMAX(size_needed - memsize_free(), 0));
     
 	do {
-		ret = victim_select(size_needed, excls, nexcl, 0, &victims);
+		ret = victim_select(size_needed, excls, nexcl, 1, &victims);
 		if (ret != 0)
 			return ret;
         

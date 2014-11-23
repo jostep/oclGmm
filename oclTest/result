@@ -1,0 +1,579 @@
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.5/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_CONFIG_HTOD_RADICAL -DGMM_REPLACEMENT_LRU -MM client.c common.c core.c interfaces.c msq.c replacement.c stats.c debug.c > .depend
+rm -f gmmctl libgmm.so *.o .depend
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.5/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_CONFIG_HTOD_RADICAL -DGMM_REPLACEMENT_LRU -MM client.c common.c core.c interfaces.c msq.c replacement.c stats.c debug.c > .depend
+gcc -c -l OpenCL -Wall -g\
+	-I/usr/local/cuda-6.5/include  server.c -o server.o -lpthread -lrt
+gcc -L/usr/local/cuda-6.5/lib server.o -o  gmmctl -lpthread -lrt
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.5/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_CONFIG_HTOD_RADICAL -DGMM_REPLACEMENT_LRU   -c -o client.o client.c
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.5/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_CONFIG_HTOD_RADICAL -DGMM_REPLACEMENT_LRU   -c -o common.o common.c
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.5/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_CONFIG_HTOD_RADICAL -DGMM_REPLACEMENT_LRU   -c -o core.o core.c
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.5/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_CONFIG_HTOD_RADICAL -DGMM_REPLACEMENT_LRU   -c -o interfaces.o interfaces.c
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.5/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_CONFIG_HTOD_RADICAL -DGMM_REPLACEMENT_LRU   -c -o msq.o msq.c
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.5/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_CONFIG_HTOD_RADICAL -DGMM_REPLACEMENT_LRU   -c -o replacement.o replacement.c
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.5/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_CONFIG_HTOD_RADICAL -DGMM_REPLACEMENT_LRU   -c -o stats.o stats.c
+gcc -g -Wall -pthread -fPIC -fvisibility=hidden -I/usr/local/cuda-6.5/include -DGMM_PRINT_LEVEL=6   -DGMM_CONFIG_STATS -DGMM_CONFIG_COW -DGMM_CONFIG_DMA_ASYNC -DGMM_CONFIG_HTOD_RADICAL -DGMM_REPLACEMENT_LRU   -c -o debug.o debug.c
+gcc -shared -pthread -ldl -fPIC -OpenCL client.o common.o core.o interfaces.o msq.o replacement.o stats.o debug.o -o libgmm.so
+	the current tid is:8418
+[8418 debug] our cid is 0
+[8418 debug] gmm initialized
+Currently, we have 1 platforms;
+	Platform Vendor:	NVIDIA Corporation
+We've got the right one
+number of devices 1
+	Device Name:	GeForce GTX 480
+[8418 debug] clCreateBuffer begins, size(188743680), flags(1)
+[8418 debug] clCreateBuffer ends : r(0x88a4910) swp(0x78afa008) pta((nil))
+[8418 debug] clCreateBuffer begins, size(188743680), flags(1)
+[8418 debug] clCreateBuffer ends : r(0x88a4f28) swp(0x6d6f9008) pta((nil))
+[8418 debug] gmm ocl Reference: 0 2
+[8418 debug] gmm ocl Reference: 3 1
+[8418 debug] opencl Setup Argument: nargs(0) size(4) offset(0)
+[8418 debug] argument is dptr: r(0x88a4910 0x78afa008 188743680 0 0)
+[8418 debug] opencl Setup Argument: nargs(1) size(4) offset(1)
+[8418 debug] opencl Setup Argument: nargs(2) size(4) offset(2)
+[8418 debug] opencl Setup Argument: nargs(3) size(4) offset(3)
+[8418 debug] argument is dptr: r(0x88a4f28 0x6d6f9008 188743680 0 0)
+[8418 debug] openCL is about to launch
+[8418 debug] new referenced region(0x88a4910 0x78afa008 188743680 0 0) off(0)
+[8418 debug] new referenced region(0x88a4f28 0x6d6f9008 188743680 0 0) off(0)
+[8418 debug] gmm_attach begins: 2 regions to attach
+[8418 debug] attaching region 0x88a4910
+[8418 debug] region attached
+[8418 debug] attaching region 0x88a4f28
+[8418 debug] region attached
+[8418 debug] gmm_attach succeeded
+[8418 debug] loading region 0x88a4910
+[8418 debug] block sync begins: r(0x88a4910) block(0) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(1) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(2) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(3) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(4) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(5) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(6) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(7) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(8) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(9) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(10) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(11) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(12) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(13) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(14) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(15) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(16) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(17) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(18) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(19) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(20) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(21) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4910) block(22) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] region loaded
+[8418 debug] loading region 0x88a4f28
+[8418 debug] block sync begins: r(0x88a4f28) block(0) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(1) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(2) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(3) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(4) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(5) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(6) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(7) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(8) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(9) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(10) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(11) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(12) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(13) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(14) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(15) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(16) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(17) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(18) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(19) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(20) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(21) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(22) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] region loaded
+[8418 debug] kernel launched
+[8418 debug] dtod: rd(0x88a4910 0x78afa008 188743680 0 1) rs(0x88a4f28 0x6d6f9008 188743680 0 1) dst(0x78afa008) src(0x6d6f9008) count(188743680)
+[8418 debug] dtoh: r(0x88a4f28 0x6d6f9008 188743680 0 1) dst(0x622f8008) src(0x6d6f9008) count(188743680)
+[8418 debug] block sync begins: r(0x88a4f28) block(0) svalid(0) dvalid(1)
+[8418 debug] kernel succeed
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(1) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(2) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(3) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(4) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(5) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(6) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(7) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(8) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(9) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(10) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(11) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(12) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(13) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(14) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(15) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(16) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(17) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(18) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(19) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(20) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(21) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x88a4f28) block(22) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] dtoh: r(0x88a4910 0x78afa008 188743680 0 1) dst(0x89d46008) src(0x78afa008) count(188743680)
+show 0th result 51
+[8418 debug] clCreateBuffer begins, size(188743680), flags(1)
+[8418 debug] clCreateBuffer ends : r(0x89806b8) swp(0x622f8008) pta((nil))
+[8418 debug] clCreateBuffer begins, size(188743680), flags(1)
+[8418 debug] clCreateBuffer ends : r(0x8980710) swp(0x56cff008) pta((nil))
+[8418 debug] gmm ocl Reference: 0 2
+[8418 debug] gmm ocl Reference: 3 1
+[8418 debug] opencl Setup Argument: nargs(0) size(4) offset(0)
+[8418 debug] argument is dptr: r(0x89806b8 0x622f8008 188743680 0 0)
+[8418 debug] opencl Setup Argument: nargs(1) size(4) offset(1)
+[8418 debug] opencl Setup Argument: nargs(2) size(4) offset(2)
+[8418 debug] opencl Setup Argument: nargs(3) size(4) offset(3)
+[8418 debug] argument is dptr: r(0x8980710 0x56cff008 188743680 0 0)
+[8418 debug] openCL is about to launch
+[8418 debug] new referenced region(0x89806b8 0x622f8008 188743680 0 0) off(0)
+[8418 debug] new referenced region(0x8980710 0x56cff008 188743680 0 0) off(0)
+[8418 debug] gmm_attach begins: 2 regions to attach
+[8418 debug] attaching region 0x89806b8
+[8418 debug] region attached
+[8418 debug] attaching region 0x8980710
+[8418 debug] region attached
+[8418 debug] gmm_attach succeeded
+[8418 debug] loading region 0x89806b8
+[8418 debug] block sync begins: r(0x89806b8) block(0) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(1) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(2) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(3) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(4) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(5) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(6) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(7) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(8) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(9) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(10) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(11) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(12) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(13) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(14) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(15) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(16) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(17) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(18) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(19) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(20) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(21) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x89806b8) block(22) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] region loaded
+[8418 debug] loading region 0x8980710
+[8418 debug] block sync begins: r(0x8980710) block(0) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(1) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(2) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(3) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(4) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(5) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(6) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(7) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(8) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(9) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(10) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(11) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(12) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(13) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(14) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(15) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(16) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(17) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(18) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(19) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(20) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(21) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(22) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] region loaded
+[8418 debug] kernel launched
+[8418 debug] dtod: rd(0x89806b8 0x622f8008 188743680 0 1) rs(0x8980710 0x56cff008 188743680 0 1) dst(0x622f8008) src(0x56cff008) count(188743680)
+[8418 debug] dtoh: r(0x8980710 0x56cff008 188743680 0 1) dst(0x4b8fe008) src(0x56cff008) count(188743680)
+[8418 debug] block sync begins: r(0x8980710) block(0) svalid(0) dvalid(1)
+[8418 debug] kernel succeed
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(1) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(2) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(3) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(4) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(5) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(6) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(7) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(8) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(9) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(10) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(11) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(12) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(13) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(14) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(15) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(16) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(17) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(18) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(19) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(20) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(21) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8980710) block(22) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] dtoh: r(0x89806b8 0x622f8008 188743680 0 1) dst(0x95146008) src(0x622f8008) count(188743680)
+show 1th result 51
+[8418 debug] clCreateBuffer begins, size(188743680), flags(1)
+[8418 debug] clCreateBuffer ends : r(0x8a42570) swp(0x4b8fe008) pta((nil))
+[8418 debug] clCreateBuffer begins, size(188743680), flags(1)
+[8418 debug] clCreateBuffer ends : r(0x8a42430) swp(0x404fd008) pta((nil))
+[8418 debug] gmm ocl Reference: 0 2
+[8418 debug] gmm ocl Reference: 3 1
+[8418 debug] opencl Setup Argument: nargs(0) size(4) offset(0)
+[8418 debug] argument is dptr: r(0x8a42570 0x4b8fe008 188743680 0 0)
+[8418 debug] opencl Setup Argument: nargs(1) size(4) offset(1)
+[8418 debug] opencl Setup Argument: nargs(2) size(4) offset(2)
+[8418 debug] opencl Setup Argument: nargs(3) size(4) offset(3)
+[8418 debug] argument is dptr: r(0x8a42430 0x404fd008 188743680 0 0)
+[8418 debug] openCL is about to launch
+[8418 debug] new referenced region(0x8a42570 0x4b8fe008 188743680 0 0) off(0)
+[8418 debug] new referenced region(0x8a42430 0x404fd008 188743680 0 0) off(0)
+[8418 debug] gmm_attach begins: 2 regions to attach
+[8418 debug] attaching region 0x8a42570
+[8418 debug] region attached
+[8418 debug] attaching region 0x8a42430
+[8418 debug] region attached
+[8418 debug] gmm_attach succeeded
+[8418 debug] loading region 0x8a42570
+[8418 debug] block sync begins: r(0x8a42570) block(0) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(1) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(2) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(3) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(4) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(5) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(6) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(7) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(8) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(9) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(10) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(11) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(12) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(13) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(14) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(15) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(16) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(17) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(18) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(19) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(20) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(21) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42570) block(22) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] region loaded
+[8418 debug] loading region 0x8a42430
+[8418 debug] block sync begins: r(0x8a42430) block(0) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(1) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(2) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(3) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(4) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(5) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(6) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(7) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(8) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(9) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(10) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(11) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(12) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(13) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(14) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(15) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(16) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(17) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(18) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(19) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(20) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(21) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(22) svalid(1) dvalid(0)
+[8418 debug] block sync ends
+[8418 debug] region loaded
+[8418 debug] kernel launched
+[8418 debug] dtod: rd(0x8a42570 0x4b8fe008 188743680 0 1) rs(0x8a42430 0x404fd008 188743680 0 1) dst(0x4b8fe008) src(0x404fd008) count(188743680)
+[8418 debug] dtoh: r(0x8a42430 0x404fd008 188743680 0 1) dst(0x350fc008) src(0x404fd008) count(188743680)
+[8418 debug] block sync begins: r(0x8a42430) block(0) svalid(0) dvalid(1)
+[8418 debug] kernel succeed
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(1) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(2) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(3) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(4) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(5) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(6) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(7) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(8) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(9) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(10) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(11) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(12) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(13) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(14) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(15) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(16) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(17) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(18) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(19) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(20) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(21) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] block sync begins: r(0x8a42430) block(22) svalid(0) dvalid(1)
+[8418 debug] block sync ends
+[8418 debug] dtoh: r(0x8a42570 0x4b8fe008 188743680 0 1) dst(0xa0546008) src(0x4b8fe008) count(188743680)
+show 2th result 51
+[8418 debug] freeing r (r 0x88a4910|| swp_addr0x78afa008|| size 188743680||flags 0||r-state 1)
+[8418 debug] region freed
+[8418 debug] freeing r (r 0x88a4f28|| swp_addr0x6d6f9008|| size 188743680||flags 0||r-state 1)
+[8418 debug] region freed
+[8418 debug] freeing r (r 0x89806b8|| swp_addr0x622f8008|| size 188743680||flags 0||r-state 1)
+[8418 debug] region freed
+[8418 debug] freeing r (r 0x8980710|| swp_addr0x56cff008|| size 188743680||flags 0||r-state 1)
+[8418 debug] region freed
+[8418 debug] freeing r (r 0x8a42570|| swp_addr0x4b8fe008|| size 188743680||flags 0||r-state 1)
+[8418 debug] region freed
+[8418 debug] freeing r (r 0x8a42430|| swp_addr0x404fd008|| size 188743680||flags 0||r-state 1)
+[8418 debug] region freed
+[8418  stat] ------------------------------
+[8418  stat] bytes_mem_alloc     1132462080
+[8418  stat] bytes_mem_peak      1132462080
+[8418  stat] bytes_mem_freed     1132462080
+[8418  stat] bytes_htod          1132462080
+[8418  stat] time_htod           193.069
+[8418  stat] bytes_htod_cow      0
+[8418  stat] time_htod_cow       0.000
+[8418  stat] bytes_dtoh          566231040
+[8418  stat] time_dtoh           70.004
+[8418  stat] bytes_dtod          566231040
+[8418  stat] time_dtod           426.284
+[8418  stat] bytes_memset        0
+[8418  stat] time_memset         0.000
+[8418  stat] ------------------------------
+[8418  stat] bytes_u2s           1698693120
+[8418  stat] time_u2s            266.033
+[8418  stat] bytes_s2d           1132462080
+[8418  stat] time_s2d            363.723
+[8418  stat] bytes_u2d           0
+[8418  stat] time_u2d            0.000
+[8418  stat] bytes_d2s           566231040
+[8418  stat] time_d2s            199.513
+[8418  stat] bytes_s2u           1132462080
+[8418  stat] time_s2u            166.501
+[8418  stat] ------------------------------
+[8418  stat] bytes_evict_needed  0
+[8418  stat] bytes_evict_space   0
+[8418  stat] count_evict_victims 0
+[8418  stat] count_evict_fail    0
+[8418  stat] count_attach_fail   0
+[8418  stat] ------------------------------
+[8418  stat] time_sync           55.559
+[8418  stat] time_kernel         0.000
+[8418  stat] time_attach         0.037
+[8418  stat] time_load           364.370
+[8418  stat] ------------------------------

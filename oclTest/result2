@@ -1,84 +1,311 @@
-	the current tid is:9605
-Currently, we have 2 platforms;
-	Platform Vendor:	Advanced Micro Devices, Inc.
-number of devices 1
-	Device Name:	Intel(R) Core(TM) i7-2600 CPU @ 3.40GHz
+	the current tid is:5290
+[5290 debug] our cid is 2
+[5290 debug] gmm initialized
+Currently, we have 1 platforms;
 	Platform Vendor:	NVIDIA Corporation
 We've got the right one
 number of devices 1
 	Device Name:	GeForce GTX 480
-show 0th result 25
-show 1th result 25
-show 2th result 25
-show 3th result 25
-show 4th result 25
-show 5th result 25
-show 6th result 25
-show 7th result 25
-show 8th result 25
-show 9th result 25
-show 10th result 25
-show 11th result 25
-show 12th result 25
-show 13th result 25
-show 14th result 25
-show 15th result 25
-show 16th result 25
-show 17th result 25
-show 18th result 25
-show 19th result 25
-show 20th result 25
-[9605  info] msq_send: client(0) type(0) size(20)
-[9605  info] msq_send: client(0) type(0) size(20)
-show 21th result 25
-[9605  info] msq_send: client(0) type(0) size(20)
-[9605  info] msq_send: client(0) type(0) size(20)
-show 22th result 25
-[9605  info] msq_send: client(0) type(0) size(20)
-[9605  info] msq_send: client(0) type(0) size(20)
-show 23th result 25
-[9605  info] msq_send: client(0) type(0) size(20)
-[9605  info] msq_send: client(0) type(0) size(20)
-show 24th result 25
-show 25th result 25
-show 26th result 25
-show 27th result 25
-show 28th result 25
-show 29th result 25
-[9605  stat] ------------------------------
-[9605  stat] bytes_mem_alloc     754974720
-[9605  stat] bytes_mem_peak      754974720
-[9605  stat] bytes_mem_freed     754974720
-[9605  stat] bytes_htod          754974720
-[9605  stat] time_htod           243.131
-[9605  stat] bytes_htod_cow      0
-[9605  stat] time_htod_cow       0.000
-[9605  stat] bytes_dtoh          377487360
-[9605  stat] time_dtoh           1704.109
-[9605  stat] bytes_dtod          0
-[9605  stat] time_dtod           0.000
-[9605  stat] bytes_memset        0
-[9605  stat] time_memset         0.000
-[9605  stat] ------------------------------
-[9605  stat] bytes_u2s           754974720
-[9605  stat] time_u2s            242.857
-[9605  stat] bytes_s2d           754974720
-[9605  stat] time_s2d            345.751
-[9605  stat] bytes_u2d           0
-[9605  stat] time_u2d            0.000
-[9605  stat] bytes_d2s           377487360
-[9605  stat] time_d2s            1220.666
-[9605  stat] bytes_s2u           377487360
-[9605  stat] time_s2u            60.404
-[9605  stat] ------------------------------
-[9605  stat] bytes_evict_needed  94213120
-[9605  stat] bytes_evict_space   100663296
-[9605  stat] count_evict_victims 8
-[9605  stat] count_evict_fail    0
-[9605  stat] count_attach_fail   0
-[9605  stat] ------------------------------
-[9605  stat] time_sync           506.821
-[9605  stat] time_kernel         0.000
-[9605  stat] time_attach         65.498
-[9605  stat] time_load           345.923
-[9605  stat] ------------------------------
+[5290 debug] clCreateBuffer begins, size(20971520), flags(1)
+[5290 debug] clCreateBuffer ends : r(0x8b94910) swp(0xa82ae008) pta((nil))
+[5290 debug] clCreateBuffer begins, size(20971520), flags(1)
+[5290 debug] clCreateBuffer ends : r(0x8b95148) swp(0xa6ead008) pta((nil))
+[5290 debug] gmm ocl Reference: 0 2
+[5290 debug] gmm ocl Reference: 3 1
+[5290 debug] opencl Setup Argument: nargs(0) size(4) offset(0)
+[5290 debug] argument is dptr: r(0x8b94910 0xa82ae008 20971520 0 0)
+[5290 debug] opencl Setup Argument: nargs(1) size(4) offset(1)
+[5290 debug] opencl Setup Argument: nargs(2) size(4) offset(2)
+[5290 debug] opencl Setup Argument: nargs(3) size(4) offset(3)
+[5290 debug] argument is dptr: r(0x8b95148 0xa6ead008 20971520 0 0)
+[5290 debug] openCL is about to launch
+[5290 debug] new referenced region(0x8b94910 0xa82ae008 20971520 0 0) off(0)
+[5290 debug] new referenced region(0x8b95148 0xa6ead008 20971520 0 0) off(0)
+[5290 debug] gmm_attach begins: 2 regions to attach
+[5290 debug] attaching region 0x8b94910
+[5290 debug] region attached
+[5290 debug] attaching region 0x8b95148
+[5290 debug] region attached
+[5290 debug] gmm_attach succeeded
+[5290 debug] loading region 0x8b94910
+[5290 debug] block sync begins: r(0x8b94910) block(0) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8b94910) block(1) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8b94910) block(2) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] region loaded
+[5290 debug] loading region 0x8b95148
+[5290 debug] block sync begins: r(0x8b95148) block(0) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8b95148) block(1) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8b95148) block(2) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] region loaded
+[5290 debug] kernel launched
+[5290 debug] dtod: rd(0x8b94910 0xa82ae008 20971520 0 1) rs(0x8b95148 0xa6ead008 20971520 0 1) dst(0xa82ae008) src(0xa6ead008) count(20971520)
+[5290 debug] dtoh: r(0x8b95148 0xa6ead008 20971520 0 1) dst(0xa5aac008) src(0xa6ead008) count(20971520)
+[5290 debug] block sync begins: r(0x8b95148) block(0) svalid(0) dvalid(1)
+[5290 debug] kernel succeed
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8b95148) block(1) svalid(0) dvalid(1)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8b95148) block(2) svalid(0) dvalid(1)
+[5290 debug] block sync ends
+[5290 debug] dtoh: r(0x8b94910 0xa82ae008 20971520 0 1) dst(0xaf50d008) src(0xa82ae008) count(20971520)
+show 0th result 51
+[5290 debug] clCreateBuffer begins, size(20971520), flags(1)
+[5290 debug] clCreateBuffer ends : r(0x8bbb2d0) swp(0xa5aac008) pta((nil))
+[5290 debug] clCreateBuffer begins, size(20971520), flags(1)
+[5290 debug] clCreateBuffer ends : r(0x8bbb350) swp(0xa44ff008) pta((nil))
+[5290 debug] gmm ocl Reference: 0 2
+[5290 debug] gmm ocl Reference: 3 1
+[5290 debug] opencl Setup Argument: nargs(0) size(4) offset(0)
+[5290 debug] argument is dptr: r(0x8bbb2d0 0xa5aac008 20971520 0 0)
+[5290 debug] opencl Setup Argument: nargs(1) size(4) offset(1)
+[5290 debug] opencl Setup Argument: nargs(2) size(4) offset(2)
+[5290 debug] opencl Setup Argument: nargs(3) size(4) offset(3)
+[5290 debug] argument is dptr: r(0x8bbb350 0xa44ff008 20971520 0 0)
+[5290 debug] openCL is about to launch
+[5290 debug] new referenced region(0x8bbb2d0 0xa5aac008 20971520 0 0) off(0)
+[5290 debug] new referenced region(0x8bbb350 0xa44ff008 20971520 0 0) off(0)
+[5290 debug] gmm_attach begins: 2 regions to attach
+[5290 debug] attaching region 0x8bbb2d0
+[5290 debug] region attached
+[5290 debug] attaching region 0x8bbb350
+[5290 debug] region attached
+[5290 debug] gmm_attach succeeded
+[5290 debug] loading region 0x8bbb2d0
+[5290 debug] block sync begins: r(0x8bbb2d0) block(0) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8bbb2d0) block(1) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8bbb2d0) block(2) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] region loaded
+[5290 debug] loading region 0x8bbb350
+[5290 debug] block sync begins: r(0x8bbb350) block(0) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8bbb350) block(1) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8bbb350) block(2) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] region loaded
+[5290 debug] kernel succeed
+[5290 debug] kernel launched
+[5290 debug] dtod: rd(0x8bbb2d0 0xa5aac008 20971520 0 1) rs(0x8bbb350 0xa44ff008 20971520 0 1) dst(0xa5aac008) src(0xa44ff008) count(20971520)
+[5290 debug] dtoh: r(0x8bbb350 0xa44ff008 20971520 0 1) dst(0xa30fe008) src(0xa44ff008) count(20971520)
+[5290 debug] block sync begins: r(0x8bbb350) block(0) svalid(0) dvalid(1)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8bbb350) block(1) svalid(0) dvalid(1)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8bbb350) block(2) svalid(0) dvalid(1)
+[5290 debug] block sync ends
+[5290 debug] dtoh: r(0x8bbb2d0 0xa5aac008 20971520 0 1) dst(0xb090d008) src(0xa5aac008) count(20971520)
+show 1th result 51
+[5290 debug] clCreateBuffer begins, size(20971520), flags(1)
+[5290 debug] clCreateBuffer ends : r(0x8bd3528) swp(0xa30fe008) pta((nil))
+[5290 debug] clCreateBuffer begins, size(20971520), flags(1)
+[5290 debug] clCreateBuffer ends : r(0x8bd35a8) swp(0xa1cfd008) pta((nil))
+[5290 debug] gmm ocl Reference: 0 2
+[5290 debug] gmm ocl Reference: 3 1
+[5290 debug] opencl Setup Argument: nargs(0) size(4) offset(0)
+[5290 debug] argument is dptr: r(0x8bd3528 0xa30fe008 20971520 0 0)
+[5290 debug] opencl Setup Argument: nargs(1) size(4) offset(1)
+[5290 debug] opencl Setup Argument: nargs(2) size(4) offset(2)
+[5290 debug] opencl Setup Argument: nargs(3) size(4) offset(3)
+[5290 debug] argument is dptr: r(0x8bd35a8 0xa1cfd008 20971520 0 0)
+[5290 debug] openCL is about to launch
+[5290 debug] new referenced region(0x8bd3528 0xa30fe008 20971520 0 0) off(0)
+[5290 debug] new referenced region(0x8bd35a8 0xa1cfd008 20971520 0 0) off(0)
+[5290 debug] gmm_attach begins: 2 regions to attach
+[5290 debug] attaching region 0x8bd3528
+[5290 debug] region attached
+[5290 debug] attaching region 0x8bd35a8
+[5290 debug] region attached
+[5290 debug] gmm_attach succeeded
+[5290 debug] loading region 0x8bd3528
+[5290 debug] block sync begins: r(0x8bd3528) block(0) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8bd3528) block(1) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8bd3528) block(2) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] region loaded
+[5290 debug] loading region 0x8bd35a8
+[5290 debug] block sync begins: r(0x8bd35a8) block(0) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8bd35a8) block(1) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8bd35a8) block(2) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] region loaded
+[5290 debug] kernel launched
+[5290 debug] dtod: rd(0x8bd3528 0xa30fe008 20971520 0 1) rs(0x8bd35a8 0xa1cfd008 20971520 0 1) dst(0xa30fe008) src(0xa1cfd008) count(20971520)
+[5290 debug] dtoh: r(0x8bd35a8 0xa1cfd008 20971520 0 1) dst(0xa08fc008) src(0xa1cfd008) count(20971520)
+[5290 debug] block sync begins: r(0x8bd35a8) block(0) svalid(0) dvalid(1)
+[5290 debug] kernel succeed
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8bd35a8) block(1) svalid(0) dvalid(1)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8bd35a8) block(2) svalid(0) dvalid(1)
+[5290 debug] block sync ends
+[5290 debug] dtoh: r(0x8bd3528 0xa30fe008 20971520 0 1) dst(0xb1d0d008) src(0xa30fe008) count(20971520)
+show 2th result 51
+[5290 debug] clCreateBuffer begins, size(20971520), flags(1)
+[5290 debug] clCreateBuffer ends : r(0x8beb8d8) swp(0xa08fc008) pta((nil))
+[5290 debug] clCreateBuffer begins, size(20971520), flags(1)
+[5290 debug] clCreateBuffer ends : r(0x8beb7e8) swp(0x9f4fb008) pta((nil))
+[5290 debug] gmm ocl Reference: 0 2
+[5290 debug] gmm ocl Reference: 3 1
+[5290 debug] opencl Setup Argument: nargs(0) size(4) offset(0)
+[5290 debug] argument is dptr: r(0x8beb8d8 0xa08fc008 20971520 0 0)
+[5290 debug] opencl Setup Argument: nargs(1) size(4) offset(1)
+[5290 debug] opencl Setup Argument: nargs(2) size(4) offset(2)
+[5290 debug] opencl Setup Argument: nargs(3) size(4) offset(3)
+[5290 debug] argument is dptr: r(0x8beb7e8 0x9f4fb008 20971520 0 0)
+[5290 debug] openCL is about to launch
+[5290 debug] new referenced region(0x8beb8d8 0xa08fc008 20971520 0 0) off(0)
+[5290 debug] new referenced region(0x8beb7e8 0x9f4fb008 20971520 0 0) off(0)
+[5290 debug] gmm_attach begins: 2 regions to attach
+[5290 debug] attaching region 0x8beb8d8
+[5290 debug] region attached
+[5290 debug] attaching region 0x8beb7e8
+[5290 debug] region attached
+[5290 debug] gmm_attach succeeded
+[5290 debug] loading region 0x8beb8d8
+[5290 debug] block sync begins: r(0x8beb8d8) block(0) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8beb8d8) block(1) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8beb8d8) block(2) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] region loaded
+[5290 debug] loading region 0x8beb7e8
+[5290 debug] block sync begins: r(0x8beb7e8) block(0) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8beb7e8) block(1) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8beb7e8) block(2) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] region loaded
+[5290 debug] kernel launched
+[5290 debug] kernel succeed
+[5290 debug] dtod: rd(0x8beb8d8 0xa08fc008 20971520 0 1) rs(0x8beb7e8 0x9f4fb008 20971520 0 1) dst(0xa08fc008) src(0x9f4fb008) count(20971520)
+[5290 debug] dtoh: r(0x8beb7e8 0x9f4fb008 20971520 0 1) dst(0x9e0fa008) src(0x9f4fb008) count(20971520)
+[5290 debug] block sync begins: r(0x8beb7e8) block(0) svalid(0) dvalid(1)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8beb7e8) block(1) svalid(0) dvalid(1)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8beb7e8) block(2) svalid(0) dvalid(1)
+[5290 debug] block sync ends
+[5290 debug] dtoh: r(0x8beb8d8 0xa08fc008 20971520 0 1) dst(0xb310d008) src(0xa08fc008) count(20971520)
+show 3th result 51
+[5290 debug] clCreateBuffer begins, size(20971520), flags(1)
+[5290 debug] clCreateBuffer ends : r(0x8c03af0) swp(0x9e0fa008) pta((nil))
+[5290 debug] clCreateBuffer begins, size(20971520), flags(1)
+[5290 debug] clCreateBuffer ends : r(0x8c03a00) swp(0x9ccf9008) pta((nil))
+[5290 debug] gmm ocl Reference: 0 2
+[5290 debug] gmm ocl Reference: 3 1
+[5290 debug] opencl Setup Argument: nargs(0) size(4) offset(0)
+[5290 debug] argument is dptr: r(0x8c03af0 0x9e0fa008 20971520 0 0)
+[5290 debug] opencl Setup Argument: nargs(1) size(4) offset(1)
+[5290 debug] opencl Setup Argument: nargs(2) size(4) offset(2)
+[5290 debug] opencl Setup Argument: nargs(3) size(4) offset(3)
+[5290 debug] argument is dptr: r(0x8c03a00 0x9ccf9008 20971520 0 0)
+[5290 debug] openCL is about to launch
+[5290 debug] new referenced region(0x8c03af0 0x9e0fa008 20971520 0 0) off(0)
+[5290 debug] new referenced region(0x8c03a00 0x9ccf9008 20971520 0 0) off(0)
+[5290 debug] gmm_attach begins: 2 regions to attach
+[5290 debug] attaching region 0x8c03af0
+[5290 debug] region attached
+[5290 debug] attaching region 0x8c03a00
+[5290 debug] region attached
+[5290 debug] gmm_attach succeeded
+[5290 debug] loading region 0x8c03af0
+[5290 debug] block sync begins: r(0x8c03af0) block(0) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8c03af0) block(1) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8c03af0) block(2) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] region loaded
+[5290 debug] loading region 0x8c03a00
+[5290 debug] block sync begins: r(0x8c03a00) block(0) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8c03a00) block(1) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8c03a00) block(2) svalid(1) dvalid(0)
+[5290 debug] block sync ends
+[5290 debug] region loaded
+[5290 debug] kernel succeed
+[5290 debug] kernel launched
+[5290 debug] dtod: rd(0x8c03af0 0x9e0fa008 20971520 0 1) rs(0x8c03a00 0x9ccf9008 20971520 0 1) dst(0x9e0fa008) src(0x9ccf9008) count(20971520)
+[5290 debug] dtoh: r(0x8c03a00 0x9ccf9008 20971520 0 1) dst(0x9b8f8008) src(0x9ccf9008) count(20971520)
+[5290 debug] block sync begins: r(0x8c03a00) block(0) svalid(0) dvalid(1)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8c03a00) block(1) svalid(0) dvalid(1)
+[5290 debug] block sync ends
+[5290 debug] block sync begins: r(0x8c03a00) block(2) svalid(0) dvalid(1)
+[5290 debug] block sync ends
+[5290 debug] dtoh: r(0x8c03af0 0x9e0fa008 20971520 0 1) dst(0xb450d008) src(0x9e0fa008) count(20971520)
+show 4th result 51
+[5290 debug] freeing r (r 0x8b94910|| swp_addr0xa82ae008|| size 20971520||flags 0||r-state 1)
+[5290 debug] region freed
+[5290 debug] freeing r (r 0x8b95148|| swp_addr0xa6ead008|| size 20971520||flags 0||r-state 1)
+[5290 debug] region freed
+[5290 debug] freeing r (r 0x8bbb2d0|| swp_addr0xa5aac008|| size 20971520||flags 0||r-state 1)
+[5290 debug] region freed
+[5290 debug] freeing r (r 0x8bbb350|| swp_addr0xa44ff008|| size 20971520||flags 0||r-state 1)
+[5290 debug] region freed
+[5290 debug] freeing r (r 0x8bd3528|| swp_addr0xa30fe008|| size 20971520||flags 0||r-state 1)
+[5290 debug] region freed
+[5290 debug] freeing r (r 0x8bd35a8|| swp_addr0xa1cfd008|| size 20971520||flags 0||r-state 1)
+[5290 debug] region freed
+[5290 debug] freeing r (r 0x8beb8d8|| swp_addr0xa08fc008|| size 20971520||flags 0||r-state 1)
+[5290 debug] region freed
+[5290 debug] freeing r (r 0x8beb7e8|| swp_addr0x9f4fb008|| size 20971520||flags 0||r-state 1)
+[5290 debug] region freed
+[5290 debug] freeing r (r 0x8c03af0|| swp_addr0x9e0fa008|| size 20971520||flags 0||r-state 1)
+[5290 debug] region freed
+[5290 debug] freeing r (r 0x8c03a00|| swp_addr0x9ccf9008|| size 20971520||flags 0||r-state 1)
+[5290 debug] region freed
+========[Total time]========= |894095 
+[5290  stat] ------------------------------
+[5290  stat] bytes_mem_alloc     209715200
+[5290  stat] bytes_mem_peak      209715200
+[5290  stat] bytes_mem_freed     209715200
+[5290  stat] bytes_htod          209715200
+[5290  stat] time_htod           74.852
+[5290  stat] bytes_htod_cow      0
+[5290  stat] time_htod_cow       0.000
+[5290  stat] bytes_dtoh          104857600
+[5290  stat] time_dtoh           35.190
+[5290  stat] bytes_dtod          104857600
+[5290  stat] time_dtod           208.013
+[5290  stat] bytes_memset        0
+[5290  stat] time_memset         0.000
+[5290  stat] ------------------------------
+[5290  stat] bytes_u2s           314572800
+[5290  stat] time_u2s            109.684
+[5290  stat] bytes_s2d           209715200
+[5290  stat] time_s2d            149.260
+[5290  stat] bytes_u2d           0
+[5290  stat] time_u2d            0.000
+[5290  stat] bytes_d2s           104857600
+[5290  stat] time_d2s            93.241
+[5290  stat] bytes_s2u           209715200
+[5290  stat] time_s2u            77.140
+[5290  stat] ------------------------------
+[5290  stat] bytes_evict_needed  0
+[5290  stat] bytes_evict_space   0
+[5290  stat] count_evict_victims 0
+[5290  stat] count_evict_fail    0
+[5290  stat] count_attach_fail   0
+[5290  stat] ------------------------------
+[5290  stat] time_sync           36.940
+[5290  stat] time_kernel         0.000
+[5290  stat] time_attach         0.087
+[5290  stat] time_load           149.507
+[5290  stat] ------------------------------
