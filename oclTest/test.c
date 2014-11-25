@@ -11,8 +11,8 @@
 #define TRUE 0
 #define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0X100000)
-#define testSize 5*1024*1024
-#define corun 5
+#define testSize 50*1024*1024
+#define corun 1
 int main(){
 
     char vendor[1024];
@@ -171,11 +171,7 @@ int main(){
                     printf("kernel launched failed\n");
                 }
 
-                errcode_COPY=clEnqueueCopyBuffer(cqueue,buffer[2*k+1],buffer[2*k],0,0,sizeof(int)*testSize,0,NULL,NULL);
-                if(errcode_COPY!=CL_SUCCESS){
-                    printf("incorrect copying, with err%d\n",errcode_COPY);
-                }
-                if(clEnqueueReadBuffer(cqueue,buffer[2*k],CL_TRUE,0,sizeof(int)*testSize,(result+k*testSize),0,NULL,NULL)!=CL_SUCCESS){
+                if(clEnqueueReadBuffer(cqueue,buffer[2*k+1],CL_TRUE,0,sizeof(int)*testSize,(result+k*testSize),0,NULL,NULL)!=CL_SUCCESS){
                     printf("read buffer error\n");
                 }
                 //answer check
@@ -196,7 +192,7 @@ int main(){
             errcode_BP=clBuildProgram(program2,1,&devId[0],NULL,NULL,NULL);
             if(errcode_BP==CL_INVALID_DEVICE){
                 printf("unable to build the program, INVALID DEV\n");
-            }
+            }*/
            for(k=0;k<corun;k++){
             
                 
@@ -213,14 +209,18 @@ int main(){
                 if(clSetKernelArg(kernel[k],1,sizeof(cl_mem),&buffer[2*k+1])!=CL_SUCCESS){
                     printf("unable to set the arg\n");
                 }
-                errcode_DEBUG=clGetKernelWorkGroupInfo(kernel[k],devId[0],CL_KERNEL_WORK_GROUP_SIZE,sizeof(local),&local,NULL);
+                /*errcode_DEBUG=clGetKernelWorkGroupInfo(kernel[k],devId[0],CL_KERNEL_WORK_GROUP_SIZE,sizeof(local),&local,NULL);
                 if(errcode_DEBUG!=CL_SUCCESS){
                     printf("Failed to get the work info\n");
-                }
+                }*/
                 if(clEnqueueNDRangeKernel(cqueue,kernel[k],1,NULL,&global,&local,0,NULL,NULL)!=CL_SUCCESS){
                     printf("kernel launched failed\n");
                 }
-                if(clEnqueueReadBuffer(cqueue,buffer[2*k+1],CL_TRUE,0,sizeof(int)*testSize,(result+k*testSize),0,NULL,NULL)!=CL_SUCCESS){
+                errcode_COPY=clEnqueueCopyBuffer(cqueue,buffer[2*k+1],buffer[2*k],0,0,sizeof(int)*testSize,0,NULL,NULL);
+                if(errcode_COPY!=CL_SUCCESS){
+                    printf("incorrect copying, with err%d\n",errcode_COPY);
+                }
+                if(clEnqueueReadBuffer(cqueue,buffer[2*k],CL_TRUE,0,sizeof(int)*testSize,(result+k*testSize),0,NULL,NULL)!=CL_SUCCESS){
                     printf("read buffer error\n");
                 }
                 for(j=0;j<testSize;j++){
@@ -234,7 +234,7 @@ int main(){
                 }
 
            
-           }*/
+           }
 
 
                 

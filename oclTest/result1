@@ -1,311 +1,266 @@
-	the current tid is:5289
-[5289 debug] our cid is 1
-[5289 debug] gmm initialized
+	the current tid is:11189
 Currently, we have 1 platforms;
 	Platform Vendor:	NVIDIA Corporation
 We've got the right one
 number of devices 1
 	Device Name:	GeForce GTX 480
-[5289 debug] clCreateBuffer begins, size(20971520), flags(1)
-[5289 debug] clCreateBuffer ends : r(0x97af7f0) swp(0xa828e008) pta((nil))
-[5289 debug] clCreateBuffer begins, size(20971520), flags(1)
-[5289 debug] clCreateBuffer ends : r(0x97b0028) swp(0xa6e8d008) pta((nil))
-[5289 debug] gmm ocl Reference: 0 2
-[5289 debug] gmm ocl Reference: 3 1
-[5289 debug] opencl Setup Argument: nargs(0) size(4) offset(0)
-[5289 debug] argument is dptr: r(0x97af7f0 0xa828e008 20971520 0 0)
-[5289 debug] opencl Setup Argument: nargs(1) size(4) offset(1)
-[5289 debug] opencl Setup Argument: nargs(2) size(4) offset(2)
-[5289 debug] opencl Setup Argument: nargs(3) size(4) offset(3)
-[5289 debug] argument is dptr: r(0x97b0028 0xa6e8d008 20971520 0 0)
-[5289 debug] openCL is about to launch
-[5289 debug] new referenced region(0x97af7f0 0xa828e008 20971520 0 0) off(0)
-[5289 debug] new referenced region(0x97b0028 0xa6e8d008 20971520 0 0) off(0)
-[5289 debug] gmm_attach begins: 2 regions to attach
-[5289 debug] attaching region 0x97af7f0
-[5289 debug] region attached
-[5289 debug] attaching region 0x97b0028
-[5289 debug] region attached
-[5289 debug] gmm_attach succeeded
-[5289 debug] loading region 0x97af7f0
-[5289 debug] block sync begins: r(0x97af7f0) block(0) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97af7f0) block(1) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97af7f0) block(2) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] region loaded
-[5289 debug] loading region 0x97b0028
-[5289 debug] block sync begins: r(0x97b0028) block(0) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97b0028) block(1) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97b0028) block(2) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] region loaded
-[5289 debug] kernel succeed
-[5289 debug] kernel launched
-[5289 debug] dtod: rd(0x97af7f0 0xa828e008 20971520 0 1) rs(0x97b0028 0xa6e8d008 20971520 0 1) dst(0xa828e008) src(0xa6e8d008) count(20971520)
-[5289 debug] dtoh: r(0x97b0028 0xa6e8d008 20971520 0 1) dst(0xa5a8c008) src(0xa6e8d008) count(20971520)
-[5289 debug] block sync begins: r(0x97b0028) block(0) svalid(0) dvalid(1)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97b0028) block(1) svalid(0) dvalid(1)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97b0028) block(2) svalid(0) dvalid(1)
-[5289 debug] block sync ends
-[5289 debug] dtoh: r(0x97af7f0 0xa828e008 20971520 0 1) dst(0xaf4d8008) src(0xa828e008) count(20971520)
 show 0th result 51
-[5289 debug] clCreateBuffer begins, size(20971520), flags(1)
-[5289 debug] clCreateBuffer ends : r(0x97d6190) swp(0xa5a8c008) pta((nil))
-[5289 debug] clCreateBuffer begins, size(20971520), flags(1)
-[5289 debug] clCreateBuffer ends : r(0x97d6210) swp(0xa468b008) pta((nil))
-[5289 debug] gmm ocl Reference: 0 2
-[5289 debug] gmm ocl Reference: 3 1
-[5289 debug] opencl Setup Argument: nargs(0) size(4) offset(0)
-[5289 debug] argument is dptr: r(0x97d6190 0xa5a8c008 20971520 0 0)
-[5289 debug] opencl Setup Argument: nargs(1) size(4) offset(1)
-[5289 debug] opencl Setup Argument: nargs(2) size(4) offset(2)
-[5289 debug] opencl Setup Argument: nargs(3) size(4) offset(3)
-[5289 debug] argument is dptr: r(0x97d6210 0xa468b008 20971520 0 0)
-[5289 debug] openCL is about to launch
-[5289 debug] new referenced region(0x97d6190 0xa5a8c008 20971520 0 0) off(0)
-[5289 debug] new referenced region(0x97d6210 0xa468b008 20971520 0 0) off(0)
-[5289 debug] gmm_attach begins: 2 regions to attach
-[5289 debug] attaching region 0x97d6190
-[5289 debug] region attached
-[5289 debug] attaching region 0x97d6210
-[5289 debug] region attached
-[5289 debug] gmm_attach succeeded
-[5289 debug] loading region 0x97d6190
-[5289 debug] block sync begins: r(0x97d6190) block(0) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97d6190) block(1) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97d6190) block(2) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] region loaded
-[5289 debug] loading region 0x97d6210
-[5289 debug] block sync begins: r(0x97d6210) block(0) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97d6210) block(1) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97d6210) block(2) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] region loaded
-[5289 debug] kernel launched
-[5289 debug] dtod: rd(0x97d6190 0xa5a8c008 20971520 0 1) rs(0x97d6210 0xa468b008 20971520 0 1) dst(0xa5a8c008) src(0xa468b008) count(20971520)
-[5289 debug] dtoh: r(0x97d6210 0xa468b008 20971520 0 1) dst(0xa328a008) src(0xa468b008) count(20971520)
-[5289 debug] block sync begins: r(0x97d6210) block(0) svalid(0) dvalid(1)
-[5289 debug] kernel succeed
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97d6210) block(1) svalid(0) dvalid(1)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97d6210) block(2) svalid(0) dvalid(1)
-[5289 debug] block sync ends
-[5289 debug] dtoh: r(0x97d6190 0xa5a8c008 20971520 0 1) dst(0xb08d8008) src(0xa5a8c008) count(20971520)
 show 1th result 51
-[5289 debug] clCreateBuffer begins, size(20971520), flags(1)
-[5289 debug] clCreateBuffer ends : r(0x97ee428) swp(0xa328a008) pta((nil))
-[5289 debug] clCreateBuffer begins, size(20971520), flags(1)
-[5289 debug] clCreateBuffer ends : r(0x97ee4a8) swp(0xa1cff008) pta((nil))
-[5289 debug] gmm ocl Reference: 0 2
-[5289 debug] gmm ocl Reference: 3 1
-[5289 debug] opencl Setup Argument: nargs(0) size(4) offset(0)
-[5289 debug] argument is dptr: r(0x97ee428 0xa328a008 20971520 0 0)
-[5289 debug] opencl Setup Argument: nargs(1) size(4) offset(1)
-[5289 debug] opencl Setup Argument: nargs(2) size(4) offset(2)
-[5289 debug] opencl Setup Argument: nargs(3) size(4) offset(3)
-[5289 debug] argument is dptr: r(0x97ee4a8 0xa1cff008 20971520 0 0)
-[5289 debug] openCL is about to launch
-[5289 debug] new referenced region(0x97ee428 0xa328a008 20971520 0 0) off(0)
-[5289 debug] new referenced region(0x97ee4a8 0xa1cff008 20971520 0 0) off(0)
-[5289 debug] gmm_attach begins: 2 regions to attach
-[5289 debug] attaching region 0x97ee428
-[5289 debug] region attached
-[5289 debug] attaching region 0x97ee4a8
-[5289 debug] region attached
-[5289 debug] gmm_attach succeeded
-[5289 debug] loading region 0x97ee428
-[5289 debug] block sync begins: r(0x97ee428) block(0) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97ee428) block(1) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97ee428) block(2) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] region loaded
-[5289 debug] loading region 0x97ee4a8
-[5289 debug] block sync begins: r(0x97ee4a8) block(0) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97ee4a8) block(1) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97ee4a8) block(2) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] region loaded
-[5289 debug] kernel launched
-[5289 debug] dtod: rd(0x97ee428 0xa328a008 20971520 0 1) rs(0x97ee4a8 0xa1cff008 20971520 0 1) dst(0xa328a008) src(0xa1cff008) count(20971520)
-[5289 debug] dtoh: r(0x97ee4a8 0xa1cff008 20971520 0 1) dst(0xa08fe008) src(0xa1cff008) count(20971520)
-[5289 debug] block sync begins: r(0x97ee4a8) block(0) svalid(0) dvalid(1)
-[5289 debug] kernel succeed
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97ee4a8) block(1) svalid(0) dvalid(1)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x97ee4a8) block(2) svalid(0) dvalid(1)
-[5289 debug] block sync ends
-[5289 debug] dtoh: r(0x97ee428 0xa328a008 20971520 0 1) dst(0xb1cd8008) src(0xa328a008) count(20971520)
 show 2th result 51
-[5289 debug] clCreateBuffer begins, size(20971520), flags(1)
-[5289 debug] clCreateBuffer ends : r(0x98067b8) swp(0xa08fe008) pta((nil))
-[5289 debug] clCreateBuffer begins, size(20971520), flags(1)
-[5289 debug] clCreateBuffer ends : r(0x98066c8) swp(0x9f4fd008) pta((nil))
-[5289 debug] gmm ocl Reference: 0 2
-[5289 debug] gmm ocl Reference: 3 1
-[5289 debug] opencl Setup Argument: nargs(0) size(4) offset(0)
-[5289 debug] argument is dptr: r(0x98067b8 0xa08fe008 20971520 0 0)
-[5289 debug] opencl Setup Argument: nargs(1) size(4) offset(1)
-[5289 debug] opencl Setup Argument: nargs(2) size(4) offset(2)
-[5289 debug] opencl Setup Argument: nargs(3) size(4) offset(3)
-[5289 debug] argument is dptr: r(0x98066c8 0x9f4fd008 20971520 0 0)
-[5289 debug] openCL is about to launch
-[5289 debug] new referenced region(0x98067b8 0xa08fe008 20971520 0 0) off(0)
-[5289 debug] new referenced region(0x98066c8 0x9f4fd008 20971520 0 0) off(0)
-[5289 debug] gmm_attach begins: 2 regions to attach
-[5289 debug] attaching region 0x98067b8
-[5289 debug] region attached
-[5289 debug] attaching region 0x98066c8
-[5289 debug] region attached
-[5289 debug] gmm_attach succeeded
-[5289 debug] loading region 0x98067b8
-[5289 debug] block sync begins: r(0x98067b8) block(0) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x98067b8) block(1) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x98067b8) block(2) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] region loaded
-[5289 debug] loading region 0x98066c8
-[5289 debug] block sync begins: r(0x98066c8) block(0) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x98066c8) block(1) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x98066c8) block(2) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] region loaded
-[5289 debug] kernel succeed
-[5289 debug] kernel launched
-[5289 debug] dtod: rd(0x98067b8 0xa08fe008 20971520 0 1) rs(0x98066c8 0x9f4fd008 20971520 0 1) dst(0xa08fe008) src(0x9f4fd008) count(20971520)
-[5289 debug] dtoh: r(0x98066c8 0x9f4fd008 20971520 0 1) dst(0x9e0fc008) src(0x9f4fd008) count(20971520)
-[5289 debug] block sync begins: r(0x98066c8) block(0) svalid(0) dvalid(1)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x98066c8) block(1) svalid(0) dvalid(1)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x98066c8) block(2) svalid(0) dvalid(1)
-[5289 debug] block sync ends
-[5289 debug] dtoh: r(0x98067b8 0xa08fe008 20971520 0 1) dst(0xb30d8008) src(0xa08fe008) count(20971520)
 show 3th result 51
-[5289 debug] clCreateBuffer begins, size(20971520), flags(1)
-[5289 debug] clCreateBuffer ends : r(0x981e9d0) swp(0x9e0fc008) pta((nil))
-[5289 debug] clCreateBuffer begins, size(20971520), flags(1)
-[5289 debug] clCreateBuffer ends : r(0x981e8e0) swp(0x9ccfb008) pta((nil))
-[5289 debug] gmm ocl Reference: 0 2
-[5289 debug] gmm ocl Reference: 3 1
-[5289 debug] opencl Setup Argument: nargs(0) size(4) offset(0)
-[5289 debug] argument is dptr: r(0x981e9d0 0x9e0fc008 20971520 0 0)
-[5289 debug] opencl Setup Argument: nargs(1) size(4) offset(1)
-[5289 debug] opencl Setup Argument: nargs(2) size(4) offset(2)
-[5289 debug] opencl Setup Argument: nargs(3) size(4) offset(3)
-[5289 debug] argument is dptr: r(0x981e8e0 0x9ccfb008 20971520 0 0)
-[5289 debug] openCL is about to launch
-[5289 debug] new referenced region(0x981e9d0 0x9e0fc008 20971520 0 0) off(0)
-[5289 debug] new referenced region(0x981e8e0 0x9ccfb008 20971520 0 0) off(0)
-[5289 debug] gmm_attach begins: 2 regions to attach
-[5289 debug] attaching region 0x981e9d0
-[5289 debug] region attached
-[5289 debug] attaching region 0x981e8e0
-[5289 debug] region attached
-[5289 debug] gmm_attach succeeded
-[5289 debug] loading region 0x981e9d0
-[5289 debug] block sync begins: r(0x981e9d0) block(0) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x981e9d0) block(1) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x981e9d0) block(2) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] region loaded
-[5289 debug] loading region 0x981e8e0
-[5289 debug] block sync begins: r(0x981e8e0) block(0) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x981e8e0) block(1) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x981e8e0) block(2) svalid(1) dvalid(0)
-[5289 debug] block sync ends
-[5289 debug] region loaded
-[5289 debug] kernel succeed
-[5289 debug] kernel launched
-[5289 debug] dtod: rd(0x981e9d0 0x9e0fc008 20971520 0 1) rs(0x981e8e0 0x9ccfb008 20971520 0 1) dst(0x9e0fc008) src(0x9ccfb008) count(20971520)
-[5289 debug] dtoh: r(0x981e8e0 0x9ccfb008 20971520 0 1) dst(0x9b8fa008) src(0x9ccfb008) count(20971520)
-[5289 debug] block sync begins: r(0x981e8e0) block(0) svalid(0) dvalid(1)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x981e8e0) block(1) svalid(0) dvalid(1)
-[5289 debug] block sync ends
-[5289 debug] block sync begins: r(0x981e8e0) block(2) svalid(0) dvalid(1)
-[5289 debug] block sync ends
-[5289 debug] dtoh: r(0x981e9d0 0x9e0fc008 20971520 0 1) dst(0xb44d8008) src(0x9e0fc008) count(20971520)
 show 4th result 51
-[5289 debug] freeing r (r 0x97af7f0|| swp_addr0xa828e008|| size 20971520||flags 0||r-state 1)
-[5289 debug] region freed
-[5289 debug] freeing r (r 0x97b0028|| swp_addr0xa6e8d008|| size 20971520||flags 0||r-state 1)
-[5289 debug] region freed
-[5289 debug] freeing r (r 0x97d6190|| swp_addr0xa5a8c008|| size 20971520||flags 0||r-state 1)
-[5289 debug] region freed
-[5289 debug] freeing r (r 0x97d6210|| swp_addr0xa468b008|| size 20971520||flags 0||r-state 1)
-[5289 debug] region freed
-[5289 debug] freeing r (r 0x97ee428|| swp_addr0xa328a008|| size 20971520||flags 0||r-state 1)
-[5289 debug] region freed
-[5289 debug] freeing r (r 0x97ee4a8|| swp_addr0xa1cff008|| size 20971520||flags 0||r-state 1)
-[5289 debug] region freed
-[5289 debug] freeing r (r 0x98067b8|| swp_addr0xa08fe008|| size 20971520||flags 0||r-state 1)
-[5289 debug] region freed
-[5289 debug] freeing r (r 0x98066c8|| swp_addr0x9f4fd008|| size 20971520||flags 0||r-state 1)
-[5289 debug] region freed
-[5289 debug] freeing r (r 0x981e9d0|| swp_addr0x9e0fc008|| size 20971520||flags 0||r-state 1)
-[5289 debug] region freed
-[5289 debug] freeing r (r 0x981e8e0|| swp_addr0x9ccfb008|| size 20971520||flags 0||r-state 1)
-[5289 debug] region freed
-========[Total time]========= |809153 
-[5289  stat] ------------------------------
-[5289  stat] bytes_mem_alloc     209715200
-[5289  stat] bytes_mem_peak      209715200
-[5289  stat] bytes_mem_freed     209715200
-[5289  stat] bytes_htod          209715200
-[5289  stat] time_htod           56.989
-[5289  stat] bytes_htod_cow      0
-[5289  stat] time_htod_cow       0.000
-[5289  stat] bytes_dtoh          104857600
-[5289  stat] time_dtoh           21.291
-[5289  stat] bytes_dtod          104857600
-[5289  stat] time_dtod           168.302
-[5289  stat] bytes_memset        0
-[5289  stat] time_memset         0.000
-[5289  stat] ------------------------------
-[5289  stat] bytes_u2s           314572800
-[5289  stat] time_u2s            96.581
-[5289  stat] bytes_s2d           209715200
-[5289  stat] time_s2d            135.149
-[5289  stat] bytes_u2d           0
-[5289  stat] time_u2d            0.000
-[5289  stat] bytes_d2s           104857600
-[5289  stat] time_d2s            55.513
-[5289  stat] bytes_s2u           209715200
-[5289  stat] time_s2u            53.101
-[5289  stat] ------------------------------
-[5289  stat] bytes_evict_needed  0
-[5289  stat] bytes_evict_space   0
-[5289  stat] count_evict_victims 0
-[5289  stat] count_evict_fail    0
-[5289  stat] count_attach_fail   0
-[5289  stat] ------------------------------
-[5289  stat] time_sync           40.277
-[5289  stat] time_kernel         0.000
-[5289  stat] time_attach         0.065
-[5289  stat] time_load           135.367
-[5289  stat] ------------------------------
+show 5th result 51
+show 6th result 51
+show 7th result 51
+show 8th result 51
+show 9th result 51
+[11189  info] evicting region 0x93517f0
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x93520e8
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x9378180
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x9378200
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+show 10th result 51
+[11189  info] evicting region 0x9390438
+[11189  info] region evicted
+[11189  info] evicting region 0x93904b8
+[11189  info] region evicted
+[11189  info] evicting region 0x93a8788
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x93a8698
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 11th result 51
+[11189  info] evicting region 0x93c09e0
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x93c08f0
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x93d8aa0
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x93d8b20
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x93fced0
+[11189  info] region evicted
+[11189  info] evicting region 0x93fcf50
+[11189  info] region evicted
+[11189  info] evicting region 0x94150c8
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x9415148
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+show 12th result 51
+[11189  info] evicting region 0x942d478
+[11189  info] region evicted
+[11189  info] evicting region 0x942d388
+[11189  info] region evicted
+[11189  info] evicting region 0x9445690
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x94455a0
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x945d770
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x945d7f0
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+show 13th result 51
+[11189  info] evicting region 0x9356070
+[11189  info] region evicted
+[11189  info] evicting region 0x93782f8
+[11189  info] region evicted
+[11189  info] evicting region 0x93a9c30
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x939caa8
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x949d810
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x9415218
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x9469b28
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x9469b80
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 14th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x942dd30
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x9390588
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 15th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x94dc360
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x939c760
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 16th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x94f33b8
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+show 17th result 51
+[11189  info] evicting region 0x94bbf98
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+show 18th result 51
+[11189  info] evicting region 0x9516348
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x94f3438
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x952d398
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x952d2a8
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 19th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+show 20th result 51
+[11189  info] evicting region 0x9516688
+[11189  info] region evicted
+[11189  info] evicting region 0x94bbe40
+[11189  info] region evicted
+[11189  info] evicting region 0x955a9e0
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x955aa60
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 21th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x9571980
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x9571868
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+show 22th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x9588768
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x9565b88
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 23th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x957cbb8
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x9538240
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 24th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x95b6698
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x95b6580
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+show 25th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+show 26th result 51
+[11189  info] evicting region 0x95cd5a0
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x95cd488
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x95e42f8
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x95e4378
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 27th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x95fb298
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x95e4448
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 28th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+show 29th result 51
+========[Total time]========= |3971759 
+[11189  stat] ------------------------------
+[11189  stat] bytes_mem_alloc     1258291200
+[11189  stat] bytes_mem_peak      1258291200
+[11189  stat] bytes_mem_freed     1258291200
+[11189  stat] bytes_htod          1258291200
+[11189  stat] time_htod           446.660
+[11189  stat] bytes_htod_cow      0
+[11189  stat] time_htod_cow       0.000
+[11189  stat] bytes_dtoh          629145600
+[11189  stat] time_dtoh           156.723
+[11189  stat] bytes_dtod          629145600
+[11189  stat] time_dtod           1342.430
+[11189  stat] bytes_memset        0
+[11189  stat] time_memset         0.000
+[11189  stat] ------------------------------
+[11189  stat] bytes_u2s           1887436800
+[11189  stat] time_u2s            658.800
+[11189  stat] bytes_s2d           1258291200
+[11189  stat] time_s2d            844.165
+[11189  stat] bytes_u2d           0
+[11189  stat] time_u2d            0.000
+[11189  stat] bytes_d2s           729808896
+[11189  stat] time_d2s            601.754
+[11189  stat] bytes_s2u           1258291200
+[11189  stat] time_s2u            397.695
+[11189  stat] ------------------------------
+[11189  stat] bytes_evict_needed  128745216
+[11189  stat] bytes_evict_space   796917760
+[11189  stat] count_evict_victims 38
+[11189  stat] count_evict_fail    0
+[11189  stat] count_attach_fail   0
+[11189  stat] ------------------------------
+[11189  stat] time_sync           407.761
+[11189  stat] time_kernel         0.000
+[11189  stat] time_attach         64.010
+[11189  stat] time_load           844.486
+[11189  stat] ------------------------------
