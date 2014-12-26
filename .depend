@@ -1,5 +1,6 @@
 client.o: client.c common.h protocol.h list.h spinlock.h atomic.h msq.h
 common.o: common.c common.h
+<<<<<<< HEAD
 core.o: core.c /usr/local/cuda/include/CL/opencl.h \
  /usr/local/cuda/include/CL/cl.h /usr/local/cuda/include/CL/cl_platform.h \
  /usr/local/cuda/include/CL/cl_gl.h \
@@ -28,3 +29,37 @@ debug.o: debug.c common.h atomic.h core.h \
  /usr/local/cuda/include/CL/cl_gl.h \
  /usr/local/cuda/include/CL/cl_gl_ext.h \
  /usr/local/cuda/include/CL/cl_ext.h list.h spinlock.h stats.h
+=======
+core.o: core.c /usr/local/cuda-6.5/include/CL/opencl.h \
+ /usr/local/cuda-6.5/include/CL/cl.h \
+ /usr/local/cuda-6.5/include/CL/cl_platform.h \
+ /usr/local/cuda-6.5/include/CL/cl_gl.h \
+ /usr/local/cuda-6.5/include/CL/cl_gl_ext.h \
+ /usr/local/cuda-6.5/include/CL/cl_ext.h common.h client.h core.h list.h \
+ spinlock.h atomic.h stats.h hint.h replacement.h msq.h debug.h
+interfaces.o: interfaces.c common.h core.h \
+ /usr/local/cuda-6.5/include/CL/opencl.h \
+ /usr/local/cuda-6.5/include/CL/cl.h \
+ /usr/local/cuda-6.5/include/CL/cl_platform.h \
+ /usr/local/cuda-6.5/include/CL/cl_gl.h \
+ /usr/local/cuda-6.5/include/CL/cl_gl_ext.h \
+ /usr/local/cuda-6.5/include/CL/cl_ext.h list.h spinlock.h atomic.h \
+ stats.h client.h protocol.h interfaces.h hint.h
+msq.o: msq.c common.h client.h protocol.h list.h spinlock.h atomic.h
+replacement.o: replacement.c replacement.h list.h common.h core.h \
+ /usr/local/cuda-6.5/include/CL/opencl.h \
+ /usr/local/cuda-6.5/include/CL/cl.h \
+ /usr/local/cuda-6.5/include/CL/cl_platform.h \
+ /usr/local/cuda-6.5/include/CL/cl_gl.h \
+ /usr/local/cuda-6.5/include/CL/cl_gl_ext.h \
+ /usr/local/cuda-6.5/include/CL/cl_ext.h spinlock.h atomic.h stats.h \
+ protocol.h client.h
+stats.o: stats.c common.h stats.h spinlock.h
+debug.o: debug.c common.h atomic.h core.h \
+ /usr/local/cuda-6.5/include/CL/opencl.h \
+ /usr/local/cuda-6.5/include/CL/cl.h \
+ /usr/local/cuda-6.5/include/CL/cl_platform.h \
+ /usr/local/cuda-6.5/include/CL/cl_gl.h \
+ /usr/local/cuda-6.5/include/CL/cl_gl_ext.h \
+ /usr/local/cuda-6.5/include/CL/cl_ext.h list.h spinlock.h stats.h
+>>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df

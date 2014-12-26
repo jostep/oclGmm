@@ -1,0 +1,269 @@
+<<<<<<< HEAD
+=======
+	the current tid is:11189
+Currently, we have 1 platforms;
+	Platform Vendor:	NVIDIA Corporation
+We've got the right one
+number of devices 1
+	Device Name:	GeForce GTX 480
+show 0th result 51
+show 1th result 51
+show 2th result 51
+show 3th result 51
+show 4th result 51
+show 5th result 51
+show 6th result 51
+show 7th result 51
+show 8th result 51
+show 9th result 51
+[11189  info] evicting region 0x93517f0
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x93520e8
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x9378180
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x9378200
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+show 10th result 51
+[11189  info] evicting region 0x9390438
+[11189  info] region evicted
+[11189  info] evicting region 0x93904b8
+[11189  info] region evicted
+[11189  info] evicting region 0x93a8788
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x93a8698
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 11th result 51
+[11189  info] evicting region 0x93c09e0
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x93c08f0
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x93d8aa0
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x93d8b20
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x93fced0
+[11189  info] region evicted
+[11189  info] evicting region 0x93fcf50
+[11189  info] region evicted
+[11189  info] evicting region 0x94150c8
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x9415148
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+show 12th result 51
+[11189  info] evicting region 0x942d478
+[11189  info] region evicted
+[11189  info] evicting region 0x942d388
+[11189  info] region evicted
+[11189  info] evicting region 0x9445690
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x94455a0
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x945d770
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x945d7f0
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+show 13th result 51
+[11189  info] evicting region 0x9356070
+[11189  info] region evicted
+[11189  info] evicting region 0x93782f8
+[11189  info] region evicted
+[11189  info] evicting region 0x93a9c30
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x939caa8
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x949d810
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x9415218
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x9469b28
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x9469b80
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 14th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x942dd30
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x9390588
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 15th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x94dc360
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x939c760
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 16th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x94f33b8
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+show 17th result 51
+[11189  info] evicting region 0x94bbf98
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+show 18th result 51
+[11189  info] evicting region 0x9516348
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x94f3438
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x952d398
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x952d2a8
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 19th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+show 20th result 51
+[11189  info] evicting region 0x9516688
+[11189  info] region evicted
+[11189  info] evicting region 0x94bbe40
+[11189  info] region evicted
+[11189  info] evicting region 0x955a9e0
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x955aa60
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 21th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x9571980
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x9571868
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+show 22th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x9588768
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x9565b88
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 23th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x957cbb8
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x9538240
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 24th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x95b6698
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x95b6580
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+show 25th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+show 26th result 51
+[11189  info] evicting region 0x95cd5a0
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] evicting region 0x95cd488
+[11189  info] region evicted
+[11189  info] msq_send: client(1) type(1) size(16)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x95e42f8
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x95e4378
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 27th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] evicting region 0x95fb298
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+[11189  info] evicting region 0x95e4448
+[11189  info] region evicted
+[11189  info] msq_send: client(2) type(1) size(16)
+show 28th result 51
+[11189  info] msq_send: client(1) type(0) size(20)
+[11189  info] msq_send: client(1) type(0) size(20)
+show 29th result 51
+========[Total time]========= |3971759 
+[11189  stat] ------------------------------
+[11189  stat] bytes_mem_alloc     1258291200
+[11189  stat] bytes_mem_peak      1258291200
+[11189  stat] bytes_mem_freed     1258291200
+[11189  stat] bytes_htod          1258291200
+[11189  stat] time_htod           446.660
+[11189  stat] bytes_htod_cow      0
+[11189  stat] time_htod_cow       0.000
+[11189  stat] bytes_dtoh          629145600
+[11189  stat] time_dtoh           156.723
+[11189  stat] bytes_dtod          629145600
+[11189  stat] time_dtod           1342.430
+[11189  stat] bytes_memset        0
+[11189  stat] time_memset         0.000
+[11189  stat] ------------------------------
+[11189  stat] bytes_u2s           1887436800
+[11189  stat] time_u2s            658.800
+[11189  stat] bytes_s2d           1258291200
+[11189  stat] time_s2d            844.165
+[11189  stat] bytes_u2d           0
+[11189  stat] time_u2d            0.000
+[11189  stat] bytes_d2s           729808896
+[11189  stat] time_d2s            601.754
+[11189  stat] bytes_s2u           1258291200
+[11189  stat] time_s2u            397.695
+[11189  stat] ------------------------------
+[11189  stat] bytes_evict_needed  128745216
+[11189  stat] bytes_evict_space   796917760
+[11189  stat] count_evict_victims 38
+[11189  stat] count_evict_fail    0
+[11189  stat] count_attach_fail   0
+[11189  stat] ------------------------------
+[11189  stat] time_sync           407.761
+[11189  stat] time_kernel         0.000
+[11189  stat] time_attach         64.010
+[11189  stat] time_load           844.486
+[11189  stat] ------------------------------
+>>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df

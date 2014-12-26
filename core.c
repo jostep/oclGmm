@@ -368,8 +368,9 @@ cl_int gmm_clReleaseMemObject(cl_mem memObjPtr){
     
     struct region *r;
     if (!(r= region_lookup(pcontext, memObjPtr))){
-        free(r->blocks);
+        //free(r->blocks);
         gprint(ERROR,"cannot find region containg %p in clReleaseMemObject\n",memObjPtr);
+        return CL_INVALID_MEM_OBJECT;
     }
     stats_inc_freed(&pcontext->stats,r->size);
     if(gmm_free(r)<0)
@@ -575,14 +576,30 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_of
     delta;
 	int ret = 0, ibuf_old;
     cl_int  err;
+<<<<<<< HEAD
+=======
+    cl_int errcode_temp;
+>>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
 	begin_dma(chan);
+    cl_event temp[NBUFS];
+    int i=0;
+    while(i<NBUFS){
+        temp[i]=clCreateUserEvent(pcontext->context_kernel,&errcode_temp);
+        if(errcode_temp!=CL_SUCCESS){
+            gprint(FATAL,"Failed to Create user event in HTOD\n");
+        }
+        if(CL_SUCCESS!=clSetUserEventStatus(temp[i],CL_COMPLETE)){
+            gprint(FATAL,"Failed to Set user event in HTOD\n");
+        }
+        i++;
+    }
     
 	// First issue DtoH commands for all staging buffers
 	ibuf_old = chan->ibuf;
 	off_dtos = 0;
 	while (off_dtos < size && off_dtos < NBUFS * BUFSIZE) {
 		delta = MIN(off_dtos + BUFSIZE, size) - off_dtos;
-        if(ocl_clEnqueueCopyBuffer(chan->commandQueue_chan,src,chan->stage_bufs[chan->ibuf],off_dtos+prev_off,0,delta,0,NULL,NULL)!=CL_SUCCESS){
+        if(ocl_clEnqueueCopyBuffer(chan->commandQueue_chan,src,chan->stage_bufs[chan->ibuf],off_dtos+prev_off,0,delta,0,NULL,&temp[chan->ibuf])!=CL_SUCCESS){
         
 			gprint(FATAL,"Copy Buffer failed in dtoh\n");
 			ret = -1;
@@ -640,7 +657,11 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_of
 			goto finish;
 		}*/
         cl_int err_RB;
+<<<<<<< HEAD
         err_RB=ocl_clEnqueueReadBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_TRUE,0,delta,(void*)(unsigned long)dst+off_stoh+prev_off,0,NULL,NULL);
+=======
+        err_RB=ocl_clEnqueueReadBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_TRUE,0,delta,(void*)(unsigned long)dst+off_stoh+prev_off,1,&temp[chan->ibuf],NULL);
+>>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
         if(err_RB!=CL_SUCCESS){
             gprint(FATAL,"cannot copy to dst with err %d\n",err_RB);
             ret=-1;
@@ -1439,7 +1460,17 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint offset,size_t size, const voi
 				return CL_INVALID_ARG_SIZE;
 				//panic("cudaSetupArgument does not match cudaReference");
 			}
-			r = region_lookup(pcontext, *(cl_mem*)arg);
+            if(arg){
+			    r = region_lookup(pcontext, *(cl_mem*)arg);
+            }
+            else{
+		        kargs[nargs].arg.arg1.dptr = arg;
+	            kargs[nargs].is_dptr = 2;
+	            kargs[nargs].size = size;
+	            kargs[nargs].argoff = offset;
+	            nargs++;
+                return CL_SUCCESS;
+            }
 			if (!r) {
 				gprint(ERROR, "cannot find region containing %p (%d) in " \
                        "clSetkernel\n", *(cl_mem*)arg, nargs);
@@ -1473,16 +1504,29 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint offset,size_t size, const voi
 		// This argument is not a device memory pointer.
 		// XXX: Currently we ignore the case that nv_cudaSetupArgument
 		// returns error and CUDA runtime might stop pushing arguments.
+<<<<<<< HEAD
         void * temp = malloc(size);
+=======
+        /*void * temp = malloc(size);
+>>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
         if(arg)
             memcpy(temp,arg,size);
         else
             temp=arg;
 		kargs[nargs].arg.arg2.arg = temp;
+<<<<<<< HEAD
 		/*
         memcpy(ktop, arg, size);
 		kargs[nargs].arg.arg2.arg = ktop;
         printf("for a non-dptr your addr will be %p \n",temp);
+=======
+		*/
+        if(arg)
+            memcpy(ktop, arg, size);
+        else 
+            ktop=arg;
+        kargs[nargs].arg.arg2.arg = ktop;
+>>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
 		ktop += size;
         */
 	}
@@ -1687,21 +1731,30 @@ reload:
 	}
     */
 	for (i = 0; i < nargs; i++) {
-		if (kargs[i].is_dptr) {
+		if (kargs[i].is_dptr==1) {
 			kargs[i].arg.arg1.dptr =(cl_mem)((unsigned long)kargs[i].arg.arg1.r->dev_addr + kargs[i].arg.arg1.off);
 
             ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
-			/*gprint(DEBUG, "setup %p %lu %lu\n", \
+			 gprint(DEBUG, "setup device ptr %p %lu %lu\n", \
              &kargs[i].arg.arg1.dptr, \
              sizeof(void *), \
-             kargs[i].arg.arg1.argoff);*/
+             kargs[i].arg.arg1.off);
 		}
+        else if (kargs[i].is_dptr==2){
+            ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
+            gprint(DEBUG,"set up a null device ptr\n");
+        }
 		else {
             ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,kargs[i].arg.arg2.arg);
+<<<<<<< HEAD
 			/*gprint(DEBUG, "setup %p %lu %lu\n", \
              kargs[i].arg.arg2.arg, \
              kargs[i].arg.arg2.size, \
              kargs[i].arg.arg2.offset);*/
+=======
+	         gprint(DEBUG, "setup non-ptr %p \n", \
+             kargs[i].arg.arg2.arg);
+>>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
 		}
 	}
     
@@ -1783,12 +1836,17 @@ reload:
 	}
     
 	for (i = 0; i < nargs; i++) {
-		if (kargs[i].is_dptr) {
+		if (kargs[i].is_dptr==1) {
 			kargs[i].arg.arg1.dptr =(cl_mem)((unsigned long)kargs[i].arg.arg1.r->dev_addr + kargs[i].arg.arg1.off);
             errcode_SK=ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
 			if(errcode_SK!=CL_SUCCESS)
 			    gprint(FATAL, "setup dptr with size%d  err:%d\n",kargs[i].size,errcode_SK);
 		}
+        else if (kargs[i].is_dptr==2){
+            errcode_SK=ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,&kargs[i].arg.arg1.dptr);
+			if(errcode_SK!=CL_SUCCESS)
+                gprint(DEBUG,"set up a null device ptr\n");
+        }
 		else {
             errcode_SK=ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,kargs[i].arg.arg2.arg);
 			if(errcode_SK!=CL_SUCCESS)

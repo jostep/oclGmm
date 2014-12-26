@@ -1,7 +1,11 @@
 include gmm.mk
 
 ## Specify CUDA install path here
+<<<<<<< HEAD
 CUDAPATH = /usr/local/cuda
+=======
+CUDAPATH = /usr/local/cuda-6.5
+>>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
 
 # Name of the GMM shared library
 LIBGMM = libgmm.so

@@ -1,0 +1,114 @@
+<<<<<<< HEAD
+=======
+	the current tid is:11190
+Currently, we have 1 platforms;
+	Platform Vendor:	NVIDIA Corporation
+We've got the right one
+number of devices 1
+	Device Name:	GeForce GTX 480
+show 0th result 51
+show 1th result 51
+show 2th result 51
+show 3th result 51
+show 4th result 51
+show 5th result 51
+show 6th result 51
+show 7th result 51
+show 8th result 51
+show 9th result 51
+show 10th result 51
+[11190  info] msq_send: client(0) type(0) size(20)
+[11190  info] msq_send: client(0) type(0) size(20)
+show 11th result 51
+[11190  info] msq_send: client(0) type(0) size(20)
+[11190  info] msq_send: client(0) type(0) size(20)
+show 12th result 51
+[11190  info] msq_send: client(0) type(0) size(20)
+[11190  info] msq_send: client(0) type(0) size(20)
+show 13th result 51
+[11190  info] msq_send: client(0) type(0) size(20)
+[11190  info] msq_send: client(0) type(0) size(20)
+show 14th result 51
+[11190  info] msq_send: client(0) type(0) size(20)
+[11190  info] msq_send: client(0) type(0) size(20)
+show 15th result 51
+[11190  info] msq_send: client(0) type(0) size(20)
+[11190  info] msq_send: client(0) type(0) size(20)
+show 16th result 51
+[11190  info] msq_send: client(0) type(0) size(20)
+[11190  info] msq_send: client(0) type(0) size(20)
+show 17th result 51
+[11190  info] msq_send: client(0) type(0) size(20)
+[11190  info] msq_send: client(0) type(0) size(20)
+show 18th result 51
+[11190  info] msq_send: client(1) type(0) size(20)
+[11190  info] msq_send: client(1) type(0) size(20)
+show 19th result 51
+[11190  info] msq_send: client(0) type(0) size(20)
+[11190  info] msq_send: client(0) type(0) size(20)
+show 20th result 51
+[11190  info] msq_send: client(0) type(0) size(20)
+[11190  info] msq_send: client(0) type(0) size(20)
+show 21th result 51
+[11190  info] msq_send: client(1) type(0) size(20)
+[11190  info] msq_send: client(1) type(0) size(20)
+show 22th result 51
+[11190  info] msq_send: client(0) type(0) size(20)
+[11190  info] msq_send: client(0) type(0) size(20)
+show 23th result 51
+[11190  info] msq_send: client(0) type(0) size(20)
+[11190  info] msq_send: client(0) type(0) size(20)
+show 24th result 51
+[11190  info] msq_send: client(1) type(0) size(20)
+[11190  info] msq_send: client(1) type(0) size(20)
+show 25th result 51
+[11190  info] msq_send: client(1) type(0) size(20)
+[11190  info] msq_send: client(1) type(0) size(20)
+show 26th result 51
+[11190  info] msq_send: client(0) type(0) size(20)
+[11190  info] msq_send: client(0) type(0) size(20)
+show 27th result 51
+[11190  info] msq_send: client(0) type(0) size(20)
+[11190  info] msq_send: client(0) type(0) size(20)
+show 28th result 51
+[11190  info] msq_send: client(1) type(0) size(20)
+show 29th result 51
+========[Total time]========= |4018853 
+[11190  stat] ------------------------------
+[11190  stat] bytes_mem_alloc     1258291200
+[11190  stat] bytes_mem_peak      1258291200
+[11190  stat] bytes_mem_freed     1258291200
+[11190  stat] bytes_htod          1258291200
+[11190  stat] time_htod           461.199
+[11190  stat] bytes_htod_cow      0
+[11190  stat] time_htod_cow       0.000
+[11190  stat] bytes_dtoh          629145600
+[11190  stat] time_dtoh           214.149
+[11190  stat] bytes_dtod          629145600
+[11190  stat] time_dtod           1306.196
+[11190  stat] bytes_memset        0
+[11190  stat] time_memset         0.000
+[11190  stat] ------------------------------
+[11190  stat] bytes_u2s           1887436800
+[11190  stat] time_u2s            661.960
+[11190  stat] bytes_s2d           1258291200
+[11190  stat] time_s2d            785.675
+[11190  stat] bytes_u2d           0
+[11190  stat] time_u2d            0.000
+[11190  stat] bytes_d2s           629145600
+[11190  stat] time_d2s            385.383
+[11190  stat] bytes_s2u           1258291200
+[11190  stat] time_s2u            452.572
+[11190  stat] ------------------------------
+[11190  stat] bytes_evict_needed  125357184
+[11190  stat] bytes_evict_space   775946240
+[11190  stat] count_evict_victims 37
+[11190  stat] count_evict_fail    0
+[11190  stat] count_attach_fail   0
+[11190  stat] ------------------------------
+[11190  stat] time_sync           487.640
+[11190  stat] time_kernel         0.000
+[11190  stat] time_attach         163.557
+[11190  stat] time_load           785.990
+[11190  stat] ------------------------------
+>>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
