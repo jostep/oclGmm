@@ -4,9 +4,18 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+FALSE	newT.c	9;"	d	file:
 FALSE	test.c	9;"	d	file:
+MAX_SOURCE_SIZE	newT.c	12;"	d	file:
 MAX_SOURCE_SIZE	test.c	12;"	d	file:
+MEM_SIZE	newT.c	11;"	d	file:
 MEM_SIZE	test.c	11;"	d	file:
+TRUE	newT.c	10;"	d	file:
 TRUE	test.c	10;"	d	file:
+corun	newT.c	14;"	d	file:
+corun	test.c	14;"	d	file:
+main	fptr.c	/^int main(){$/;"	f
+main	newT.c	/^int main(){$/;"	f
 main	test.c	/^int main(){$/;"	f
+testSize	newT.c	13;"	d	file:
 testSize	test.c	13;"	d	file:

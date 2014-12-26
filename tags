@@ -5,18 +5,19 @@
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 .DEFAULT_GOAL	Makefile	/^.DEFAULT_GOAL := all$/;"	m
-ALIGNUP	core.h	155;"	d
-BLOCKIDX	core.h	152;"	d
-BLOCKMASK	core.h	148;"	d
-BLOCKSHIFT	core.h	147;"	d
-BLOCKSIZE	core.h	146;"	d
-BLOCKUP	core.h	153;"	d
+ALIGNUP	core.h	154;"	d
+BLOCKIDX	core.h	151;"	d
+BLOCKMASK	core.h	147;"	d
+BLOCKSHIFT	core.h	146;"	d
+BLOCKSIZE	core.h	145;"	d
+BLOCKUP	core.h	152;"	d
 BUFSIZE	core.h	102;"	d
 CC	Makefile	/^CC := gcc$/;"	m
 CFLAGS	Makefile	/^CFLAGS := -g -Wall -pthread -fPIC -fvisibility=hidden \\$/;"	m
-CUDAPATH	Makefile	/^CUDAPATH = \/usr\/local\/cuda-6.0$/;"	m
+CUDAPATH	Makefile	/^CUDAPATH = \/usr\/local\/cuda$/;"	m
 DEBUG	common.h	14;"	d
 ERROR	common.h	11;"	d
+FALSE	oclTest/newT.c	9;"	d	file:
 FALSE	oclTest/test.c	9;"	d	file:
 FATAL	common.h	10;"	d
 FLAG_COW	hint.h	20;"	d
@@ -51,20 +52,22 @@ INTERCEPT_CL	interfaces.h	33;"	d
 LDFLAGS	Makefile	/^LDFLAGS := -shared -pthread -ldl -fPIC -OpenCL$/;"	m
 LIBGMM	Makefile	/^LIBGMM = libgmm.so$/;"	m
 LMAX	core.c	/^long LMAX(long a, long b)$/;"	f
-LOWER_PAGE	core.h	142;"	d
+LOWER_PAGE	core.h	141;"	d
+MAX_SOURCE_SIZE	oclTest/newT.c	12;"	d	file:
 MAX_SOURCE_SIZE	oclTest/test.c	12;"	d	file:
+MEM_SIZE	oclTest/newT.c	11;"	d	file:
 MEM_SIZE	oclTest/test.c	11;"	d	file:
-MIN	core.h	144;"	d
+MIN	core.h	143;"	d
 MSG_REP_ACK	protocol.h	/^	MSG_REP_ACK,$/;"	e	enum:msgtype
 MSG_REQ_EVICT	protocol.h	/^	MSG_REQ_EVICT,$/;"	e	enum:msgtype
 NBUFS	core.h	101;"	d
 NCLIENTS	protocol.h	12;"	d
-NRBLOCKS	core.h	151;"	d
+NRBLOCKS	core.h	150;"	d
 NREFS	core.h	66;"	d
 OBJS	Makefile	/^OBJS = $(SRCS:.c=.o)$/;"	m
 OFFSETOF	list.h	90;"	d
 OPENCL_PATH	interfaces.h	16;"	d
-PAGEMASK	core.h	140;"	d
+PAGEMASK	core.h	139;"	d
 PRINT_LEVEL	gmm.mk	/^PRINT_LEVEL = 6$/;"	m
 PRINT_LEVELS	common.h	15;"	d
 PRIO_DEFAULT	hint.h	28;"	d
@@ -78,10 +81,11 @@ STATE_FREEING	core.h	/^	STATE_FREEING,			\/\/ object being freed$/;"	e	enum:regi
 STATE_ZOMBIE	core.h	/^	STATE_ZOMBIE			\/\/ object waiting to be GC'ed$/;"	e	enum:region_state
 TDIFF	stats.h	53;"	d
 TREAT_ERROR	interfaces.h	18;"	d
+TRUE	oclTest/newT.c	10;"	d	file:
 TRUE	oclTest/test.c	10;"	d	file:
 TRY_ACQUIRE_TIMES	spinlock.h	42;"	d
 TVAL	stats.h	52;"	d
-UPPER_PAGE	core.h	141;"	d
+UPPER_PAGE	core.h	140;"	d
 USE_PRINT_BUFFER	gmm.mk	/^USE_PRINT_BUFFER = 0$/;"	m
 WARN	common.h	12;"	d
 _GMM_ATOMIC_H_	atomic.h	2;"	d
@@ -141,12 +145,12 @@ cid	client.c	/^int cid = -1;						\/\/ Id of this client$/;"	v
 cidtopid	client.c	/^pid_t cidtopid(int cid)$/;"	f
 clBuildProgram	interfaces.c	/^cl_int clBuildProgram(cl_program program, cl_uint num_devices, const cl_device_id* devices, const char *options, void (*pfn_notify)(cl_program,void*user_data),void*user_data){$/;"	f
 clCreateBuffer	interfaces.c	/^cl_mem clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int *errcode){$/;"	f
-clCreateCommandQueue	interfaces.c	/^cl_command_queue clCreateCommandQueue(cl_context context,cl_device_id device,cl_command_queue_properties properties, cl_int *errcode_CQ){$/;"	f
 clCreateContext	interfaces.c	/^cl_context clCreateContext(const cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void (CL_CALLBACK* pfn_notify)(const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){$/;"	f
-clCreateKernel	interfaces.c	/^cl_kernel clCreateKernel(cl_program program, const char *kernel_name,cl_int *errcode_ret){$/;"	f
 clCreateProgramWithSource	interfaces.c	/^cl_program clCreateProgramWithSource(cl_context context, cl_uint count, const char** strings, const size_t *lengths, cl_int *errcode_ret){$/;"	f
+clEnqueueCopyBuffer	interfaces.c	/^cl_int clEnqueueCopyBuffer(cl_command_queue command_queue,cl_mem src,cl_mem dst, size_t src_off,size_t dst_off, size_t cb, cl_uint num_events_in_wait_list,const cl_event* event_wait_list,cl_event* event){$/;"	f
 clEnqueueFillBuffer	interfaces.c	/^cl_int clEnqueueFillBuffer(cl_command_queue command_queue, cl_mem buffer, const void *pattern, size_t pattern_size, size_t offset,size_t size, cl_uint num_events_in_wait_list,const cl_event *event_wait_list, cl_event * event){$/;"	f
-clEnqueueReadBuffer	interfaces.c	/^cl_int clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, size_t offset, size_t cb, const void * ptr, cl_uint num_events_in_wait_list, const cl_event *events_wait_list, cl_event *event){$/;"	f
+clEnqueueNDRangeKernel	interfaces.c	/^cl_int clEnqueueNDRangeKernel(cl_command_queue command_queue,cl_kernel kernel,cl_uint work_dim,const size_t* global_work_offset, const size_t* global_work_size,const size_t* local_work_size,cl_uint num_events, const cl_event* events_wait_list, cl_event* event){$/;"	f
+clEnqueueReadBuffer	interfaces.c	/^cl_int clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, size_t offset, size_t cb, void * ptr, cl_uint num_events_in_wait_list, const cl_event *events_wait_list, cl_event *event){$/;"	f
 clEnqueueTask	interfaces.c	/^cl_int clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel, cl_uint num_events, const cl_event * events_wait_list, cl_event* event){$/;"	f
 clEnqueueWriteBuffer	interfaces.c	/^cl_int clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, $/;"	f
 clReference	interfaces.c	/^cl_int clReference(int which_arg, int flags){$/;"	f
@@ -164,6 +168,8 @@ commandQueue_chan	core.h	/^    cl_command_queue commandQueue_chan;$/;"	m	struct:
 commandQueue_kernel	core.h	/^    cl_command_queue commandQueue_kernel;$/;"	m	struct:gmm_context
 cond_ack	msq.c	/^pthread_cond_t cond_ack;$/;"	v
 context_kernel	core.h	/^    cl_context context_kernel;$/;"	m	struct:gmm_context
+corun	oclTest/newT.c	14;"	d	file:
+corun	oclTest/test.c	14;"	d	file:
 count_attach_fail	stats.h	/^	long count_attach_fail;		\/\/ # of failed attach$/;"	m	struct:statistics
 count_evict_fail	stats.h	/^	long count_evict_fail;		\/\/ # of failed evictions in gmm_evict$/;"	m	struct:statistics
 count_evict_victims	stats.h	/^	long count_evict_victims;	\/\/ # of evicted victim regions$/;"	m	struct:statistics
@@ -196,9 +202,10 @@ gmm_attach	core.c	/^static int gmm_attach(struct region **rgns, int n)$/;"	f	fil
 gmm_clBuildProgram	core.c	/^cl_int gmm_clBuildProgram(cl_program program,cl_uint num_devices, const cl_device_id *devices_list,const char *options,void(*pfn_notify)(cl_program, void* user_data),void * user_data){$/;"	f
 gmm_clCreateBuffer	core.c	/^cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, void *host_ptr, cl_int* errcode_CB, int gmm_flags){$/;"	f
 gmm_clCreateContext	core.c	/^cl_context gmm_clCreateContext(cl_context_properties *properties,cl_uint num_devices,const cl_device_id *devices,void *pfn_notify (const char *errinfo, const void *private_info, size_t cb, void *user_data), void *user_data,cl_int *errcode_ret){$/;"	f
-gmm_clCreateKernel	core.c	/^cl_kernel gmm_clCreateKernel(cl_program program, const char* kernel_name, cl_int* errcode_ret){$/;"	f
 gmm_clCreateProgramWithSource	core.c	/^cl_program gmm_clCreateProgramWithSource(cl_context context, cl_uint count, const char**strings, const size_t * lengths, cl_int *errcode_ret){$/;"	f
+gmm_clEnqueueCopyBuffer	core.c	/^cl_int  gmm_clEnqueueCopyBuffer(cl_command_queue command_queue,cl_mem src,cl_mem dst,size_t src_off,size_t dst_off,size_t count,cl_uint num_events_in_wait_list,const cl_event* event_wait_list,cl_event* event)$/;"	f
 gmm_clEnqueueFillBuffer	core.c	/^cl_int gmm_clEnqueueFillBuffer(cl_command_queue command_queue, cl_mem  buffer, int value, size_t pattern_size, size_t offset,size_t size, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){$/;"	f
+gmm_clEnqueueNDRangeKernel	core.c	/^cl_int gmm_clEnqueueNDRangeKernel(cl_command_queue command_queue, cl_kernel kernel,cl_uint work_dim,const size_t *global_work_offset,const size_t * global_work_size,const size_t * local_work_size, cl_uint num_events_in_wait_list, const cl_event * event_in_wait_list, cl_event *event)$/;"	f
 gmm_clEnqueueReadBuffer	core.c	/^cl_int gmm_clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem src, cl_bool blocking, size_t offset,size_t count, void * dst, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event*event){$/;"	f
 gmm_clEnqueueTask	core.c	/^cl_int gmm_clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel, cl_uint num_events_in_wait_list, const cl_event * event_in_wait_list, cl_event *event)$/;"	f
 gmm_clEnqueueWriteBuffer	core.c	/^cl_int gmm_clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem dst, cl_bool blocking_write, size_t offset, size_t count, const void *src, cl_uint num_events_in_wait_list, const cl_event *event_wait_list, cl_event* event){$/;"	f
@@ -209,7 +216,8 @@ gmm_context	core.h	/^struct gmm_context {$/;"	s
 gmm_context_fini	core.c	/^void gmm_context_fini(){$/;"	f
 gmm_context_init	core.c	/^int gmm_context_init(){$/;"	f
 gmm_context_initEX	core.c	/^void gmm_context_initEX(){$/;"	f
-gmm_dtoh	core.c	/^int gmm_dtoh(struct region *r, void *dst, const void *src, size_t count)$/;"	f
+gmm_dtod	core.c	/^static int gmm_dtod(struct region *rd,struct region *rs,cl_mem dst,cl_mem src,size_t count,size_t dst_off,size_t src_off)$/;"	f	file:
+gmm_dtoh	core.c	/^int gmm_dtoh(struct region *r, void *dst, const cl_mem src, size_t count,size_t src_off)$/;"	f
 gmm_dtoh_block	core.c	/^static int gmm_dtoh_block($/;"	f	file:
 gmm_dtoh_pta	core.c	/^static int gmm_dtoh_pta($/;"	f	file:
 gmm_dump_dptr	debug.c	/^void gmm_dump_dptr(const char *filepath, const void *dptr, const size_t size)$/;"	f
@@ -223,11 +231,12 @@ gmm_htod	core.c	/^static int gmm_htod($/;"	f	file:
 gmm_htod_block	core.c	/^static int gmm_htod_block($/;"	f	file:
 gmm_htod_pta	core.c	/^static int gmm_htod_pta($/;"	f	file:
 gmm_init	interfaces.c	/^void gmm_init(void)$/;"	f
-gmm_kernel_callback	core.c	/^void CL_CALLBACK gmm_kernel_callback(cl_event event, cl_int status, void *data){$/;"	f
-gmm_launch	core.c	/^static int gmm_launch(struct region **rgns, int nrgns)$/;"	f	file:
+gmm_kernel_callback	core.c	/^void CL_CALLBACK gmm_kernel_callback(cl_event event,cl_int status, void *data){$/;"	f
+gmm_launch	core.c	/^static int gmm_launch(struct region **rgns, int nrgns,cl_kernel kernel)$/;"	f	file:
+gmm_launch2	core.c	/^static int gmm_launch2(struct region **rgns, int nrgns,cl_kernel kernel,cl_uint work_dim,const size_t*global_work_offset, const size_t * global_work_size, const size_t* local_work_size, cl_event* event)$/;"	f	file:
 gmm_load	core.c	/^static int gmm_load(struct region **rgns, int nrgns)$/;"	f	file:
-gmm_memcpy_dtoh	core.c	/^static int gmm_memcpy_dtoh(cl_mem dst, cl_mem src, unsigned long size)$/;"	f	file:
-gmm_memcpy_htod	core.c	/^static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size){$/;"	f	file:
+gmm_memcpy_dtoh	core.c	/^static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_off)$/;"	f	file:
+gmm_memcpy_htod	core.c	/^static int gmm_memcpy_htod(cl_mem dst,const void * src, unsigned long size,int prev_off){$/;"	f	file:
 gmm_memset	core.c	/^static int gmm_memset(struct region *r, cl_mem buffer,int value, size_t count){$/;"	f	file:
 gmm_memset_pta	core.c	/^static int gmm_memset_pta(struct region * r, cl_mem dst, int value, size_t count){$/;"	f	file:
 gmm_print_dptr	debug.c	/^void gmm_print_dptr(const void *dptr)$/;"	f
@@ -257,7 +266,6 @@ is_included	core.h	/^static inline int is_included(void **a, int n, void *p)$/;"
 karg	core.h	/^struct karg {$/;"	s
 kargs	core.c	/^static struct karg kargs[NREFS];$/;"	v	typeref:struct:karg	file:
 kcb	core.h	/^struct kcb {$/;"	s
-kernel	core.h	/^    cl_kernel kernel;$/;"	m	struct:gmm_context
 kstack	core.c	/^static unsigned char kstack[512];$/;"	v	file:
 ktop	core.c	/^static void *ktop=(void *)kstack;$/;"	v	file:
 latomic_add	atomic.h	/^static inline long latomic_add(latomic_t *ptr, long val)$/;"	f
@@ -296,12 +304,15 @@ lock	stats.h	/^	struct spinlock lock;$/;"	m	struct:statistics	typeref:struct:sta
 lock_alloced	core.h	/^	struct spinlock lock_alloced;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::spinlock
 lock_attached	core.h	/^	struct spinlock lock_attached;$/;"	m	struct:gmm_context	typeref:struct:gmm_context::spinlock
 locked	spinlock.h	/^	unsigned int locked;$/;"	m	struct:spinlock
+main	oclTest/fptr.c	/^int main(){$/;"	f
+main	oclTest/newT.c	/^int main(){$/;"	f
 main	oclTest/test.c	/^int main(){$/;"	f
 main	server.c	/^int main(int argc, char *argv[])$/;"	f
 mem_total	protocol.h	/^	long mem_total;				\/\/ Total size of device memory.$/;"	m	struct:gmm_global
 mem_used	protocol.h	/^	latomic_t mem_used;			\/\/ Size of used (attached) device memory$/;"	m	struct:gmm_global
 memsize_free	client.c	/^long memsize_free()$/;"	f
 memsize_free2	client.c	/^long memsize_free2()$/;"	f
+memsize_getUsed	client.c	/^long memsize_getUsed(){$/;"	f
 memsize_total	client.c	/^long memsize_total()$/;"	f
 mqid	msq.c	/^mqd_t mqid = (mqd_t) -1;$/;"	v
 msg	protocol.h	/^struct msg {$/;"	s
@@ -322,11 +333,11 @@ nrefs	interfaces.c	/^int nrefs=0;$/;"	v
 nrgns	core.h	/^	int nrgns;					\/\/ Number of regions referenced$/;"	m	struct:kcb
 ocl_clBuildProgram	interfaces.c	/^cl_int (*ocl_clBuildProgram)(cl_program, cl_uint, const cl_device_id*, const char *, void *,void*)=NULL;$/;"	v
 ocl_clCreateBuffer	interfaces.c	/^cl_mem (*ocl_clCreateBuffer)(cl_context, cl_mem_flags, size_t, void*, cl_int)= NULL;$/;"	v
-ocl_clCreateCommandQueue	interfaces.c	/^cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id, cl_command_queue_properties, cl_int errcode_ret)=NULL;$/;"	v
 ocl_clCreateContext	interfaces.c	/^cl_context (*ocl_clCreateContext)(cl_context_properties *,cl_uint ,const cl_device_id *,void*, void *,cl_int *)=NULL;$/;"	v
-ocl_clCreateKernel	interfaces.c	/^cl_kernel (*ocl_clCreateKernel)(cl_program ,const char *,cl_int*)=NULL;$/;"	v
 ocl_clCreateProgramWithSource	interfaces.c	/^cl_program (*ocl_clCreateProgramWithSource)(cl_context, cl_uint, const char**, const size_t *, cl_int *errcode_ret)=NULL;$/;"	v
+ocl_clEnqueueCopyBuffer	interfaces.c	/^cl_int (*ocl_clEnqueueCopyBuffer)(cl_command_queue,cl_mem,cl_mem,size_t,size_t,size_t,cl_uint,const cl_event*,cl_event)=NULL;$/;"	v
 ocl_clEnqueueFillBuffer	interfaces.c	/^cl_int (*ocl_clEnqueueFillBuffer)(cl_command_queue, cl_mem, const void *, size_t, size_t,size_t, cl_uint, const cl_event, cl_event)=NULL;$/;"	v
+ocl_clEnqueueNDRangeKernel	interfaces.c	/^cl_int (*ocl_clEnqueueNDRangeKernel)(cl_command_queue,cl_kernel,cl_uint,const size_t*,const size_t *,const size_t *,cl_uint, const cl_event*,cl_event*)=NULL;$/;"	v
 ocl_clEnqueueReadBuffer	interfaces.c	/^cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event*)=NULL;$/;"	v
 ocl_clEnqueueTask	interfaces.c	/^cl_int (*ocl_clEnqueueTask)(cl_command_queue, cl_kernel, cl_uint, const cl_event*, cl_event *)=NULL;$/;"	v
 ocl_clEnqueueWriteBuffer	interfaces.c	/^cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event*)=NULL;$/;"	v
@@ -357,7 +368,7 @@ region_load_memset	core.c	/^static int region_load_memset(struct region *r)$/;"	
 region_load_pta	core.c	/^static int region_load_pta(struct region *r)$/;"	f	file:
 region_lookup	core.c	/^struct region * region_lookup(struct gmm_context *ctx, const cl_mem ptr){$/;"	f
 region_pin	core.c	/^static inline void region_pin(struct region *r)$/;"	f	file:
-region_pinned	core.h	159;"	d
+region_pinned	core.h	158;"	d
 region_state	core.h	/^typedef enum region_state {$/;"	g
 region_state_t	core.h	/^} region_state_t;$/;"	t	typeref:enum:region_state
 region_unpin	core.c	/^static inline void region_unpin(struct region *r)$/;"	f	file:
@@ -382,7 +393,7 @@ size_attached	core.h	/^	latomic_t size_attached;			\/\/ Total size of attached m
 size_detachable	protocol.h	/^	latomic_t size_detachable;$/;"	m	struct:gmm_client
 size_needed	protocol.h	/^	long size_needed;$/;"	m	struct:msg_req
 spinlock	spinlock.h	/^struct spinlock {$/;"	s
-stage_bufs	core.h	/^	void* stage_bufs[NBUFS];	\/\/ Host-pinned staging buffers$/;"	m	struct:dma_channel
+stage_bufs	core.h	/^	cl_mem stage_bufs[NBUFS];	\/\/ Host-pinned staging buffers$/;"	m	struct:dma_channel
 start	server.c	/^int start(size_t mem_total)$/;"	f
 state	core.h	/^	region_state_t state;	\/\/ state of the object$/;"	m	struct:region
 statistics	stats.h	/^struct statistics {$/;"	s
@@ -408,6 +419,8 @@ stats_time_end	stats.h	92;"	d
 stop	server.c	/^int stop()$/;"	f
 swp_addr	core.h	/^	void* swp_addr;			\/\/ host swap buffer address$/;"	m	struct:region
 swp_valid	core.h	/^	int swp_valid;			\/\/ if data copy in host swap buffer is valid$/;"	m	struct:block
+testSize	oclTest/newT.c	13;"	d	file:
+testSize	oclTest/test.c	13;"	d	file:
 thread_msq_listener	msq.c	/^void *thread_msq_listener(void *arg)$/;"	f
 tid_msq	msq.c	/^pthread_t tid_msq;$/;"	v
 time_attach	stats.h	/^	double time_attach;			\/\/ Time on attaching (gmm_attach)$/;"	m	struct:statistics

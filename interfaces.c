@@ -22,7 +22,7 @@ cl_int (*ocl_clEnqueueWriteBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, si
 cl_int (*ocl_clEnqueueReadBuffer)(cl_command_queue, cl_mem, cl_bool, size_t, size_t , const void*, cl_uint, const cl_event *, cl_event*)=NULL;
 cl_int (*ocl_clEnqueueCopyBuffer)(cl_command_queue,cl_mem,cl_mem,size_t,size_t,size_t,cl_uint,const cl_event*,cl_event)=NULL;
 cl_context (*ocl_clCreateContext)(cl_context_properties *,cl_uint ,const cl_device_id *,void*, void *,cl_int *)=NULL;
-cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id, cl_command_queue_properties, cl_int errcode_ret)=NULL;
+//cl_command_queue (*ocl_clCreateCommandQueue)(cl_context, cl_device_id, cl_command_queue_properties, cl_int errcode_ret)=NULL;
 cl_program (*ocl_clCreateProgramWithSource)(cl_context, cl_uint, const char**, const size_t *, cl_int *errcode_ret)=NULL;
 cl_int (*ocl_clBuildProgram)(cl_program, cl_uint, const cl_device_id*, const char *, void *,void*)=NULL;
 //cl_kernel (*ocl_clCreateKernel)(cl_program ,const char *,cl_int*)=NULL;
@@ -46,7 +46,7 @@ void gmm_init(void)
 	INTERCEPT_CL("clCreateBuffer", ocl_clCreateBuffer);
 	INTERCEPT_CL("clReleaseMemObject",ocl_clReleaseMemObject);
     INTERCEPT_CL("clCreateContext",ocl_clCreateContext);	
-    INTERCEPT_CL("clCreateCommandQueue",ocl_clCreateCommandQueue);
+  //  INTERCEPT_CL("clCreateCommandQueue",ocl_clCreateCommandQueue);
     INTERCEPT_CL("clEnqueueFillBuffer",ocl_clEnqueueFillBuffer);
     INTERCEPT_CL("clEnqueueWriteBuffer",ocl_clEnqueueWriteBuffer);
     INTERCEPT_CL("clEnqueueCopyBuffer",ocl_clEnqueueCopyBuffer);
@@ -147,7 +147,7 @@ cl_int clReleaseMemObject(cl_mem memObj){
     return ret;
 }
 
-GMM_EXPORT
+/*GMM_EXPORT
 cl_command_queue clCreateCommandQueue(cl_context context,cl_device_id device,cl_command_queue_properties properties, cl_int *errcode_CQ){
     
     cl_command_queue ret;
@@ -161,7 +161,7 @@ cl_command_queue clCreateCommandQueue(cl_context context,cl_device_id device,cl_
 
     return ret;
 
-}
+}*/
 
 GMM_EXPORT
 cl_int clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, 

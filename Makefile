@@ -1,7 +1,7 @@
 include gmm.mk
 
 ## Specify CUDA install path here
-CUDAPATH = /usr/local/cuda-6.0
+CUDAPATH = /usr/local/cuda
 
 # Name of the GMM shared library
 LIBGMM = libgmm.so
@@ -43,7 +43,7 @@ depend : .depend
 %.c: ;
 
 gmmctl : server.o
-	$(CC) -L$(CUDAPATH)/lib64 $^ -o  $@ -lpthread -lrt
+	$(CC) -L$(CUDAPATH)/lib $^ -o  $@ -lpthread -lrt
 
 server.o : server.c protocol.h spinlock.h list.h atomic.h
 	$(CC) -c -l OpenCL -Wall -g\

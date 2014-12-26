@@ -1,4 +1,4 @@
-cscope 15 $HOME/oclGmm/oclTest -q 0000001707 0000125484
+cscope 15 $HOME/oclGmm/oclTest -q 0000001711 0000131558
 	@fptr.c
 
 1 
@@ -9,7 +9,7 @@ cscope 15 $HOME/oclGmm/oclTest -q 0000001707 0000125484
 	~<¡dlib.h
 >
 
-	@test.c
+	@newT.c
 
 1 
 	~<¡dio.h
@@ -30,6 +30,10 @@ cscope 15 $HOME/oclGmm/oclTest -q 0000001707 0000125484
 5 
 	~<¡ršg.h
 >
+
+6 
+	~"../gmm.h
+"
 
 9 
 	#FALSE
@@ -57,7 +61,13 @@ cscope 15 $HOME/oclGmm/oclTest -q 0000001707 0000125484
 
 13 
 	#‹¡Size
- 20*1024
+ 1*1024*1024
+
+	)
+
+14 
+	#cÜun
+ 1
 
 	)
 
@@ -103,13 +113,17 @@ cqueue
 þ_´og¿m
  
 ´og¿m
+,
+´og¿m2
 ;
 
 24 
 þ_k”Ãl
  
 k”Ãl
-;
+[
+cÜun
+];
 
 25 
 þ_ulÚg
@@ -129,13 +143,13 @@ size_t
 glob®
 =
 ‹¡Size
-;
+*();
 
 28 
 size_t
  
 loÿl
-;
+=1024;
 
 29 
 devName
@@ -145,121 +159,163 @@ devName
 i
 =0,
 j
+=0,
+k
 =0;
 
-31 
-d©a
-[
-‹¡Size
-]={5,6,7,8,9,0,1,2,3,4};
-
-32 
+31 *
 d©a2
-[
+=(*)
+	`m®loc
+(
 ‹¡Size
-]={55,6,7,8,9,0,1,2,3,4};
+*());
+
+32 *
+»suÉ
+=(*)
+	`m®loc
+(
+‹¡Size
+*()*
+cÜun
+);
 
 33 
-»suÉ
-[
-‹¡Size
-]={1,2,3,4,5,6,7,8,9,0};
-
-34 
 v®ue
 =44;
 
-35 *
+34 *
 nvidŸ
 ="NVIDIA Corporation";
 
-36 
+35 
 æag
 =
 FALSE
 ;
 
-37 
+36 
+æag_ÿl
+[
+cÜun
+];
+
+37 
+·¿1
+=3;
+
+38 
+·¿2
+=8;
+
+39 
 þ_deviû_id
  
 deviû
 ;
 
-38 
+40 
 þ_deviû_šfo
  
 ·¿m_Çme
 ;
 
-39 
-þ_št
- *
-”rcode_CC
-=
-NULL
-;
-
-40 
-þ_št
- *
-”rcode_CQ
-=
-NULL
-;
-
 41 
 þ_št
- *
-”rcode_CP
-=
-NULL
+ 
+”rcode_CC
 ;
 
 42 
 þ_št
- *
-”rcode_CK
-=
-NULL
+ 
+”rcode_CQ
 ;
 
 43 
 þ_št
- *
-”rcode_BP
-=
-NULL
+ 
+”rcode_CP
 ;
 
 44 
-þ_mem
+þ_št
  
-bufãr
-,
-bufãr2
+”rcode_CK
+;
+
+45 
+þ_št
+ 
+”rcode_BP
 ;
 
 46 
+þ_št
+ 
+”rcode_DEBUG
+;
+
+47 
+þ_mem
+ 
+bufãr
+[
+cÜun
+];
+
+49 
+	`mem£t
+(
+æag_ÿl
+,0,
+cÜun
+);
+
+50 
+	`mem£t
+(
+»suÉ
+,0,
+‹¡Size
+*()*
+cÜun
+);
+
+51 
+j
+=0;j<
+‹¡Size
+;j++){
+
+52 
+d©a2
+[
+j
+]=j;
+
+56 
 FILE
 *
 å
 ;
 
-47 
+57 
 fžeName
 []="./hello.cl";
 
-48 *
+58 *
 sourû_¡r
 ;
 
-49 
+59 
 size_t
  
 sourû_size
 ;
 
-50 
+60 
 å
 =
 	`fÝ’
@@ -267,19 +323,19 @@ sourû_size
 fžeName
 ,"r");
 
-51 if(!
+61 if(!
 å
 ){
 
-52 
+62 
 	`´štf
 ("failedohe openhe openCL file");
 
-53 
+63 
 	`ex™
 (1);
 
-56 
+65 
 sourû_¡r
 =(*)
 	`m®loc
@@ -287,7 +343,7 @@ sourû_¡r
 MAX_SOURCE_SIZE
 );
 
-57 
+66 
 sourû_size
 =
 	`ä—d
@@ -299,21 +355,85 @@ MAX_SOURCE_SIZE
 å
 );
 
-58 
+67 
 	`fþo£
 (
 å
 );
 
-63 
-þ_št
- *
-”rcode_CB
-=
-NULL
+69 
+FILE
+*
+å2
 ;
 
-64 
+70 
+fžeName2
+[]="./goodbye.cl";
+
+71 *
+sourû_¡r2
+;
+
+72 
+size_t
+ 
+sourû_size2
+;
+
+73 
+å2
+=
+	`fÝ’
+(
+fžeName2
+,"r");
+
+74 if(!
+å2
+){
+
+75 
+	`´štf
+("failedohe openhe openCL file");
+
+76 
+	`ex™
+(1);
+
+78 
+sourû_¡r2
+=(*)
+	`m®loc
+(
+MAX_SOURCE_SIZE
+);
+
+79 
+sourû_size2
+=
+	`ä—d
+(
+sourû_¡r2
+,1,
+MAX_SOURCE_SIZE
+,
+å2
+);
+
+80 
+	`fþo£
+(
+å2
+);
+
+85 
+þ_št
+ 
+”rcode_CB
+;
+
+86 
 	`þG‘PÏtfÜmIDs
 (
 NULL
@@ -321,13 +441,13 @@ NULL
 num_¶©fÜm
 );
 
-65 
+87 
 	`´štf
 ("Cu¼’Žy, whav%d…ÏtfÜms;\n",
 num_¶©fÜm
 );
 
-67 
+89 
 þ_¶©fÜm_id
  * 
 ¶©fÜm
@@ -337,7 +457,7 @@ num_¶©fÜm
 num_¶©fÜm
 *(cl_platform_id));
 
-68 
+90 
 	`þG‘PÏtfÜmIDs
 (
 num_¶©fÜm
@@ -347,13 +467,13 @@ num_¶©fÜm
 NULL
 );
 
-70 
+92 
 i
 =0;i<
 num_¶©fÜm
 ;i++){
 
-72 
+94 
 	`þG‘PÏtfÜmInfo
 (
 ¶©fÜm
@@ -367,13 +487,13 @@ v’dÜ
 NULL
 );
 
-73 
+95 
 	`´štf
 ("\tPÏtfÜm V’dÜ:\t%s\n",
 v’dÜ
 );
 
-74 if(
+96 if(
 	`¡rcmp
 (
 v’dÜ
@@ -381,17 +501,17 @@ v’dÜ
 nvidŸ
 )==0){
 
-75 
+97 
 	`´štf
 ("We've gothe„ight one\n");
 
-76 
+98 
 æag
 =
 TRUE
 ;
 
-80 
+102 
 	`þG‘DeviûIDs
 (
 ¶©fÜm
@@ -405,13 +525,13 @@ devId
 num_Dev
 );
 
-81 
+103 
 	`´štf
 ("numb” oàdeviû %u\n",
 num_Dev
 );
 
-83 
+105 
 	`þG‘DeviûInfo
 (
 devId
@@ -423,19 +543,19 @@ devName
 NULL
 );
 
-84 
+106 
 	`´štf
 ("\tDeviû Name:\t%s\n",
 devName
 );
 
-86 if(
+108 if(
 æag
 ==
 TRUE
 ){
 
-87 
+109 
 cÚ‹xt
 =
 	`þC»©eCÚ‹xt
@@ -443,21 +563,29 @@ cÚ‹xt
 NULL
 ,1,
 devId
-,NULL,NULL,
+,NULL,NULL,&
 ”rcode_CC
 );
 
-88 if(
+110 
+	`´štf
+("shÜˆdebug: devId[0]%p,”rcode_CC%d\n",
+devId
+,
+”rcode_CC
+);
+
+111 if(
 ”rcode_CC
 !=
 CL_SUCCESS
 ){
 
-89 
+112 
 	`´štf
 ("Context Creating Failed!\n");
 
-91 
+114 
 cqueue
 =
 	`þC»©eCommªdQueue
@@ -467,67 +595,11 @@ cÚ‹xt
 devId
 [0],
 CL_QUEUE_PROFILING_ENABLE
-,
+,&
 ”rcode_CQ
 );
 
-92 
-bufãr
-=
-	`þC»©eBufãr
-(
-cÚ‹xt
-,
-CL_MEM_READ_WRITE
-,
-‹¡Size
-*(),
-NULL
-,
-”rcode_CB
-);
-
-93 if(
-”rcode_CB
-!=
-CL_SUCCESS
-){
-
-94 
-	`´štf
-("Bufã¸C»©šg fažed! %p\n",
-”rcode_CB
-);
-
-96 
-bufãr2
-=
-	`þC»©eBufãr
-(
-cÚ‹xt
-,
-CL_MEM_READ_WRITE
-,
-‹¡Size
-*(),
-NULL
-,
-”rcode_CB
-);
-
-97 if(
-”rcode_CB
-!=
-CL_SUCCESS
-){
-
-98 
-	`´štf
-("Bufã¸C»©šg fažed! %p\n",
-”rcode_CB
-);
-
-101 
+115 
 ´og¿m
 =
 	`þC»©eProg¿mW™hSourû
@@ -539,23 +611,23 @@ sourû_¡r
 size_t
 *)&
 sourû_size
-, 
+, &
 ”rcode_CP
 );
 
-102 if(
+116 if(
 ”rcode_CP
 !=
 CL_SUCCESS
 ){
 
-103 
+117 
 	`´štf
 ("uÇbËØthlßdh´og¿m %p\n",
 ”rcode_CP
 );
 
-105 
+119 
 ”rcode_BP
 =
 	`þBuždProg¿m
@@ -567,123 +639,113 @@ devId
 NULL
 ,NULL,NULL);
 
-106 if(
+120 if(
 ”rcode_BP
 !=
 CL_SUCCESS
 ){
 
-107 
+121 
 	`´štf
 ("unableo buildhe…rogram\n");
 
-108 ()
-”rcode_BP
+124 
+k
+=0;k<
+cÜun
+;k++){
+
+125 
+bufãr
+[2*
+k
+]=
+	`þC»©eBufãr
+(
+cÚ‹xt
+,
+CL_MEM_READ_WRITE
+,
+‹¡Size
+*(),
+NULL
+,&
+”rcode_CB
+);
+
+126 if(
+”rcode_CB
+!=
+CL_SUCCESS
 ){
 
-109 
-CL_INVALID_PROGRAM
-:
-
-110 
+127 
 	`´štf
-("program is‚ot valid\n");
-
-113 
-CL_INVALID_VALUE
-:
-
-114 
-	`´štf
-("value is‚ot valid\n");
-
-116 
-CL_INVALID_DEVICE
-:
-
-117 
-	`´štf
-("device is‚ot valid\n");
-
-119 
-CL_INVALID_BINARY
-:
-
-120 
-	`´štf
-("BINARY is‚ot valid\n");
-
-122 
-CL_INVALID_BUILD_OPTIONS
-:
-
-123 
-	`´štf
-("build opt is‚ot valid\n");
-
-125 
-CL_INVALID_OPERATION
-:
-
-126 
-	`´štf
-("op is‚ot valid\n");
-
-128 
-CL_COMPILER_NOT_AVAILABLE
-:
+("Bufã¸C»©šg fažed! %d \n",
+”rcode_CB
+);
 
 129 
+bufãr
+[2*
+k
++1]=
+	`þC»©eBufãr
+(
+cÚ‹xt
+,
+CL_MEM_READ_WRITE
+,
+‹¡Size
+*(),
+NULL
+,&
+”rcode_CB
+);
+
+130 if(
+”rcode_CB
+!=
+CL_SUCCESS
+){
+
+131 
 	`´štf
-("compiler is‚ot valid\n");
+("Bufã¸C»©šg fažed! %d \n",
+”rcode_CB
+);
 
-131 
-CL_BUILD_PROGRAM_FAILURE
-:
-
-132 
-	`´štf
-("build…rogram is‚ot valid\n");
-
-134 
-CL_OUT_OF_HOST_MEMORY
-:
-
-135 
-	`´štf
-("Host Mem is‚ot valid\n");
-
-138 
-	`´štf
-("I have‚o idea\n");
-
-142 
+133 
 k”Ãl
-=
+[
+k
+]=
 	`þC»©eK”Ãl
 (
 ´og¿m
-,"squ¬e",
+,"lÚgSize",&
 ”rcode_CK
 );
 
-143 if(
+134 if(
 ”rcode_CK
 !=
 CL_SUCCESS
 ){
 
-144 
+135 
 	`´štf
 ("kernel creating failure\n");
 
-151 if(
+137 if(
 	`þEnqueueWr™eBufãr
 (
 cqueue
 ,
 bufãr
-,
+[2*
+k
+],
 CL_TRUE
 ,0,()*
 ‹¡Size
@@ -695,111 +757,111 @@ NULL
 CL_SUCCESS
 ){
 
-152 
+138 
 	`´štf
 ("write buffer failed\n");
 
-154 if(
+140 if(
 	`þEnqueueWr™eBufãr
 (
 cqueue
 ,
-bufãr2
-,
+bufãr
+[2*
+k
++1],
 CL_TRUE
 ,0,()*
 ‹¡Size
-,
+,(
 »suÉ
-,0,
++k*‹¡Size),0,
 NULL
 ,NULL)!=
 CL_SUCCESS
 ){
 
-155 
+141 
 	`´štf
 ("write buffer failed\n");
 
-157 if(
-	`þReã»nû
-(0,2)!=
-CL_SUCCESS
-){
-
-158 
-	`´štf
-("unableo sethe‡rg„ef\n");
-
-160 if(
-	`þReã»nû
-(1,1)!=
-CL_SUCCESS
-){
-
-161 
-	`´štf
-("unableo sethe‡rg„ef\n");
-
-164 if(
+149 if(
 	`þS‘K”ÃlArg
 (
 k”Ãl
-,0,(
+[
+k
+],0,(
 þ_mem
 ),&
 bufãr
-)!=
+[2*k])!=
 CL_SUCCESS
 ){
 
-165 
+150 
 	`´štf
-("unableo sethe‡rg\n");
+("unableo sethe‡rg 0\n");
 
-167 if(
+152 if(
 	`þS‘K”ÃlArg
 (
 k”Ãl
-,1,(
-þ_mem
-),&
-bufãr2
+[
+k
+],1,(),&
+·¿1
 )!=
 CL_SUCCESS
 ){
 
-168 
+153 
 	`´štf
-("unableo sethe‡rg\n");
+("unableo sethe‡rg 1\n");
 
-170 if(
-	`þG‘K”ÃlWÜkGroupInfo
+155 if(
+	`þS‘K”ÃlArg
 (
 k”Ãl
-,
-devId
-[0],
-CL_KERNEL_WORK_GROUP_SIZE
-,(
-loÿl
-),&loÿl,
-NULL
+[
+k
+],2,8,&
+·¿2
 )!=
 CL_SUCCESS
 ){
 
-171 
+156 
 	`´štf
-("Failedo gethe work info\n");
+("unableo sethe‡rg 2\n");
 
-173 if(
+158 if(
+	`þS‘K”ÃlArg
+(
+k”Ãl
+[
+k
+],3,(
+þ_mem
+),&
+bufãr
+[2*k+1])!=
+CL_SUCCESS
+){
+
+159 
+	`´štf
+("unableo sethe‡rg 3\n");
+
+166 if(
 	`þEnqueueNDRªgeK”Ãl
 (
 cqueue
 ,
 k”Ãl
-,1,
+[
+k
+],1,
 NULL
 ,&
 glob®
@@ -807,9 +869,85 @@ glob®
 loÿl
 ,0,NULL,NULL)!=
 CL_SUCCESS
-)
+){
 
-178 if(
+167 
+	`´štf
+("kernel†aunched failed\n");
+
+169 if(
+	`þEnqueueR—dBufãr
+(
+cqueue
+,
+bufãr
+[2*
+k
++1],
+CL_TRUE
+,0,()*
+‹¡Size
+,(
+»suÉ
++k*‹¡Size),0,
+NULL
+,NULL)!=
+CL_SUCCESS
+){
+
+170 
+	`´štf
+("read bufferƒrror\n");
+
+173 
+j
+=0;j<
+‹¡Size
+;j++){
+
+174 if(*(
+»suÉ
++
+k
+*
+‹¡Size
++
+j
+)!=
+d©a2
+[j]*data2[j]){
+
+175 
+æag_ÿl
+[
+k
+]=
+FALSE
+;
+
+178 
+	`´štf
+("show %dth„esuÉ %d\n",
+k
+,*(
+»suÉ
++k*
+‹¡Size
++5));
+
+179 if(
+æag_ÿl
+==
+FALSE
+){
+
+180 
+	`´štf
+("th%dth c®cuÏtiÚ i šcÜ»ù\n",
+k
+);
+
+232 if(
 CL_SUCCESS
 !=
 	`þFšish
@@ -817,83 +955,1097 @@ CL_SUCCESS
 cqueue
 )){
 
-179 
+233 
 	`´štf
 ("unsuccessfully quited\n");
 
-181 if(
-	`þEnqueueR—dBufãr
+237 
+k
+=0;k<2*
+cÜun
+;k++){
+
+238 if(
+CL_SUCCESS
+!=
+	`þR–—£MemObjeù
+(
+bufãr
+[
+k
+])){
+
+239 
+	`´štf
+("Buffer Deleting unsuccessful\n");
+
+244 
+æag
+=
+FALSE
+;
+
+247 
+	}
+}
+
+	@test.c
+
+1 
+	~<¡dio.h
+>
+
+2 
+	~<¡dlib.h
+>
+
+3 
+	~<CL/Ý’þ.h
+>
+
+4 
+	~<š‰y³s.h
+>
+
+5 
+	~<¡ršg.h
+>
+
+6 
+	~"../gmm.h
+"
+
+9 
+	#FALSE
+ 1
+
+	)
+
+10 
+	#TRUE
+ 0
+
+	)
+
+11 
+	#MEM_SIZE
+ (128)
+
+	)
+
+12 
+	#MAX_SOURCE_SIZE
+ (0X100000)
+
+	)
+
+13 
+	#‹¡Size
+ 50*1024*1024
+
+	)
+
+14 
+	#cÜun
+ 2
+
+	)
+
+15 
+	$maš
+(){
+
+17 
+v’dÜ
+[1024];
+
+18 
+þ_ušt
+ 
+num_¶©fÜm
+;
+
+19 
+þ_deviû_id
+ 
+devId
+[10];
+
+20 
+þ_ušt
+ 
+num_Dev
+;
+
+21 
+þ_cÚ‹xt
+ 
+cÚ‹xt
+;
+
+22 
+þ_commªd_queue
+ 
+cqueue
+;
+
+23 
+þ_´og¿m
+ 
+´og¿m
+,
+´og¿m2
+;
+
+24 
+þ_k”Ãl
+ 
+k”Ãl
+[
+cÜun
+];
+
+25 
+þ_ulÚg
+ 
+mem
+;
+
+26 
+þ_ulÚg
+ 
+loÿlMem
+;
+
+27 
+size_t
+ 
+glob®
+=
+‹¡Size
+*();
+
+28 
+size_t
+ 
+loÿl
+=1024;
+
+29 
+devName
+[1024];
+
+30 
+i
+=0,
+j
+=0,
+k
+=0;
+
+31 *
+d©a2
+=(*)
+	`m®loc
+(
+‹¡Size
+*());
+
+32 *
+»suÉ
+=(*)
+	`m®loc
+(
+‹¡Size
+*()*
+cÜun
+);
+
+33 
+v®ue
+=44;
+
+34 *
+nvidŸ
+="NVIDIA Corporation";
+
+35 
+æag
+=
+FALSE
+;
+
+36 
+æag_ÿl
+[
+cÜun
+];
+
+37 
+·¿1
+=3;
+
+38 
+·¿2
+=8;
+
+39 
+þ_deviû_id
+ 
+deviû
+;
+
+40 
+þ_deviû_šfo
+ 
+·¿m_Çme
+;
+
+41 
+þ_št
+ 
+”rcode_CC
+;
+
+42 
+þ_št
+ 
+”rcode_CQ
+;
+
+43 
+þ_št
+ 
+”rcode_CP
+;
+
+44 
+þ_št
+ 
+”rcode_CK
+;
+
+45 
+þ_št
+ 
+”rcode_BP
+;
+
+46 
+þ_št
+ 
+”rcode_DEBUG
+;
+
+47 
+þ_št
+ 
+”rcode_COPY
+;
+
+48 
+þ_mem
+ 
+bufãr
+[
+cÜun
+];
+
+50 
+	`mem£t
+(
+æag_ÿl
+,0,
+cÜun
+);
+
+51 
+	`mem£t
+(
+»suÉ
+,0,
+‹¡Size
+*()*
+cÜun
+);
+
+52 
+j
+=0;j<
+‹¡Size
+;j++){
+
+53 
+d©a2
+[
+j
+]=j;
+
+57 
+FILE
+*
+å
+;
+
+58 
+fžeName
+[]="./hello.cl";
+
+59 *
+sourû_¡r
+;
+
+60 
+size_t
+ 
+sourû_size
+;
+
+61 
+å
+=
+	`fÝ’
+(
+fžeName
+,"r");
+
+62 if(!
+å
+){
+
+63 
+	`´štf
+("failedohe openhe openCL file");
+
+64 
+	`ex™
+(1);
+
+66 
+sourû_¡r
+=(*)
+	`m®loc
+(
+MAX_SOURCE_SIZE
+);
+
+67 
+sourû_size
+=
+	`ä—d
+(
+sourû_¡r
+,1,
+MAX_SOURCE_SIZE
+,
+å
+);
+
+68 
+	`fþo£
+(
+å
+);
+
+70 
+FILE
+*
+å2
+;
+
+71 
+fžeName2
+[]="./goodbye.cl";
+
+72 *
+sourû_¡r2
+;
+
+73 
+size_t
+ 
+sourû_size2
+;
+
+74 
+å2
+=
+	`fÝ’
+(
+fžeName2
+,"r");
+
+75 if(!
+å2
+){
+
+76 
+	`´štf
+("failedohe openhe openCL file");
+
+77 
+	`ex™
+(1);
+
+79 
+sourû_¡r2
+=(*)
+	`m®loc
+(
+MAX_SOURCE_SIZE
+);
+
+80 
+sourû_size2
+=
+	`ä—d
+(
+sourû_¡r2
+,1,
+MAX_SOURCE_SIZE
+,
+å2
+);
+
+81 
+	`fþo£
+(
+å2
+);
+
+86 
+þ_št
+ 
+”rcode_CB
+;
+
+87 
+	`þG‘PÏtfÜmIDs
+(
+NULL
+,0,&
+num_¶©fÜm
+);
+
+88 
+	`´štf
+("Cu¼’Žy, whav%d…ÏtfÜms;\n",
+num_¶©fÜm
+);
+
+90 
+þ_¶©fÜm_id
+ * 
+¶©fÜm
+=(þ_¶©fÜm_id*è
+	`m®loc
+(
+num_¶©fÜm
+*(cl_platform_id));
+
+91 
+	`þG‘PÏtfÜmIDs
+(
+num_¶©fÜm
+,
+¶©fÜm
+,
+NULL
+);
+
+93 
+i
+=0;i<
+num_¶©fÜm
+;i++){
+
+95 
+	`þG‘PÏtfÜmInfo
+(
+¶©fÜm
+[
+i
+],
+CL_PLATFORM_VENDOR
+,(
+v’dÜ
+),v’dÜ,
+NULL
+);
+
+96 
+	`´štf
+("\tPÏtfÜm V’dÜ:\t%s\n",
+v’dÜ
+);
+
+97 if(
+	`¡rcmp
+(
+v’dÜ
+,
+nvidŸ
+)==0){
+
+98 
+	`´štf
+("We've gothe„ight one\n");
+
+99 
+æag
+=
+TRUE
+;
+
+103 
+	`þG‘DeviûIDs
+(
+¶©fÜm
+[
+i
+],
+CL_DEVICE_TYPE_ALL
+,(
+devId
+),devId,&
+num_Dev
+);
+
+104 
+	`´štf
+("numb” oàdeviû %u\n",
+num_Dev
+);
+
+106 
+	`þG‘DeviûInfo
+(
+devId
+[0], 
+CL_DEVICE_NAME
+, (
+devName
+),devName,
+NULL
+);
+
+107 
+	`´štf
+("\tDeviû Name:\t%s\n",
+devName
+);
+
+109 if(
+æag
+==
+TRUE
+){
+
+110 
+cÚ‹xt
+=
+	`þC»©eCÚ‹xt
+(
+NULL
+,1,
+devId
+,NULL,NULL,&
+”rcode_CC
+);
+
+112 if(
+”rcode_CC
+!=
+CL_SUCCESS
+){
+
+113 
+	`´štf
+("Context Creating Failed!\n");
+
+115 
+cqueue
+=
+	`þC»©eCommªdQueue
+(
+cÚ‹xt
+,
+devId
+[0],
+CL_QUEUE_PROFILING_ENABLE
+,&
+”rcode_CQ
+);
+
+116 
+´og¿m
+=
+	`þC»©eProg¿mW™hSourû
+(
+cÚ‹xt
+,1,(cÚ¡ **)&
+sourû_¡r
+,(cÚ¡ 
+size_t
+*)&
+sourû_size
+, &
+”rcode_CP
+);
+
+117 if(
+”rcode_CP
+!=
+CL_SUCCESS
+){
+
+118 
+	`´štf
+("uÇbËØthlßdh´og¿m %p\n",
+”rcode_CP
+);
+
+120 
+”rcode_BP
+=
+	`þBuždProg¿m
+(
+´og¿m
+,1,
+devId
+,
+NULL
+,NULL,NULL);
+
+121 if(
+”rcode_BP
+!=
+CL_SUCCESS
+){
+
+122 
+	`´štf
+("unableo buildhe…rogram\n");
+
+125 
+k
+=0;k<
+cÜun
+;k++){
+
+126 
+bufãr
+[2*
+k
+]=
+	`þC»©eBufãr
+(
+cÚ‹xt
+,
+CL_MEM_READ_WRITE
+,
+‹¡Size
+*(),
+NULL
+,&
+”rcode_CB
+);
+
+127 if(
+”rcode_CB
+!=
+CL_SUCCESS
+){
+
+128 
+	`´štf
+("Bufã¸C»©šg fažed! %d \n",
+”rcode_CB
+);
+
+130 
+bufãr
+[2*
+k
++1]=
+	`þC»©eBufãr
+(
+cÚ‹xt
+,
+CL_MEM_READ_WRITE
+,
+‹¡Size
+*(),
+NULL
+,&
+”rcode_CB
+);
+
+131 if(
+”rcode_CB
+!=
+CL_SUCCESS
+){
+
+132 
+	`´štf
+("Bufã¸C»©šg fažed! %d \n",
+”rcode_CB
+);
+
+134 
+k”Ãl
+[
+k
+]=
+	`þC»©eK”Ãl
+(
+´og¿m
+,"squ¬e",&
+”rcode_CK
+);
+
+135 if(
+”rcode_CK
+!=
+CL_SUCCESS
+){
+
+136 
+	`´štf
+("kernel creating failure\n");
+
+138 if(
+	`þEnqueueWr™eBufãr
 (
 cqueue
 ,
-bufãr2
-,
+bufãr
+[2*
+k
+],
 CL_TRUE
 ,0,()*
 ‹¡Size
 ,
-»suÉ
+d©a2
 ,0,
 NULL
 ,NULL)!=
 CL_SUCCESS
 ){
 
-183 
+139 
+	`´štf
+("write buffer failed\n");
+
+141 if(
+	`þEnqueueWr™eBufãr
+(
+cqueue
+,
+bufãr
+[2*
+k
++1],
+CL_TRUE
+,0,()*
+‹¡Size
+,(
+»suÉ
++k*‹¡Size),0,
+NULL
+,NULL)!=
+CL_SUCCESS
+){
+
+142 
+	`´štf
+("write buffer failed\n");
+
+144 if(
+	`þReã»nû
+(0,2)!=
+CL_SUCCESS
+){
+
+145 
+	`´štf
+("unableo sethe‡rg„ef\n");
+
+147 if(
+	`þReã»nû
+(3,1)!=
+CL_SUCCESS
+){
+
+148 
+	`´štf
+("unableo sethe‡rg„ef\n");
+
+150 if(
+	`þS‘K”ÃlArg
+(
+k”Ãl
+[
+k
+],0,(
+þ_mem
+),&
+bufãr
+[2*k])!=
+CL_SUCCESS
+){
+
+151 
+	`´štf
+("unableo sethe‡rg 0\n");
+
+153 if(
+	`þS‘K”ÃlArg
+(
+k”Ãl
+[
+k
+],1,(),&
+·¿1
+)!=
+CL_SUCCESS
+){
+
+154 
+	`´štf
+("unableo sethe‡rg 1\n");
+
+156 if(
+	`þS‘K”ÃlArg
+(
+k”Ãl
+[
+k
+],2,(),&
+·¿2
+)!=
+CL_SUCCESS
+){
+
+157 
+	`´štf
+("unableo sethe‡rg 2\n");
+
+159 if(
+	`þS‘K”ÃlArg
+(
+k”Ãl
+[
+k
+],3,(
+þ_mem
+),&
+bufãr
+[2*k+1])!=
+CL_SUCCESS
+){
+
+160 
+	`´štf
+("unableo sethe‡rg 3\n");
+
+167 if(
+	`þEnqueueNDRªgeK”Ãl
+(
+cqueue
+,
+k”Ãl
+[
+k
+],1,
+NULL
+,&
+glob®
+,&
+loÿl
+,0,NULL,NULL)!=
+CL_SUCCESS
+){
+
+168 
+	`´štf
+("kernel†aunched failed\n");
+
+171 
+”rcode_COPY
+=
+	`þEnqueueCÝyBufãr
+(
+cqueue
+,
+bufãr
+[2*
+k
++1],bufãr[2*k],0,0,()*
+‹¡Size
+,0,
+NULL
+,NULL);
+
+172 if(
+”rcode_COPY
+!=
+CL_SUCCESS
+){
+
+173 
+	`´štf
+("šcÜ»ù cÝyšg, w™hƒ¼%d\n",
+”rcode_COPY
+);
+
+175 if(
+	`þEnqueueR—dBufãr
+(
+cqueue
+,
+bufãr
+[2*
+k
+],
+CL_TRUE
+,0,()*
+‹¡Size
+,(
+»suÉ
++k*‹¡Size),0,
+NULL
+,NULL)!=
+CL_SUCCESS
+){
+
+176 
 	`´štf
 ("read bufferƒrror\n");
 
-186 if(
+179 
+j
+=0;j<
+‹¡Size
+;j++){
+
+180 if(*(
+»suÉ
++
+k
+*
+‹¡Size
++
+j
+)!=
+d©a2
+[j]*data2[j]){
+
+181 
+æag_ÿl
+[
+k
+]=
+FALSE
+;
+
+184 
+	`´štf
+("show %dth„esuÉ %d\n",
+k
+,*(
+»suÉ
++k*
+‹¡Size
++5));
+
+185 if(
+æag_ÿl
+==
+FALSE
+){
+
+186 
+	`´štf
+("th%dth c®cuÏtiÚ i šcÜ»ù\n",
+k
+);
+
+238 if(
+CL_SUCCESS
+!=
+	`þFšish
+(
+cqueue
+)){
+
+239 
+	`´štf
+("unsuccessfully quited\n");
+
+243 
+k
+=0;k<2*
+cÜun
+;k++){
+
+244 if(
 CL_SUCCESS
 !=
 	`þR–—£MemObjeù
 (
 bufãr
-)){
+[
+k
+])){
 
-187 
+245 
 	`´štf
 ("Buffer Deleting unsuccessful\n");
 
-191 
-	`þG‘DeviûInfo
-(
-devId
-[0],
-CL_DEVICE_GLOBAL_MEM_SIZE
-, (
-mem
-),&mem,
-NULL
-);
-
-192 
-	`´štf
-("Thglob® sizi %lu \n",
-mem
-/(1024*1024));
-
-193 
-j
-=0;j<10;j++)
-
-194 
-	`´štf
-("Ët ju¡ show oÃ oàthem %d\n",
-»suÉ
-[
-j
-]);
-
-195 
+250 
 æag
 =
 FALSE
 ;
 
-198 
+253 
 	}
 }
+
+	@../gmm.h
+
+2 #iâdeà
+_GMM_H_
+
+
+3 
+	#_GMM_H_
+
+
+	)
+
+5 
+	~"hšt.h
+"
+
+7 #ifdeà
+__ýlu¥lus
+
+
+16 
+þReã»nû
+(
+which_¬g
+, 
+æags
+);
+
+18 #ifdeà
+__ýlu¥lus
+
 
 	@/usr/include/inttypes.h
 
@@ -22368,10 +23520,12 @@ __END_DECLS
 .
 1
 /usr/include
-19
-396
+21
+412
 fptr.c
+newT.c
 test.c
+../gmm.h
 /usr/include/inttypes.h
 /usr/include/stdio.h
 /usr/include/stdlib.h
