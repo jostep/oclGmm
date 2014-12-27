@@ -576,10 +576,7 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_of
     delta;
 	int ret = 0, ibuf_old;
     cl_int  err;
-<<<<<<< HEAD
-=======
     cl_int errcode_temp;
->>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
 	begin_dma(chan);
     cl_event temp[NBUFS];
     int i=0;
@@ -657,11 +654,7 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_of
 			goto finish;
 		}*/
         cl_int err_RB;
-<<<<<<< HEAD
-        err_RB=ocl_clEnqueueReadBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_TRUE,0,delta,(void*)(unsigned long)dst+off_stoh+prev_off,0,NULL,NULL);
-=======
         err_RB=ocl_clEnqueueReadBuffer(chan->commandQueue_chan,chan->stage_bufs[chan->ibuf],CL_TRUE,0,delta,(void*)(unsigned long)dst+off_stoh+prev_off,1,&temp[chan->ibuf],NULL);
->>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
         if(err_RB!=CL_SUCCESS){
             gprint(FATAL,"cannot copy to dst with err %d\n",err_RB);
             ret=-1;
@@ -1504,18 +1497,13 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint offset,size_t size, const voi
 		// This argument is not a device memory pointer.
 		// XXX: Currently we ignore the case that nv_cudaSetupArgument
 		// returns error and CUDA runtime might stop pushing arguments.
-<<<<<<< HEAD
         void * temp = malloc(size);
-=======
         /*void * temp = malloc(size);
->>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
         if(arg)
             memcpy(temp,arg,size);
         else
             temp=arg;
 		kargs[nargs].arg.arg2.arg = temp;
-<<<<<<< HEAD
-		/*
         memcpy(ktop, arg, size);
 		kargs[nargs].arg.arg2.arg = ktop;
         printf("for a non-dptr your addr will be %p \n",temp);
@@ -1526,9 +1514,7 @@ cl_int gmm_clSetKernelArg(cl_kernel kernel,cl_uint offset,size_t size, const voi
         else 
             ktop=arg;
         kargs[nargs].arg.arg2.arg = ktop;
->>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
 		ktop += size;
-        */
 	}
 	kargs[nargs].is_dptr = is_dptr;
 	kargs[nargs].size = size;
@@ -1746,15 +1732,12 @@ reload:
         }
 		else {
             ocl_clSetKernelArg(kernel, kargs[i].argoff,kargs[i].size,kargs[i].arg.arg2.arg);
-<<<<<<< HEAD
 			/*gprint(DEBUG, "setup %p %lu %lu\n", \
              kargs[i].arg.arg2.arg, \
              kargs[i].arg.arg2.size, \
              kargs[i].arg.arg2.offset);*/
-=======
 	         gprint(DEBUG, "setup non-ptr %p \n", \
              kargs[i].arg.arg2.arg);
->>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
 		}
 	}
     

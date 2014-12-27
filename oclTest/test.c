@@ -3,10 +3,7 @@
 #include <CL/opencl.h>
 #include <inttypes.h>
 #include <string.h>
-<<<<<<< HEAD
-=======
 #include <time.h>
->>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
 #include "../gmm.h"
 
 
@@ -15,11 +12,7 @@
 #define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0X100000)
 #define testSize 50*1024*1024
-<<<<<<< HEAD
-#define corun 2
-=======
 #define corun 1
->>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
 int main(){
     
     char vendor[1024];
@@ -133,18 +126,12 @@ int main(){
             }
 
            for(k=0;k<corun;k++){
-<<<<<<< HEAD
                 printf("current%p, unsigned long%p\n",buffer[2*k],(unsigned long)buffer[2*k]);
-=======
->>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
                 buffer[2*k]=clCreateBuffer(context,CL_MEM_READ_WRITE,testSize*sizeof(int),NULL,&errcode_CB);
                 if(errcode_CB!=CL_SUCCESS){
                     printf("Buffer Creating failed!  %d \n",errcode_CB);
                 }
-<<<<<<< HEAD
                 printf("current%p, unsigned long%p\n",buffer[2*k],(unsigned long)buffer[2*k]);
-=======
->>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
                 buffer[2*k+1]=clCreateBuffer(context,CL_MEM_READ_WRITE,testSize*sizeof(int),NULL,&errcode_CB);
                 if(errcode_CB!=CL_SUCCESS){
                     printf("Buffer Creating failed!  %d \n",errcode_CB);
@@ -186,15 +173,11 @@ int main(){
                     printf("kernel launched failed\n");
                 }
 
-<<<<<<< HEAD
                 errcode_COPY=clEnqueueCopyBuffer(cqueue,buffer[2*k+1],buffer[2*k],0,0,sizeof(int)*testSize,0,NULL,NULL);
                 if(errcode_COPY!=CL_SUCCESS){
                     printf("incorrect copying, with err%d\n",errcode_COPY);
                 }
-                if(clEnqueueReadBuffer(cqueue,buffer[2*k],CL_TRUE,0,sizeof(int)*testSize,(result+k*testSize),0,NULL,NULL)!=CL_SUCCESS){
-=======
                 if(clEnqueueReadBuffer(cqueue,buffer[2*k+1],CL_TRUE,0,sizeof(int)*testSize,(result+k*testSize),0,NULL,NULL)!=CL_SUCCESS){
->>>>>>> e9a66bdce415aaa1c33e8344ba8b8d3d4c7ed3df
                     printf("read buffer error\n");
                 }
                 //answer check
