@@ -122,7 +122,7 @@ int main(){
             }
             errcode_BP=clBuildProgram(program,1,devId,NULL,NULL,NULL);
             if(errcode_BP!=CL_SUCCESS){
-                printf("unable to build the program\n");
+                printf("unable to build the program, with the error %d\n",errcode_BP);
             }
 
            for(k=0;k<corun;k++){
