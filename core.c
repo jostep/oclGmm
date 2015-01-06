@@ -621,8 +621,6 @@ static int gmm_memcpy_dtoh(void* dst, cl_mem src, unsigned long size,int prev_of
 	// rest DtoH commands if any.
 	chan->ibuf = ibuf_old;
 	off_stoh = 0;
-    int i=0;
-    cl_int errcode_temp;
     /*cl_event temp[NBUFS];
     while(i<NBUFS){
         temp[i]=clCreateUserEvent(pcontext->context_kernel,&errcode_temp);
