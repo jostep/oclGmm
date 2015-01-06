@@ -383,16 +383,18 @@ struct region * region_lookup(struct gmm_context *ctx, const cl_mem ptr){
     struct region *r = NULL;
     struct list_head *pos;
     int found =0;
+    unsigned long wa=0x0000ffff;
+    unsigned long start,end;
     acquire (&ctx->lock_alloced);
     list_for_each(pos, &ctx->list_alloced){
         r= list_entry(pos, struct region, entry_alloced);
-
+        start=(unsigned long)r->swp_addr;
+        end=(unsigned long)start+r->size;
+        printf("the start addr will be(%p) (%lu) , end(%p)(%lu) ",start,start,end,end);
         if (r->state==STATE_FREEING||r->state==STATE_ZOMBIE){
             continue;
         }
-        if(((unsigned long)>=(unsigned long)(r->swp_addr))&&
-           (ptrtmp<
-           (swptmp+(unsigned long)(r->size)))){
+        if(start<=(unsigned long)(ptr)&&end>(unsigned long)ptr){
             found =1;
             break;
         }
