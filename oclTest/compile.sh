@@ -5,7 +5,7 @@ make
 ./gmmctl --start
 cd ./oclTest
 rm -f a.out
-export LD_LIBRARY_PATH=/home/erci/oclGmm
+export LD_LIBRARY_PATH=/home/giorgio/oclGmm
 export LD_LIBRARY_PATH=/usr/local/cuda/lib
 gcc -g -I/usr/local/cuda/include -L/home/giorgio/oclGmm  test.c -Xlinker -rpath=/home/giorgio/oclGmm -lgmm -lrt -lOpenCL
 #gcc -g -I/usr/local/cuda-6.0/include newT.c  -lrt -lOpenCL

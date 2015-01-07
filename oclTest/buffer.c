@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <CL/opencl.h>
@@ -126,8 +127,7 @@ int main(){
             }
 
            for(k=0;k<corun;k++){
-                printf("current%p, unsigned long%p\n",buffer[2*k],(unsigned long)buffer[2*k]);
-                buffer[2*k]=clCreateBuffer(context,CL_MEM_READ_WRITE,testSize*sizeof(int),NULL,&errcode_CB);
+                buffer[2*k]=clCreateBuffer(context,CL_MEM_ALLOC_HOST_PTR,testSize*sizeof(int),NULL,&errcode_CB);
                 if(errcode_CB!=CL_SUCCESS){
                     printf("Buffer Creating failed!  %d \n",errcode_CB);
                 }
@@ -146,79 +146,12 @@ int main(){
                 if(clEnqueueWriteBuffer(cqueue,buffer[2*k+1],CL_TRUE,0,sizeof(int)*testSize,(result+k*testSize),0,NULL,NULL)!=CL_SUCCESS){
                     printf("write buffer failed\n");
                 }
-                if(clReference(0,2)!=CL_SUCCESS){
-                    printf("unable to set the arg ref\n");
-                }
-                if(clReference(3,1)!=CL_SUCCESS){
-                    printf("unable to set the arg ref\n");
-                }
-                if(clSetKernelArg(kernel[k],0,sizeof(cl_mem),&buffer[2*k])!=CL_SUCCESS){
-                    printf("unable to set the arg 0\n");
-                }   
-                if(clSetKernelArg(kernel[k],1,sizeof(int),&para1)!=CL_SUCCESS){
-                    printf("unable to set the arg 1\n");
-                }   
                 if(clSetKernelArg(kernel[k],2,sizeof(int),&para2)!=CL_SUCCESS){
                     printf("unable to set the arg 2\n");
                 }   
                 if(clSetKernelArg(kernel[k],3,sizeof(cl_mem),&buffer[2*k+1])!=CL_SUCCESS){
                     printf("unable to set the arg 3\n");
                 }
-                /*errcode_DEBUG=clGetKernelWorkGroupInfo(kernel[k],devId[0],CL_KERNEL_WORK_GROUP_SIZE,sizeof(local),&local,NULL);
-                printf("the local is %d\n",local);
-                if(errcode_DEBUG!=CL_SUCCESS){
-                    printf("Failed to get the work info\n");
-                }*/
-                if(clEnqueueNDRangeKernel(cqueue,kernel[k],1,NULL,&global,&local,0,NULL,NULL)!=CL_SUCCESS){
-                    printf("kernel launched failed\n");
-                }
-
-                errcode_COPY=clEnqueueCopyBuffer(cqueue,buffer[2*k+1],buffer[2*k],0,0,sizeof(int)*testSize,0,NULL,NULL);
-                if(errcode_COPY!=CL_SUCCESS){
-                    printf("incorrect copying, with err%d\n",errcode_COPY);
-                }
-                if(clEnqueueReadBuffer(cqueue,buffer[2*k+1],CL_TRUE,0,sizeof(int)*testSize,(result+k*testSize),0,NULL,NULL)!=CL_SUCCESS){
-                    printf("read buffer error\n");
-                }
-                //answer check
-                for(j=0;j<testSize;j++){
-                    if(*(result+k*testSize+j)!=data2[j]*data2[j]){
-                        flag_cal[k]=FALSE;
-                    }     
-                }
-                printf("show %dth result %d\n",k,*(result+k*testSize+5));
-                if(flag_cal==FALSE){
-                    printf("the %dth calculation is incorrect\n",k);
-                }
-           }
-            /*program2=clCreateProgramWithSource(context,1,(const char**)&source_str2,(const size_t*)&source_size2, errcode_CP);
-            if(errcode_CP!=CL_SUCCESS){
-                printf("unable to the load the program  %p\n",errcode_CP);
-            }
-            errcode_BP=clBuildProgram(program2,1,&devId[0],NULL,NULL,NULL);
-            if(errcode_BP==CL_INVALID_DEVICE){
-                printf("unable to build the program, INVALID DEV\n");
-            }*/
-           for(k=0;k<corun;k++){
-            
-                
-                kernel[k]=clCreateKernel(program,"add",errcode_CK);
-                if(clReference(0,2)!=CL_SUCCESS){
-                    printf("unable to set the arg ref\n");
-                }
-                if(clReference(1,1)!=CL_SUCCESS){
-                    printf("unable to set the arg ref\n");
-                }
-                if(clSetKernelArg(kernel[k],0,sizeof(cl_mem),&buffer[2*k])!=CL_SUCCESS){
-                    printf("unable to set the arg\n");
-                }   
-                if(clSetKernelArg(kernel[k],1,sizeof(cl_mem),&buffer[2*k+1])!=CL_SUCCESS){
-                    printf("unable to set the arg\n");
-                }
-                /*errcode_DEBUG=clGetKernelWorkGroupInfo(kernel[k],devId[0],CL_KERNEL_WORK_GROUP_SIZE,sizeof(local),&local,NULL);
-                if(errcode_DEBUG!=CL_SUCCESS){
-                    printf("Failed to get the work info\n");
-                }*/
                 if(clEnqueueNDRangeKernel(cqueue,kernel[k],1,NULL,&global,&local,0,NULL,NULL)!=CL_SUCCESS){
                     printf("kernel launched failed\n");
                 }
@@ -226,20 +159,6 @@ int main(){
                 if(errcode_COPY!=CL_SUCCESS){
                     printf("incorrect copying, with err%d\n",errcode_COPY);
                 }
-                if(clEnqueueReadBuffer(cqueue,buffer[2*k],CL_TRUE,0,sizeof(int)*testSize,(result+k*testSize),0,NULL,NULL)!=CL_SUCCESS){
-                    printf("read buffer error\n");
-                }
-                for(j=0;j<testSize;j++){
-                    if(*(result+k*testSize+j)!=data2[j]*data2[j]){
-                        flag_cal[k]=FALSE;
-                    }     
-                }
-                printf("show %dth result %d\n",k,*(result+k*testSize+5));
-                if(flag_cal==FALSE){
-                    printf("the %dth calculation is incorrect\n",k);
-                }
-
-           
            }
 
 

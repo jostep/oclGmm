@@ -878,7 +878,7 @@ static int gmm_htod_block(
 		// this is not thread-safe; otherwise, move memcpy before release
 
 		//memcpy((void *)((unsigned long )r->swp_addr + offset), src, size);
-        ocl_clEnqueueWriteBuffer(&pcontext->commandQueue_kernel,r->swp_addr,CL_TRUE,offset,size,src,0,NULL,NULL);
+        ocl_clEnqueueWriteBuffer(&pcontext->commandQueue_kernel,r->swp_addr,CL_FALSE,offset,size,src,0,NULL,NULL);
 		stats_time_end(&pcontext->stats, time_u2s);
 		stats_inc(&pcontext->stats, bytes_u2s, size);
 	}
