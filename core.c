@@ -241,11 +241,11 @@ cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, v
         return NULL;
     }
     
-    r->swp_addr=malloc(size);
+    //r->swp_addr=malloc(size);
+    r->swp_addr=ocl_clCreateBuffer(context,CL_MEM_ALLOC_HOST_PTR,size,NULL,errcode_CB);
     if (!r->swp_addr){
         
         gprint(FATAL,"malloc for a swap buffer: %s\n",strerror(errno));
-        gprint(FATAL,"malloc for a swap buffer: %s\n");
         free(r);
         return errcode_CB;
     }
@@ -277,7 +277,8 @@ cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, v
         if(r->pta_addr){
             free(r->pta_addr);
         }
-        free(r->swp_addr);
+        //free(r->swp_addr);
+        ocl_clReleaseMemObject(r->swp_addr);
         free(r);
         return NULL;
     }
@@ -294,10 +295,7 @@ cl_mem gmm_clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size, v
     
     gprint(DEBUG, "clCreateBuffer ends : r(%p) swp(%p) pta(%p)\n",r,r->swp_addr,r->pta_addr);
     
-    if(errcode_CB)
-        *errcode_CB=CL_SUCCESS;
-    
-    return (cl_mem)r->swp_addr; 
+    return r->swp_addr; 
 }
 
 static int dma_channel_init(struct gmm_context *ctx,struct dma_channel *chan, int htod){
@@ -383,18 +381,18 @@ struct region * region_lookup(struct gmm_context *ctx, const cl_mem ptr){
     struct region *r = NULL;
     struct list_head *pos;
     int found =0;
-    unsigned long wa=0x0000ffff;
     unsigned long start,end;
+    unsigned long addr=(unsigned long) ptr;
     acquire (&ctx->lock_alloced);
     list_for_each(pos, &ctx->list_alloced){
         r= list_entry(pos, struct region, entry_alloced);
-        start=(unsigned long)r->swp_addr;
-        end=(unsigned long)start+r->size;
-        printf("the start addr will be(%p) (%lu) , end(%p)(%lu) ",start,start,end,end);
+        start=((unsigned long)r->swp_addr);
+        end=((unsigned long)start+r->size);
+        printf("the start addr will be(%p) (%lu) , end(%p)(%lu) and the ptr is (%p) (%lu)\n",start,start,end,end,addr,addr);
         if (r->state==STATE_FREEING||r->state==STATE_ZOMBIE){
             continue;
         }
-        if(start<=(unsigned long)(ptr)&&end>(unsigned long)ptr){
+        if(start<=addr&&end>addr){
             found =1;
             break;
         }
@@ -878,7 +876,9 @@ static int gmm_htod_block(
         
 		stats_time_begin();
 		// this is not thread-safe; otherwise, move memcpy before release
-		memcpy((void *)((unsigned long )r->swp_addr + offset), src, size);
+
+		//memcpy((void *)((unsigned long )r->swp_addr + offset), src, size);
+        ocl_clEnqueueWriteBuffer(&pcontext->commandQueue_kernel,r->swp_addr,CL_TRUE,offset,size,src,0,NULL,NULL);
 		stats_time_end(&pcontext->stats, time_u2s);
 		stats_inc(&pcontext->stats, bytes_u2s, size);
 	}
@@ -902,7 +902,8 @@ static int gmm_htod_block(
 		}
         
 		stats_time_begin();
-		memcpy((void *)((unsigned long)r->swp_addr + offset), src, size);
+		//memcpy((void *)((unsigned long)r->swp_addr + offset), src, size);
+        ocl_clEnqueueWriteBuffer(&pcontext->commandQueue_kernel,r->swp_addr,CL_TRUE,offset,size,src,0,NULL,NULL);
 		stats_time_end(&pcontext->stats, time_u2s);
 		stats_inc(&pcontext->stats, bytes_u2s, size);
 	}
@@ -2521,7 +2522,8 @@ static int gmm_dtoh_block(
     
 	if (b->swp_valid) {
 		stats_time_begin();
-		memcpy(dst, r->swp_addr + off, size);
+		//memcpy(dst, r->swp_addr + off, size);
+        ocl_clEnqueueReadBuffer(&pcontext->commandQueue_kernel,r->swp_addr,CL_TRUE,off,size,dst,0,NULL,NULL);
 		stats_time_end(&pcontext->stats, time_s2u);
 		stats_inc(&pcontext->stats, bytes_s2u, size);
         
@@ -2543,7 +2545,8 @@ static int gmm_dtoh_block(
 	if (b->swp_valid) {
 		release(&b->lock);
 		stats_time_begin();
-		memcpy(dst, r->swp_addr + off, size);
+		//memcpy(dst, r->swp_addr + off, size);
+        ocl_clEnqueueReadBuffer(&pcontext->commandQueue_kernel,r->swp_addr,CL_TRUE,off,size,dst,0,NULL,NULL);
 		stats_time_end(&pcontext->stats, time_s2u);
 		stats_inc(&pcontext->stats, bytes_s2u, size);
 	}
@@ -2566,7 +2569,8 @@ static int gmm_dtoh_block(
 			goto finish;
         
 		stats_time_begin();
-		memcpy(dst, r->swp_addr + off, size);
+		//memcpy(dst, r->swp_addr + off, size);
+        ocl_clEnqueueReadBuffer(&pcontext->commandQueue_kernel,r->swp_addr,CL_TRUE,off,size,dst,0,NULL,NULL);
 		stats_time_end(&pcontext->stats, time_s2u);
 		stats_inc(&pcontext->stats, bytes_s2u, size);
 	}
@@ -2583,7 +2587,7 @@ static int gmm_dtoh_pta(
                         const void *src,
                         size_t count)
 {
-	unsigned long off = (unsigned long)(src - r->swp_addr);
+	unsigned long off = (unsigned long)src -(unsigned long) r->swp_addr;
     
 	if (off % sizeof(void *)) {
 		gprint(ERROR, "offset(%lu) not aligned for pta-to-host memcpy\n", off);
@@ -2685,7 +2689,7 @@ cl_int gmm_clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem src, cl_bo
 		gprint(ERROR, "dtoh: region already tagged COW\n");
 		return CL_INVALID_VALUE;
 	}
-	if ((unsigned long)src + count > r->swp_addr + r->size) {
+	if ((unsigned long)src + count > (unsigned long)r->swp_addr + r->size) {
 		gprint(ERROR, "dtoh out of region boundary\n");
 		return CL_INVALID_VALUE;
 	}

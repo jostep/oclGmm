@@ -43,7 +43,7 @@ struct block {
 struct region {
 	unsigned long size;				// size of the object in bytes
 	cl_mem dev_addr;			// device memory address
-	void* swp_addr;			// host swap buffer address
+	cl_mem swp_addr;			// host swap buffer address
 	void* pta_addr;			// dptr array address
 	cl_mem usr_addr;			// copy-on-write user address
 	int value_memset;		// value of cudaMemset

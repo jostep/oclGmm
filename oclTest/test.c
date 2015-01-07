@@ -11,7 +11,7 @@
 #define TRUE 0
 #define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0X100000)
-#define testSize 50*1024*1024
+#define testSize 1*1024*1024
 #define corun 1
 int main(){
     
