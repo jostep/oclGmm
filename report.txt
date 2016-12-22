@@ -1,1 +1,0 @@
-In this report, we will introduce the oclGMM, a openCL implentation of the GPU Memory Management Tool. We will firstly introduce the logical structure of oclGMM, and then followed with converting part of 
